@@ -5,6 +5,7 @@
 This application is part of "Spatiotemporal Analysis with Application Development for Epidemiological Study of Suicide Mortality" senior project of the [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/). 
 
 
+
 ### 📝Developer Team
 1.  [Papin Thanutchapat](https://github.com/Jappapin)
 2. [Chiraphat Phoncharoenwirote](https://github.com/Chiraphatt)
@@ -15,6 +16,10 @@ This application is part of "Spatiotemporal Analysis with Application Developmen
 1. Dr. Unchalisa Taetragool
 2. Asst. Prof. Dr. Chawarat Rotejanaprasert
 3. Asst. Prof. Dr. Peerut Chienwichai
+
+## Style Guide 🎨
+![STEHealth_styleguide](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/STEHealth_styleguide.png?raw=true)
+
 
 
 ## Tools ⚙
