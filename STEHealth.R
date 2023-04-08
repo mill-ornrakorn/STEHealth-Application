@@ -5,12 +5,14 @@
 # เพิ่ม:
 # - เปลี่ยน time filter จาก slider เป็น dropdown
 # - ไม่ขึ้น error หน้าเว็บแล้ว
+# - แก้ชื่อตัวแปรใน asso เอา pi ไว้ข้างหลัง
+# - แก้บัคถ้าใส่ cova ไม่ถึง 7 จะโหลตไม่ได้
 
 
 
 # เหลือ: 
-# - แก้บัคถ้าใส่ cova ไม่ถึง 7 จะโหลตไม่ได้
-# - แก้ชื่อตัวแปรใน asso เอา pi ไว้ข้างหลัง
+
+
 
 # อาจจะเพิ่มถ้าเวลาเหลือ:
 # - แสดงตารางในหน้า asso
@@ -2445,42 +2447,184 @@ shinyApp(
       
     dataresult_asso_risk <- reactive({
       
+      x1 <- input$columncov1indata
+      x2 <- input$columncov2indata
+      x3 <- input$columncov3indata
+      x4 <- input$columncov4indata
+      x5 <- input$columncov5indata
+      x6 <- input$columncov6indata
+      x7 <- input$columncov7indata
       
-      col_order <- c(input$columnidareainmap,
-                                                                                       paste(input$columncov1indata,"_percent_increase", sep=""),
-                                                                                       paste(input$columncov1indata,"_lowerbound", sep=""),
-                                                                                       paste(input$columncov1indata,"_upperbound", sep=""),
-                                                                                       paste(input$columncov1indata,"_significance", sep=""),
-                                                                                       
-                                                                                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                                                                                       paste(input$columncov2indata,"_lowerbound", sep=""),
-                                                                                       paste(input$columncov2indata,"_upperbound", sep=""),
-                                                                                       paste(input$columncov2indata,"_significance", sep=""),
-                                                                                       
-                                                                                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                                                                                       paste(input$columncov3indata,"_lowerbound", sep=""),
-                                                                                       paste(input$columncov3indata,"_upperbound", sep=""),
-                                                                                       paste(input$columncov3indata,"_significance", sep=""),
-                                                                                       
-                                                                                       paste(input$columncov4indata,"_percent_increase", sep=""),
-                                                                                       paste(input$columncov4indata,"_lowerbound", sep=""),
-                                                                                       paste(input$columncov4indata,"_upperbound", sep=""),
-                                                                                       paste(input$columncov4indata,"_significance", sep=""),
-                                                                                       
-                                                                                       paste(input$columncov5indata,"_percent_increase", sep=""),
-                                                                                       paste(input$columncov5indata,"_lowerbound", sep=""),
-                                                                                       paste(input$columncov5indata,"_upperbound", sep=""),
-                                                                                       paste(input$columncov5indata,"_significance", sep=""),
-                                                                                       
-                                                                                       paste(input$columncov6indata,"_percent_increase", sep=""),
-                                                                                       paste(input$columncov6indata,"_lowerbound", sep=""),
-                                                                                       paste(input$columncov6indata,"_upperbound", sep=""),
-                                                                                       paste(input$columncov6indata,"_significance", sep=""),
-                                                                                       
-                                                                                       paste(input$columncov7indata,"_percent_increase", sep=""),
-                                                                                       paste(input$columncov7indata,"_lowerbound", sep=""),
-                                                                                       paste(input$columncov7indata,"_upperbound", sep=""),
-                                                                                       paste(input$columncov7indata,"_significance", sep=""))
+      if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+        
+        # print("all null")
+        
+      }else if (x1 != ""& x2== ""& x3== ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+        col_order <- c(input$columnidareainmap,
+                       paste(input$columncov1indata,"_percent_increase", sep=""),
+                       paste(input$columncov1indata,"_lowerbound", sep=""),
+                       paste(input$columncov1indata,"_upperbound", sep=""),
+                       paste(input$columncov1indata,"_significance", sep=""))
+        
+        
+      }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+        col_order <- c(input$columnidareainmap,
+                       paste(input$columncov1indata,"_percent_increase", sep=""),
+                       paste(input$columncov1indata,"_lowerbound", sep=""),
+                       paste(input$columncov1indata,"_upperbound", sep=""),
+                       paste(input$columncov1indata,"_significance", sep=""),
+                       
+                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                       paste(input$columncov2indata,"_lowerbound", sep=""),
+                       paste(input$columncov2indata,"_upperbound", sep=""),
+                       paste(input$columncov2indata,"_significance", sep=""))
+        
+        
+      }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+        col_order <- c(input$columnidareainmap,
+                       paste(input$columncov1indata,"_percent_increase", sep=""),
+                       paste(input$columncov1indata,"_lowerbound", sep=""),
+                       paste(input$columncov1indata,"_upperbound", sep=""),
+                       paste(input$columncov1indata,"_significance", sep=""),
+                       
+                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                       paste(input$columncov2indata,"_lowerbound", sep=""),
+                       paste(input$columncov2indata,"_upperbound", sep=""),
+                       paste(input$columncov2indata,"_significance", sep=""),
+                       
+                       paste(input$columncov3indata,"_percent_increase", sep=""),
+                       paste(input$columncov3indata,"_lowerbound", sep=""),
+                       paste(input$columncov3indata,"_upperbound", sep=""),
+                       paste(input$columncov3indata,"_significance", sep=""))
+        
+        
+      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+        col_order <- c(input$columnidareainmap,
+                       paste(input$columncov1indata,"_percent_increase", sep=""),
+                       paste(input$columncov1indata,"_lowerbound", sep=""),
+                       paste(input$columncov1indata,"_upperbound", sep=""),
+                       paste(input$columncov1indata,"_significance", sep=""),
+                       
+                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                       paste(input$columncov2indata,"_lowerbound", sep=""),
+                       paste(input$columncov2indata,"_upperbound", sep=""),
+                       paste(input$columncov2indata,"_significance", sep=""),
+                       
+                       paste(input$columncov3indata,"_percent_increase", sep=""),
+                       paste(input$columncov3indata,"_lowerbound", sep=""),
+                       paste(input$columncov3indata,"_upperbound", sep=""),
+                       paste(input$columncov3indata,"_significance", sep=""),
+                       
+                       paste(input$columncov4indata,"_percent_increase", sep=""),
+                       paste(input$columncov4indata,"_lowerbound", sep=""),
+                       paste(input$columncov4indata,"_upperbound", sep=""),
+                       paste(input$columncov4indata,"_significance", sep=""))
+        
+        
+      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+        
+        col_order <- c(input$columnidareainmap,
+                       paste(input$columncov1indata,"_percent_increase", sep=""),
+                       paste(input$columncov1indata,"_lowerbound", sep=""),
+                       paste(input$columncov1indata,"_upperbound", sep=""),
+                       paste(input$columncov1indata,"_significance", sep=""),
+                       
+                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                       paste(input$columncov2indata,"_lowerbound", sep=""),
+                       paste(input$columncov2indata,"_upperbound", sep=""),
+                       paste(input$columncov2indata,"_significance", sep=""),
+                       
+                       paste(input$columncov3indata,"_percent_increase", sep=""),
+                       paste(input$columncov3indata,"_lowerbound", sep=""),
+                       paste(input$columncov3indata,"_upperbound", sep=""),
+                       paste(input$columncov3indata,"_significance", sep=""),
+                       
+                       paste(input$columncov4indata,"_percent_increase", sep=""),
+                       paste(input$columncov4indata,"_lowerbound", sep=""),
+                       paste(input$columncov4indata,"_upperbound", sep=""),
+                       paste(input$columncov4indata,"_significance", sep=""),
+                       
+                       paste(input$columncov5indata,"_percent_increase", sep=""),
+                       paste(input$columncov5indata,"_lowerbound", sep=""),
+                       paste(input$columncov5indata,"_upperbound", sep=""),
+                       paste(input$columncov5indata,"_significance", sep=""))
+        
+        
+        
+      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+        
+        col_order <- c(input$columnidareainmap,
+                       paste(input$columncov1indata,"_percent_increase", sep=""),
+                       paste(input$columncov1indata,"_lowerbound", sep=""),
+                       paste(input$columncov1indata,"_upperbound", sep=""),
+                       paste(input$columncov1indata,"_significance", sep=""),
+                       
+                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                       paste(input$columncov2indata,"_lowerbound", sep=""),
+                       paste(input$columncov2indata,"_upperbound", sep=""),
+                       paste(input$columncov2indata,"_significance", sep=""),
+                       
+                       paste(input$columncov3indata,"_percent_increase", sep=""),
+                       paste(input$columncov3indata,"_lowerbound", sep=""),
+                       paste(input$columncov3indata,"_upperbound", sep=""),
+                       paste(input$columncov3indata,"_significance", sep=""),
+                       
+                       paste(input$columncov4indata,"_percent_increase", sep=""),
+                       paste(input$columncov4indata,"_lowerbound", sep=""),
+                       paste(input$columncov4indata,"_upperbound", sep=""),
+                       paste(input$columncov4indata,"_significance", sep=""),
+                       
+                       paste(input$columncov5indata,"_percent_increase", sep=""),
+                       paste(input$columncov5indata,"_lowerbound", sep=""),
+                       paste(input$columncov5indata,"_upperbound", sep=""),
+                       paste(input$columncov5indata,"_significance", sep=""),
+                       
+                       paste(input$columncov6indata,"_percent_increase", sep=""),
+                       paste(input$columncov6indata,"_lowerbound", sep=""),
+                       paste(input$columncov6indata,"_upperbound", sep=""),
+                       paste(input$columncov6indata,"_significance", sep=""))
+        
+        
+        
+      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
+        
+        col_order <- c(input$columnidareainmap,
+                       paste(input$columncov1indata,"_percent_increase", sep=""),
+                       paste(input$columncov1indata,"_lowerbound", sep=""),
+                       paste(input$columncov1indata,"_upperbound", sep=""),
+                       paste(input$columncov1indata,"_significance", sep=""),
+                       
+                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                       paste(input$columncov2indata,"_lowerbound", sep=""),
+                       paste(input$columncov2indata,"_upperbound", sep=""),
+                       paste(input$columncov2indata,"_significance", sep=""),
+                       
+                       paste(input$columncov3indata,"_percent_increase", sep=""),
+                       paste(input$columncov3indata,"_lowerbound", sep=""),
+                       paste(input$columncov3indata,"_upperbound", sep=""),
+                       paste(input$columncov3indata,"_significance", sep=""),
+                       
+                       paste(input$columncov4indata,"_percent_increase", sep=""),
+                       paste(input$columncov4indata,"_lowerbound", sep=""),
+                       paste(input$columncov4indata,"_upperbound", sep=""),
+                       paste(input$columncov4indata,"_significance", sep=""),
+                       
+                       paste(input$columncov5indata,"_percent_increase", sep=""),
+                       paste(input$columncov5indata,"_lowerbound", sep=""),
+                       paste(input$columncov5indata,"_upperbound", sep=""),
+                       paste(input$columncov5indata,"_significance", sep=""),
+                       
+                       paste(input$columncov6indata,"_percent_increase", sep=""),
+                       paste(input$columncov6indata,"_lowerbound", sep=""),
+                       paste(input$columncov6indata,"_upperbound", sep=""),
+                       paste(input$columncov6indata,"_significance", sep=""),
+                       
+                       paste(input$columncov7indata,"_percent_increase", sep=""),
+                       paste(input$columncov7indata,"_lowerbound", sep=""),
+                       paste(input$columncov7indata,"_upperbound", sep=""),
+                       paste(input$columncov7indata,"_significance", sep=""))
+        
+      }
       
       
       df2 <- rv$association_wsf_df[,col_order]
