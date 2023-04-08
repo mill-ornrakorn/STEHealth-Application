@@ -1,0 +1,180 @@
+
+* {
+  font-family: 'Poppins', sans-serif; /*!important ใส่ไม่ได้เพราะเหมือน iconบางส่วนหาย*/
+}
+
+.nav-tabs-custom .nav-tabs li.active {
+    border-top-color: #735DFB;
+}
+
+
+
+/* logo */
+.skin-purple .main-header .logo {
+          background-color: #735DFB;
+        }
+        
+/* logo when hovered */
+ .skin-purple .main-header .logo:hover {
+          background-color: #735DFB;
+        }
+        
+/* navbar (rest of the header) */
+.skin-purple .main-header .navbar  {
+          background-color: #735DFB;
+        }
+         
+/* toggle button when hovered  */
+.skin-purple .main-header .navbar .sidebar-toggle:hover {
+          background-color: #735DFB;
+        }
+        
+/* body */
+.content-wrapper, .right-side {
+          background-color: #ECF0F5;
+        }
+        
+       
+          
+.header .container {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.header .container .infos {
+  margin-top: 200px;
+  width: 50%;
+}
+
+
+
+.header .container .infos .title {
+  margin-bottom: 0px;
+  font-weight: bold;
+  color: #1F2059;
+  
+}
+
+.header .container .infos p {
+  margin-top: 30px;
+  color: #1F2059;
+  
+}
+
+.header .container .infos .button {
+  margin-top: 30px;
+  
+}
+
+
+.header .container .img-holder {
+  height: 100%;
+  -webkit-align-self: flex-end;
+      -ms-flex-item-align: end;
+          align-self: flex-end;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: end;
+  -webkit-align-items: flex-end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  padding-left: 0px;
+}
+
+.header .container .img-holder img {
+  width: 100%;
+  max-width: 620px;
+  -webkit-filter: drop-shadow(0 -4px 20px rgba(206, 212, 218, 0.4));
+          filter: drop-shadow(0 -4px 20px rgba(206, 212, 218, 0.4));
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 200px;
+}
+
+
+/* ปุ่ม */
+.btn-primary {
+  background-color: #8673fb !important; 
+  border-radius: 100px;
+  
+  box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
+
+  
+}
+
+
+.btn-primary:hover {
+  background-color: #735DFB !important;
+  
+}
+
+/* ปุ่มที่เป็นขอบ */
+.btn-outline-primary,  .btn-outline-primary:active, 
+.btn-outline-primary:visited {
+  color: #735DFB;
+  border-color: #735DFB;
+  border-radius: 100px;
+  
+  margin-left: 15px;
+  
+  
+} 
+
+.btn-outline-primary:hover{
+  color: #FFF;
+  background-color: #8673fb !important;
+  
+}
+
+
+
+
+.heading_container h1 {
+  font-family: 'Poppins';
+  color: #735DFB;
+  font-weight: bold;
+
+}
+
+
+h2, h3, h4, h5 {
+  font-family: 'Poppins';
+  font-weight: bold;
+
+}
+
+
+.box-gray {
+  background: #FFFFFF; 
+  /* background: #EFEFEF; > */
+  box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
+  border-radius: 14px;
+  
+  text-align: justify; 
+  padding-left: 40px; 
+  padding-right: 40px; 
+  padding-top: 20px; 
+  padding-bottom: 20px;
+  
+  margin-bottom: 20px;
+  margin-right: 20px;
+
+  /* 
+  max-width: 400px;
+  height: 25vh;
+   */
+  
+}
