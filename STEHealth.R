@@ -1293,8 +1293,9 @@ shinyApp(
           c(exp(model2$summary.random$`data|S|x1_id`$mean))
         ) -1 )*100
         
-        colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep="")
-        )
+        
+        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""))
+        
         
         association_wsf <- cbind(map, association_df)
         
@@ -1365,9 +1366,9 @@ shinyApp(
           c(exp(model2$summary.random$`data|S|x2_id`$mean))
         ) -1 )*100
         
-        colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
-                                       paste("percent_increase_",input$columncov2indata, sep="")
-        )
+        
+        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                       paste(input$columncov2indata,"_percent_increase", sep=""))
         
         association_wsf <- cbind(map, association_df)
         
@@ -1448,10 +1449,10 @@ shinyApp(
           c(exp(model2$summary.random$`data|S|x3_id`$mean))
         ) -1 )*100
         
-        colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
-                                       paste("percent_increase_",input$columncov2indata, sep=""),
-                                       paste("percent_increase_",input$columncov3indata, sep="")
-        )
+        
+        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                                       paste(input$columncov3indata,"_percent_increase", sep=""))
         
         association_wsf <- cbind(map, association_df)
         
@@ -1543,11 +1544,12 @@ shinyApp(
           c(exp(model2$summary.random$`data|S|x4_id`$mean))
         ) -1 )*100
         
-        colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
-                                       paste("percent_increase_",input$columncov2indata, sep=""),
-                                       paste("percent_increase_",input$columncov3indata, sep=""),
-                                       paste("percent_increase_",input$columncov4indata, sep="")
-        )
+        
+        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                                       paste(input$columncov3indata,"_percent_increase", sep=""),
+                                       paste(input$columncov4indata,"_percent_increase", sep=""))
+        
         
         association_wsf <- cbind(map, association_df)
         
@@ -1646,12 +1648,12 @@ shinyApp(
           c(exp(model2$summary.random$`data|S|x5_id`$mean))
         ) -1 )*100
         
-        colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
-                                       paste("percent_increase_",input$columncov2indata, sep=""),
-                                       paste("percent_increase_",input$columncov3indata, sep=""),
-                                       paste("percent_increase_",input$columncov4indata, sep=""),
-                                       paste("percent_increase_",input$columncov5indata, sep="")
-                                       )
+        
+        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                                       paste(input$columncov3indata,"_percent_increase", sep=""),
+                                       paste(input$columncov4indata,"_percent_increase", sep=""),
+                                       paste(input$columncov5indata,"_percent_increase", sep=""))
 
         association_wsf <- cbind(map, association_df)
         
@@ -1762,12 +1764,13 @@ shinyApp(
           c(exp(model2$summary.random$`data|S|x6_id`$mean))
         ) -1 )*100
         
-        colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
-                                       paste("percent_increase_",input$columncov2indata, sep=""),
-                                       paste("percent_increase_",input$columncov3indata, sep=""),
-                                       paste("percent_increase_",input$columncov4indata, sep=""),
-                                       paste("percent_increase_",input$columncov5indata, sep=""),
-                                       paste("percent_increase_",input$columncov6indata, sep=""))
+        
+        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                                       paste(input$columncov3indata,"_percent_increase", sep=""),
+                                       paste(input$columncov4indata,"_percent_increase", sep=""),
+                                       paste(input$columncov5indata,"_percent_increase", sep=""),
+                                       paste(input$columncov6indata,"_percent_increase", sep=""))
         
         association_wsf <- cbind(map, association_df)
         
@@ -1891,13 +1894,17 @@ shinyApp(
           c(exp(model2$summary.random$`data|S|x7_id`$mean))
         ) -1 )*100
         
-        colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
-                                       paste("percent_increase_",input$columncov2indata, sep=""),
-                                       paste("percent_increase_",input$columncov3indata, sep=""),
-                                       paste("percent_increase_",input$columncov4indata, sep=""),
-                                       paste("percent_increase_",input$columncov5indata, sep=""),
-                                       paste("percent_increase_",input$columncov6indata, sep=""),
-                                       paste("percent_increase_",input$columncov7indata, sep=""))
+        
+        
+        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                       paste(input$columncov2indata,"_percent_increase", sep=""),
+                                       paste(input$columncov3indata,"_percent_increase", sep=""),
+                                       paste(input$columncov4indata,"_percent_increase", sep=""),
+                                       paste(input$columncov5indata,"_percent_increase", sep=""),
+                                       paste(input$columncov6indata,"_percent_increase", sep=""),
+                                       paste(input$columncov7indata,"_percent_increase", sep=""))
+        
+        
         
         association_wsf <- cbind(map, association_df)
         
@@ -2298,25 +2305,25 @@ shinyApp(
       map@data <- datafiltered[ordercounties, ]
    
       
-      if (input$risk_factor_filter == paste("percent_increase_",input$columncov1indata, sep="")){
+      if (input$risk_factor_filter == paste(input$columncov1indata,"_percent_increase", sep="")){
         sig_col <- map@data[, paste(input$columncov1indata,"_significance", sep="")]
                             
-      } else if (input$risk_factor_filter == paste("percent_increase_",input$columncov2indata, sep="")) {
+      } else if (input$risk_factor_filter == paste(input$columncov2indata,"_percent_increase", sep="")) {
         sig_col <- map@data[, paste(input$columncov2indata,"_significance", sep="")]
         
-      } else if (input$risk_factor_filter == paste("percent_increase_",input$columncov3indata, sep="")) {
+      } else if (input$risk_factor_filter == paste(input$columncov3indata,"_percent_increase", sep="")) {
         sig_col <- map@data[, paste(input$columncov3indata,"_significance", sep="")]
         
-      } else if (input$risk_factor_filter == paste("percent_increase_",input$columncov4indata, sep="")) {
+      } else if (input$risk_factor_filter == paste(input$columncov4indata,"_percent_increase", sep="")) {
         sig_col <- map@data[, paste(input$columncov4indata,"_significance", sep="")]
         
-      } else if (input$risk_factor_filter == paste("percent_increase_",input$columncov5indata, sep="")) {
+      } else if (input$risk_factor_filter == paste(input$columncov5indata,"_percent_increase", sep="")) {
         sig_col <- map@data[, paste(input$columncov5indata,"_significance", sep="")]
         
-      } else if (input$risk_factor_filter == paste("percent_increase_",input$columncov6indata, sep="")) {
+      } else if (input$risk_factor_filter == paste(input$columncov6indata,"_percent_increase", sep="")) {
         sig_col <- map@data[, paste(input$columncov6indata,"_significance", sep="")]
         
-      } else if (input$risk_factor_filter == paste("percent_increase_",input$columncov7indata, sep="")) {
+      } else if (input$risk_factor_filter == paste(input$columncov7indata,"_percent_increase",sep="")) {
         sig_col <- map@data[, paste(input$columncov7indata,"_significance", sep="")]
         
       } 
@@ -2440,37 +2447,37 @@ shinyApp(
       
       
       col_order <- c(input$columnidareainmap,
-                                                                                       paste("percent_increase_",input$columncov1indata, sep=""),
+                                                                                       paste(input$columncov1indata,"_percent_increase", sep=""),
                                                                                        paste(input$columncov1indata,"_lowerbound", sep=""),
                                                                                        paste(input$columncov1indata,"_upperbound", sep=""),
                                                                                        paste(input$columncov1indata,"_significance", sep=""),
                                                                                        
-                                                                                       paste("percent_increase_",input$columncov2indata, sep=""),
+                                                                                       paste(input$columncov2indata,"_percent_increase", sep=""),
                                                                                        paste(input$columncov2indata,"_lowerbound", sep=""),
                                                                                        paste(input$columncov2indata,"_upperbound", sep=""),
                                                                                        paste(input$columncov2indata,"_significance", sep=""),
                                                                                        
-                                                                                       paste("percent_increase_",input$columncov3indata, sep=""),
+                                                                                       paste(input$columncov3indata,"_percent_increase", sep=""),
                                                                                        paste(input$columncov3indata,"_lowerbound", sep=""),
                                                                                        paste(input$columncov3indata,"_upperbound", sep=""),
                                                                                        paste(input$columncov3indata,"_significance", sep=""),
                                                                                        
-                                                                                       paste("percent_increase_",input$columncov4indata, sep=""),
+                                                                                       paste(input$columncov4indata,"_percent_increase", sep=""),
                                                                                        paste(input$columncov4indata,"_lowerbound", sep=""),
                                                                                        paste(input$columncov4indata,"_upperbound", sep=""),
                                                                                        paste(input$columncov4indata,"_significance", sep=""),
                                                                                        
-                                                                                       paste("percent_increase_",input$columncov5indata, sep=""),
+                                                                                       paste(input$columncov5indata,"_percent_increase", sep=""),
                                                                                        paste(input$columncov5indata,"_lowerbound", sep=""),
                                                                                        paste(input$columncov5indata,"_upperbound", sep=""),
                                                                                        paste(input$columncov5indata,"_significance", sep=""),
                                                                                        
-                                                                                       paste("percent_increase_",input$columncov6indata, sep=""),
+                                                                                       paste(input$columncov6indata,"_percent_increase", sep=""),
                                                                                        paste(input$columncov6indata,"_lowerbound", sep=""),
                                                                                        paste(input$columncov6indata,"_upperbound", sep=""),
                                                                                        paste(input$columncov6indata,"_significance", sep=""),
                                                                                        
-                                                                                       paste("percent_increase_",input$columncov7indata, sep=""),
+                                                                                       paste(input$columncov7indata,"_percent_increase", sep=""),
                                                                                        paste(input$columncov7indata,"_lowerbound", sep=""),
                                                                                        paste(input$columncov7indata,"_upperbound", sep=""),
                                                                                        paste(input$columncov7indata,"_significance", sep=""))
