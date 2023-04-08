@@ -1,13 +1,16 @@
 
 # ================================================================
 
-# @22-3-23
+# @8-4-23
 # เพิ่ม:
-# - เรียง column name ตอนโหลด asso แล้ว
+# - เปลี่ยน time filter จาก slider เป็น dropdown
+# - ไม่ขึ้น error หน้าเว็บแล้ว
+
 
 
 # เหลือ: 
-# -
+# - แก้บัคถ้าใส่ cova ไม่ถึง 7 จะโหลตไม่ได้
+# - แก้ชื่อตัวแปรใน asso เอา pi ไว้ข้างหลัง
 
 # อาจจะเพิ่มถ้าเวลาเหลือ:
 # - แสดงตารางในหน้า asso
@@ -96,7 +99,10 @@ body <- dashboardBody(
   tags$head(
     tags$meta(charset="utf-8"),
     tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
-    tags$style('.tab-content {margin-left:40px;}')  # เว้นระยะห่างด้านซ้ายทุกหน้า
+    tags$style('.tab-content {margin-left:40px;}'), # เว้นระยะห่างด้านซ้ายทุกหน้า
+    tags$style(type="text/css",
+               ".shiny-output-error { visibility: hidden; }",
+               ".shiny-output-error:before { visibility: hidden; }" ) # ไม่แสดง error หน้าเว็บ
 
   ),
   
@@ -209,7 +215,7 @@ body <- dashboardBody(
                           
                                         hr(),
                                         #width = 7,
-                                        HTML("<strong><font color= \"#735DFB\">Upload all shapefile at once:</font></strong> shp, dbf, shx and prj."),
+                                        HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile at once:</font></strong> shp, dbf, shx and prj."),
                                         fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
 
                                         helpText("Select columns area name in the map."),
@@ -396,8 +402,8 @@ body <- dashboardBody(
                            HTML("<h4>Fillter</h4>"),
                            
                            # เลือกช่วงเวลา
-                           sliderInput("time_period_filter", label = "Time Period:" , min = 1 ,
-                                       max = 10 , value = 1, step = 1),
+                           selectInput("time_period_filter", label = "Time Period:" ,
+                                       choices = c(""), selected = ""),
                            
                            #selectInput("time_period_filter", label = "Time Period:", choices = c(""), selected = ""),
                            
@@ -569,8 +575,13 @@ body <- dashboardBody(
                                              HTML("<h4>Fillter</h4>"),
                                              
                                            # เลือกช่วงเวลา
-                                           sliderInput("time_period_filter_cluster", label = "Time Period:" , min = 1 ,
-                                                       max = 10 , value = 1, step = 1),
+                                           # sliderInput("time_period_filter_cluster", label = "Time Period:" , min = 1 ,
+                                           #             max = 10 , value = 1, step = 1),
+                                           
+                                           selectInput("time_period_filter_cluster", label = "Time Period:" ,
+                                                       choices = c(""), selected = ""),
+                                           
+                                           
                                            
                                            # เลือกสีแมพ
                                            selectInput("color_cluster", label = "Color Scheme:", 
@@ -1074,10 +1085,16 @@ shinyApp(
       #print(input$tabs)
       if(input$tabs == "Map_Distribution"){
       data <- rv$datosOriginal
-      updateSliderInput(session, "time_period_filter", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
+      
+      #updateSelectInput(session, "columnidareainmap",        choices = x,  selected = head(x, 1))
+      updateSelectInput(session, "time_period_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
+                        #min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
       # print(min(data[,input$columndateindata]))
       # print(max(data[,input$columndateindata]))
       # print(range(data[,input$columndateindata]))
+      
+      updateSelectInput(session, "time_period_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
+      
       }
       
     })
@@ -1099,8 +1116,10 @@ shinyApp(
       
       if(input$tabs == "Analysis"){
       data <- rv$datosOriginal
-      updateSliderInput(session, "time_period_filter_cluster", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
-     
+      
+      #updateSliderInput(session, "time_period_filter_cluster", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
+      
+      
       
       ######################### คำนวณ cluster ###################################
       map <- rv$map
