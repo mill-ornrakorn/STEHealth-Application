@@ -233,7 +233,7 @@ body <- dashboardBody(
                                            
                                             </br></br>"),
                           
-                                        radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected=""),
+                                        radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
                           
 
                                         # fluidRow(column(12, helpText(div("Optional. Select column name of the regions in the map."),
@@ -320,6 +320,16 @@ body <- dashboardBody(
                           fluidRow(column(6, selectInput("columncov7indata", label = "covariate 7", choices = c(""), selected = "")),
                                    #column(6, selectInput("columncov8indata", label = "covariate 8", choices = c(""), selected = ""))
                           ),
+                          
+                          HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
+                                             <ul>
+                                              <li>If the user select 1 covariate, the analysis is <strong>univariate</strong>.</li> 
+                                              <li>If the user selects covariates more than 1, all covariates will be calculated at the same time, which is a 
+                                                <strong>multivariate</strong> analysis. However, the results will be displayed one by one on the 'Spatiotemporal Epidemiological Analysis' page ('Association with Risk Factors' tap).</li>  
+                                              
+                                             </ul>
+                                                
+                                            </br>"),
                           
 
                           fluidRow(column(4, offset=3, actionButton("Preview_Map_Distribution",
