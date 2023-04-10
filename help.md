@@ -32,10 +32,12 @@ The application consists of seven pages:
 
 &emsp;&emsp;Cluster detection is an important tool for identifying areas of high risk and developing hypotheses about health outcomes [[1]](https://doi.org/10.1186/1476-072X-6-13). Cluster detection used to compute probabilities that the risk in an area exceeds certain thresholds can be done using the posterior probability distributions [[2]](http://www.jstor.org/stable/3085830). This probability of exceedance can then be used to decide whether an area should be hot-spot [[3]](https://doi.org/10.1289%2Fehp.6740). The Cluster detection Tab displays a hotspot area map of the data.
 
+
 * **Association with Risk Factors Tap**
 
  &emsp;&emsp;The percentage of a health outcome expected to change as a risk factor increases one unit. When the probability is positive, it means that as the risk factor rises, so will the outcome, whereas when the probability is negative, it means that if the risk factor increases, the outcome decreases. The data are assumed to be unrelated when the probability is zero. The association Tab displays an association between risk factors and case outcomes.
 
+&emsp;&emsp;From this analysis, the coefficient of the risk factors obtained from the fit model, which is in the log scale, must be exponentiated and minus 1 and multiplied by 100. Therefore, the value is obtained as a percent increase.
 
 
 **5.About application**

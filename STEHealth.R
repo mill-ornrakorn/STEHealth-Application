@@ -1,27 +1,29 @@
 
 # ================================================================
 
-# @8-4-23
+# @10-4-23
 # เพิ่ม:
-# - เปลี่ยน time filter จาก slider เป็น dropdown
-# - ไม่ขึ้น error หน้าเว็บแล้ว
-# - แก้ชื่อตัวแปรใน asso เอา pi ไว้ข้างหลัง
-# - แก้บัคถ้าใส่ cova ไม่ถึง 7 จะโหลตไม่ได้
-
-
+# - ลืงก์ไปยัง tap อื่น
+# - เพิ่มตัวอย่างแปลผลในหน้า analysis
+# - แก้บัคหน้าคู่มือ
 
 # เหลือ: 
-
+# - โหลดข้อมูลแบบเป็นภาพ
+# - เพิ่มรายละเอียดโมเดล และการวัดค่า sig ในแอป
 
 
 # อาจจะเพิ่มถ้าเวลาเหลือ:
 # - แสดงตารางในหน้า asso
-# - โหลดข้อมูลแบบเป็นภาพ แล้วรายงานได้
 # - เลือก model
 # - ตรงเลือกว่าประเทศไทย บังคับ
+# - เลือกว่าจะโหลดข้อมูลอะไรบ้าง
 
 
 # ของเก่าที่ทำไปแล้ว:
+# - เปลี่ยน time filter จาก slider เป็น dropdown
+# - ไม่ขึ้น error หน้าเว็บแล้ว
+# - แก้ชื่อตัวแปรใน asso เอา pi ไว้ข้างหลัง
+# - แก้บัคถ้าใส่ cova ไม่ถึง 7 จะโหลตไม่ได้
 # - เพิ่ม ค่า sig ตอนโหลดข้อมูล และแสดงในแมพ
 # - แก้ปุ่มวาปใช้ or 
 # - แก้รูปไอคอนตรงtapในแอป
@@ -97,14 +99,16 @@ body <- dashboardBody(
                       href="STEHealth_logo_0.ico")
             ),
   
-  # import css file
   tags$head(
     tags$meta(charset="utf-8"),
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),   # import css file
     tags$style('.tab-content {margin-left:40px;}'), # เว้นระยะห่างด้านซ้ายทุกหน้า
     tags$style(type="text/css",
                ".shiny-output-error { visibility: hidden; }",
-               ".shiny-output-error:before { visibility: hidden; }" ) # ไม่แสดง error หน้าเว็บ
+               ".shiny-output-error:before { visibility: hidden; }" ), # ไม่แสดง error หน้าเว็บ
+    
+    tags$script(src="js/index.js") # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่น ๆ
+
 
   ),
   
@@ -542,24 +546,23 @@ body <- dashboardBody(
                          tabPanel(HTML("<h4>Cluster Detection</h4>"),
                                   fluidRow(
                                     column(3,
-                                             HTML("
-                                          <div class='box-gray'>
-                                              <img align='left' width='52px' height='52px' src='cluster.png' style='margin-top: 10px; margin-right: 10px' >
-                                              <h4>Cluster Detection Tap</h4>
-                                              <p>
-                                                 <!-- Cluster detection is an important tool for identifying areas of high risk and developing hypotheses about health outcomes 
-                                                    <a href='https://doi.org/10.1186/1476-072X-6-13'> [1]</a>.
-                                                 Cluster detection used to compute probabilities that the risk in an area exceeds certain thresholds can be done using the posterior probability distributions 
-                                                    <a href='http://www.jstor.org/stable/3085830'> [2]</a>.
-                                                 This probability of exceedance can then be used to decide whether an area should be hot-spot 
-                                                    <a href='https://doi.org/10.1289%2Fehp.6740'> [3]</a>. 
-                                                  -->
-                                              The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong> and <strong>non-hotspot</strong>. 
-                                              Users can visualize and select filters including time period and color scheme.
-                                              </p>
+                                           # <img align='left' width='52px' height='52px' src='cluster.png' style='margin-top: 10px; margin-right: 10px' >
+                                           # <h4>Cluster Detection</h4>
+                                           # <p>
+                                           # The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong> and <strong>non-hotspot</strong>. 
+                                           # Users can visualize and select filters including time period and color scheme. For details of the model, please refer to the 
+                                           #   <a onclick='customHref('Help')'>Help page</a>.
+                                           # </p>
                                            
-                                          </div>
-                                           "),
+                                           div(
+                                             class = "box-gray",
+                                             tags$img(align='left',width='52px',height='52px',src='cluster.png',style='margin-top: 10px; margin-right: 10px'),
+                                             tags$h4("Cluster Detection"),
+                                             HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
+                                                    Users can visualize and select filters including time period and color scheme. For details of the model, please refer to the"),
+                                             tags$a("Help page.", onclick="customHref('Help')")
+                                             
+                                           ),
                                            
                                            # เลือกสีแมพ
                                            # selectInput("color_cluster", label = "Color Scheme:", 
@@ -622,11 +625,21 @@ body <- dashboardBody(
                                     verbatimTextOutput("map_cluster_value"),
                                     #leafletOutput("map_cluster", height = "70vh")
                                     addSpinner(
-                                      leafletOutput("map_cluster", height = "70vh"),
+                                      leafletOutput("map_cluster", height = "65vh"),
                                       spin = "bounce", color = "#735DFB"
-                                              )
+                                              ),
+                                    
+                                    div(
+                                    HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                            If the area has a <strong>hotspot</strong>: </br>
+                                              In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides).
+                                              For other examples of interpretation, please refer to the
+                                            "
+                                         ),
+                                    tags$a("Manual page.", onclick="customHref('Manual')")
 
-                                         )
+                                        )
+                                        )
                                       )
                                   ),
                          
@@ -635,27 +648,23 @@ body <- dashboardBody(
                          tabPanel(HTML("<h4>Association with Risk Factors</h4>"),
                                   fluidRow(
                                     column(3,
-                                          HTML("
-                                          <div class='box-gray'>
+                                           div(
+                                             class = "box-gray",
+                                             HTML("
                                             <img align='left' width='52px' height='52px' src='risk.png' style='margin-top: 10px; margin-right: 10px' >
-                                            <h5>Association with Risk Factors Tap</h5>
-                                            <p>
-                                             <!--
-                                             The percentage of a health outcome expected to change as a risk factor increases one unit. 
-                                             When the probability is positive, it means that as the risk factor rises, so will the outcome, 
-                                             whereas when the probability is negative, it means that if the risk factor increases, the outcome decreases. 
-                                             The data are assumed to be unrelated when the probability is zero.
-                                             -->
+                                            <h5>Association with Risk Factors</h5>
+                                            
                                              
                                              This tab displays an association between risk factors and case outcomes. 
-                                             From the analysis, the coefficient of the risk factors obtained from the fit model, 
-                                             which is in the log scale, must be exponentiated and minus  1 and multiplied by 100. 
-                                             Therefore, the value is obtained as a <strong>percent increase</strong>. 
-                                             In addition, the map also indicates the <strong>significance</strong> of each risk factor in each area. 
+                                             From the analysis, this map indicates the <strong>percent increase value</strong> 
+                                            and <strong>significance</strong> of each risk factor in each area. 
                                              Users can visualize by using filters including each risk factor and color scheme. 
-                                            </p>
-                                          </div>  
-                                           "),
+                                             
+                                             For details of the model and value, please refer to the
+                                                  "),
+                                             
+                                            tags$a("Help page.", onclick="customHref('Help')")
+                                           ),
                                           
                                     div(
                                       class = "box-gray",
@@ -692,9 +701,17 @@ body <- dashboardBody(
                                            uiOutput("status_risk_fac"),
                                            verbatimTextOutput("status_risk_fac_nocova"),
                                            addSpinner(
-                                             leafletOutput("map_risk_fac", height = "70vh"),
+                                             leafletOutput("map_risk_fac", height = "65vh"),
                                              spin = "bounce", color = "#735DFB"
-                                           )
+                                           ),
+                                           HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                            If the significance is <strong>significant</strong> and value is <strong>positive (+)</strong>: </br>
+                                              In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
+                                              the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
+                                              For other examples of interpretation, please refer to the
+                                             "),
+                                           tags$a("Manual page.", onclick="customHref('Manual')")
+                                           
                                     )
                                   )
 
@@ -876,7 +893,7 @@ shinyApp(
       x7 <- input$columncov7indata
       
       if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-        return(HTML('The user did not select any Covariates.'))
+        return(HTML('There are no covariates have been select !'))
       }
       
       

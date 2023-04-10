@@ -4,7 +4,7 @@
 
 If this manual is not displayed, you can view it by [click here](https://drive.google.com/drive/folders/11YfEo3pXg7V0UOQAAI_PvDp-4uQ5OxYz?usp=share_link).
 
-<iframe src="STEHealth_Application Manual.pdf", width="100%", height="800vh", scrolling="auto"> </iframe>
+<iframe src="STEHealth_Application_Manual.pdf", width="100%", height="800vh", scrolling="auto"> </iframe>
 
 
 
