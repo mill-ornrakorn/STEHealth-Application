@@ -142,7 +142,7 @@ body <- dashboardBody(
                                  onclick="$(\'li:eq(2) a\').tab(\'show\');" 
                                  role="button"
                                  style = "border-color: #735DFB;" >
-                           <strong>Go to upload data page</strong>
+                           <strong>Get Started</strong>
                         </a>
                         
                         

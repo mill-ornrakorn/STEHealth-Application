@@ -56,6 +56,7 @@
 
 
 .header .container .infos .title {
+  font-family: 'Poppins';
   margin-bottom: 0px;
   font-weight: bold;
   color: #1F2059;
@@ -112,6 +113,8 @@
   
   box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
 
+  padding-left: 20px;
+  padding-right: 20px;
   
 }
 
@@ -129,6 +132,9 @@
   border-radius: 100px;
   
   margin-left: 15px;
+  
+  padding-left: 15px;
+  padding-right: 15px;
   
   
 } 
