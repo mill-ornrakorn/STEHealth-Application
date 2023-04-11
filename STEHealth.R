@@ -81,13 +81,14 @@ header$children[[2]]$children <- tags$img(src='STEHealth_logo2.png',width='180',
 
 sidebar <- dashboardSidebar(
   sidebarMenu(id="tabs",
-              menuItem("Home", tabName = "Home", icon = icon("house")),
-              menuItem("Upload Data", tabName = "Upload_data", icon = icon("folder-open")),
-              menuItem("Map Distribution", tabName = "Map_Distribution", icon = icon("map")),
-              menuItem(HTML("Spatiotemporal <br/>&emsp; &ensp;Epidemiology Analysis"), tabName="Analysis", icon=icon("globe")),
-              menuItem("About Application", tabName = "About", icon = icon("file")),
-              menuItem("Manual", tabName = "Manual", icon = icon("book")),
-              menuItem("Help", tabName = "Help", icon=icon("question"))
+              menuItem(HTML("&ensp;Home"), tabName = "Home", icon = icon("house")),
+              menuItem(HTML("&ensp;Upload Data"), tabName = "Upload_data", icon = icon("folder-open")),
+              menuItem(HTML("&ensp;Map Distribution"), tabName = "Map_Distribution", icon = icon("map")),
+              menuItem(HTML("&ensp;Spatiotemporal <br/>&emsp; &ensp;Epidemiology Analysis"), tabName="Analysis", icon=icon("globe")),
+              menuItem(HTML("&ensp;About Application"), tabName = "About", icon = icon("file")),
+              menuItem(HTML("&ensp;Manual"), tabName = "Manual", icon = icon("book")),
+              menuItem(HTML("&ensp;Help"), tabName = "Help", icon=icon("question")),
+              menuItem(HTML("&ensp;Releases"), tabName = "Releases", icon=icon("tasks"))
 
   )
 )
@@ -748,6 +749,10 @@ body <- dashboardBody(
     
     tabItem(tabName = "Help",
             includeMarkdown("help.md")
+    ),
+    
+    tabItem(tabName = "Releases",
+            includeMarkdown("Releases.md")
     ) 
 )
 ))     

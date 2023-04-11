@@ -77,18 +77,18 @@ The application consists of seven pages:
 
     **7-13. 7 covariates:** debt, income, poverty, expenditure, homicide crime, property crime and shocking crime.
 
-
+<!--
 ### **When Error Occurred ?**
 <img width="40px" height="10px" src="Rectangle.svg">
 
 If an error occurs in usage, for example:
-| <div style="margin-right:20px">Error Message</div>                                                                                | Description                                                                |
+| <div style="margin-right:70px">Error Message<div>                                                                                | Description                                                                |
 | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------|
-| ERROR: Wasn't able to determine range of domain                                             | If the message displayed in "Map Distribution" page on the map, it means area name of shapefile and csv file do not match. |
-| ERROR: no applicable method for 'filter' applied to an object of class "NULL"               | If the message displayed in "Cluster Detection" tab on the map, it means the user forgot to import the data before beginning the analysis or did not press the "go to analysis page" button on the Map Distribution page. |
-| ERROR: trying to get slot "data" from an object of a basic class ("NULL") with no slots     | If the message displayed in "Association with Risk Factors" tab on the map, it means the user forgot to import the data before beginning the analysis or did not press the "go to analysis page" button on the Map Distribution page.
-|  Application crashes                                                                                 | It may be because the user uploaded data that is not as specified making it unable to analyze the data.
-
+| > ERROR: Wasn't able to determine range of domain                                              | If the message displayed in "Map Distribution" page on the map, it means area name of shapefile and csv file do not match. |
+| > ERROR: no applicable method for 'filter' applied to an object of class "NULL"               | If the message displayed in "Cluster Detection" tab on the map, it means the user forgot to import the data before beginning the analysis or did not press the "go to analysis page" button on the Map Distribution page. |
+| > ERROR: trying to get slot "data" from an object of a basic class ("NULL") with no slots     | If the message displayed in "Association with Risk Factors" tab on the map, it means the user forgot to import the data before beginning the analysis or did not press the "go to analysis page" button on the Map Distribution page.
+|  > Application crashes                                                                                 | It may be because the user uploaded data that is not as specified making it unable to analyze the data.
+-->
 
 ### **Contact us**
 <img width="40px" height="10px" src="Rectangle.svg">
