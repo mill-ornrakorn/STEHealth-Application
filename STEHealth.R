@@ -435,6 +435,28 @@ body <- dashboardBody(
                          #HTML("</br>"),
                          #verbatimTextOutput("status_map_dis")
                          
+                         div(
+                           class = "box-gray",
+                         HTML('<h5>
+                                Capture screenshot
+                               </h5>
+                               <p>
+                                Take a screenshot of map. The captured image is downloaded as a PNG image.
+                               </p>
+                              '),
+                         
+                         capture(
+                           selector = "#map_distribution",
+                           filename = paste("map_distribution-", Sys.Date(), ".png", sep=""),
+                           icon("camera"), "Screenshot Map",
+                           scale = 3, # bigger scale
+                           options=list(backgroundColor = "white"),
+                           style = "border-radius: 100px;"
+                         )
+                         
+                         ),
+                         
+                         
                          fluidRow(column(4,
                                          offset=3,
                                          actionButton("nextpage",
@@ -453,16 +475,8 @@ body <- dashboardBody(
                          uiOutput("status_map_dis"),
                          #leafletOutput("map_distribution", height = "70vh")
                          addSpinner(
-                           leafletOutput("map_distribution", height = "70vh"),
+                           leafletOutput("map_distribution", height = "75vh"),
                            spin = "bounce", color = "#735DFB"
-                         ),
-                         
-                         capture(
-                           selector = "#map_distribution",
-                           filename = paste("map_distribution-", Sys.Date(), ".png", sep=""),
-                           icon("camera"), "Take a Screenshot Map",
-                           scale = 3, # bigger scale
-                           options=list(backgroundColor = "white")
                          )
                          
                          
@@ -635,7 +649,27 @@ body <- dashboardBody(
                                              
                                            
                                              downloadButton("downloadData_cluster", "Download (.csv)", 
-                                                            style = "border-radius: 100px;")
+                                                            style = "border-radius: 100px;"), 
+                                             
+                                             HTML('</br>
+                                                  </br>
+                                                  <h5>
+                                                     Capture screenshot
+                                                  </h5>
+                                                  <p>
+                                                  Take a screenshot of map. The captured image is downloaded as a PNG image.
+                                                  </p>
+                                                  
+                                                  '),
+                                             
+                                             capture(
+                                               selector = "#map_cluster",
+                                               filename = paste("map_cluster-", Sys.Date(), ".png", sep=""),
+                                               icon("camera"), "Screenshot Map",
+                                               scale = 3, # bigger scale
+                                               options=list(backgroundColor = "white"),
+                                               style = "border-radius: 100px;"
+                                             )
                                                       
                                            
                                            )
@@ -648,7 +682,7 @@ body <- dashboardBody(
                                     verbatimTextOutput("map_cluster_value"),
                                     #leafletOutput("map_cluster", height = "70vh")
                                     addSpinner(
-                                      leafletOutput("map_cluster", height = "65vh"),
+                                      leafletOutput("map_cluster", height = "75vh"),
                                       spin = "bounce", color = "#735DFB"
                                               ),
                                     
@@ -713,7 +747,27 @@ body <- dashboardBody(
                                       
                                       
                                       downloadButton("downloadData_asso_risk", "Download (.csv)", 
-                                                     style = "border-radius: 100px;")
+                                                     style = "border-radius: 100px;"),
+                                      
+                                      
+                                      HTML('</br>
+                                            </br>
+                                            <h5>
+                                              Capture screenshot
+                                            </h5>
+                                            <p>
+                                            Take a screenshot of map. The captured image is downloaded as a PNG image.
+                                            </p>
+                                           '),
+                                      
+                                      capture(
+                                        selector = "#map_risk_fac",
+                                        filename = paste("map_risk_fac-", Sys.Date(), ".png", sep=""),
+                                        icon("camera"), "Screenshot Map",
+                                        scale = 3, # bigger scale
+                                        options=list(backgroundColor = "white"),
+                                        style = "border-radius: 100px;"
+                                      )
                                       
                                       
                                     )
@@ -724,7 +778,7 @@ body <- dashboardBody(
                                            uiOutput("status_risk_fac"),
                                            verbatimTextOutput("status_risk_fac_nocova"),
                                            addSpinner(
-                                             leafletOutput("map_risk_fac", height = "65vh"),
+                                             leafletOutput("map_risk_fac", height = "75vh"),
                                              spin = "bounce", color = "#735DFB"
                                            ),
                                            HTML("<h4>Examples of interpretation (from sample data)</h4>
