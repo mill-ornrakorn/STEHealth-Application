@@ -124,6 +124,9 @@
   
 }
 
+
+
+
 /* ปุ่มที่เป็นขอบ */
 .btn-outline-primary,  .btn-outline-primary:active, 
 .btn-outline-primary:visited {
@@ -146,6 +149,21 @@
 }
 
 
+/* ปุ่ม ? */
+.btn-Question {
+  background-color: #8673fb !important; 
+  border-radius: 100px;
+  color: #FFF !important;
+  box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
+
+}
+
+
+.btn-Question:hover,  .btn-Question:active, 
+.btn-Question:visited {
+  background-color: #735DFB !important;
+  
+}
 
 
 .heading_container h1 {

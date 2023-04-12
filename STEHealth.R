@@ -1,14 +1,15 @@
 
 # ================================================================
 
-# @10-4-23
+# @12-4-23
 # เพิ่ม:
 # - ลืงก์ไปยัง tap อื่น
 # - เพิ่มตัวอย่างแปลผลในหน้า analysis
 # - แก้บัคหน้าคู่มือ
+# - โหลดข้อมูลแบบเป็นภาพ
+
 
 # เหลือ: 
-# - โหลดข้อมูลแบบเป็นภาพ
 # - เพิ่มรายละเอียดโมเดล และการวัดค่า sig ในแอป
 
 
@@ -57,7 +58,8 @@ library(INLA)
 inla.setOption(scale.model.default = TRUE)
 library(spdep) # อันนี้ใช้ nb2mat
 
-
+# remotes::install_github("dreamRs/capture")
+library(capture)
 
 
 # By default the file size limit is 5MB. Here limit is 70MB.
@@ -198,7 +200,7 @@ body <- dashboardBody(
                               
                               # เลยต้องแก้แบบนี้แทน 
                               div(style = "margin-left: 220px; margin-top: -40px;",
-                              bsButton("question_shapefile", label = "", icon = icon("question"), style = "primary"),
+                              bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
 
                               bsPopover(id = "question_shapefile", title = "Shapefile",
                                         content = paste0(strong("What is a shapefile? "),br(),
@@ -251,7 +253,7 @@ body <- dashboardBody(
                               
                               # เลยต้องแก้แบบนี้แทน 
                               div(style = "margin-left: 200px; margin-top: -40px;",
-                                  bsButton("question_csvfile", label = "", icon = icon("question"), style = "primary"),
+                                  bsButton("question_csvfile", label = "", icon = icon("question"), style = "Question"),
                                   
                                   bsPopover(id = "question_csvfile", title = "csv file",
                                             content = paste0(strong("The csv file "),br(),
@@ -454,6 +456,16 @@ body <- dashboardBody(
                            leafletOutput("map_distribution", height = "70vh"),
                            spin = "bounce", color = "#735DFB"
                          ),
+                         
+                         capture(
+                           selector = "#map_distribution",
+                           filename = paste("map_distribution-", Sys.Date(), ".png", sep=""),
+                           icon("camera"), "Take a Screenshot Map",
+                           scale = 3, # bigger scale
+                           options=list(backgroundColor = "white")
+                         )
+                         
+                         
                   # fluidRow(column(3,
                   #         offset=9,
                   #         actionButton("nextpage",
@@ -776,16 +788,9 @@ shinyApp(
 ###############################################################
 
   server <- function(input, output, session) { 
-    
-    #output$value1 <- renderPrint({ rv$map })
-    #output$value2 <- renderPrint({ rv$datosOriginal })
-    
-    #output$value3 <- renderPrint({ rv$datosOriginal })
-    #output$value4 <- renderPrint({ rv$datosOriginal$columnidareaindata })
-    #output$value5 <- renderPrint({ rv$columnidareaindata })
-    # output$value6 <- renderPrint({ input$columncasesindata })
-    
-    
+
+      
+      
     # แบบ text
     # output$status_map <- renderPrint({
     #   if (!is.null(input$filemap)) { 
