@@ -23,9 +23,9 @@ This application is part of ```Spatiotemporal Analysis with Application Developm
 3. Asst. Prof. Dr. Peerut Chienwichai
 
 ## Manual📗
-This manual includes step-by-step instructions on how to use each page of the application. 
+This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://github.com/mill-ornrakorn/STEHealth-Application/blob/feature-select-download/www/STEHealth_Application_Manual.pdf)
 
-![STEHealth_Manual]()
+![STEHealth_Manual](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/STEHealth_Application_Manual_cover.png?raw=true)
 
 
 ## Style Guide 🎨
