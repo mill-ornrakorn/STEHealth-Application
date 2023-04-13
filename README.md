@@ -2,12 +2,17 @@
 
 **STEHealth** (It stands for **S**patiotemporal **E**pidemiological **Health**) is a shiny application for analyzing space-time pattern, **cluster detection**, and **association with risk factors** of health outcomes, which allows users to import their own data, analyze, and visualize.
 
-This application is part of "Spatiotemporal Analysis with Application Development for Epidemiological Study of Suicide Mortality" senior project of the [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/). 
+This application is part of ```Spatiotemporal Analysis with Application Development for Epidemiological Study of Suicide Mortality 💀📝``` senior project of the [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/). 
 
+### 💡Feature
+1. Analysis for spatial and spatiotemporal epidemiological studies and ```cluster detection``` and ```association with risk factors```.
 
+2. ```Upload data``` for analysis into the application for analysis.
+
+3. ```Download results``` of analysis from the application.
 
 ### 📝Developer Team
-1.  [Papin Thanutchapat](https://github.com/Jappapin)
+1. [Papin Thanutchapat](https://github.com/Jappapin)
 2. [Chiraphat Phoncharoenwirote](https://github.com/Chiraphatt)
 3. [Ornrakorn Mekchaiporn](https://github.com/mill-ornrakorn)
 
@@ -16,6 +21,12 @@ This application is part of "Spatiotemporal Analysis with Application Developmen
 1. Dr. Unchalisa Taetragool
 2. Asst. Prof. Dr. Chawarat Rotejanaprasert
 3. Asst. Prof. Dr. Peerut Chienwichai
+
+## Manual📗
+This manual includes step-by-step instructions on how to use each page of the application. 
+
+![STEHealth_Manual]()
+
 
 ## Style Guide 🎨
 ![STEHealth_styleguide](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/STEHealth_styleguide.png?raw=true)
@@ -43,15 +54,19 @@ This application is part of "Spatiotemporal Analysis with Application Developmen
 [rgdal](https://cran.r-project.org/web/packages/shinyjs/index.html) | Provides bindings to Frank Warmerdam's Geospatial Data Abstraction Library (GDAL)
 [R-INLA](https://cran.r-project.org/web/packages/shinyjs/index.html)  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
 [spdep](https://cran.r-project.org/web/packages/spdep/index.html)| Spatial Dependence: Weighting Schemes, Statistics
+[capture](https://github.com/dreamRs/capture) | Add a button in Shiny application or R Markdown document to take a screenshot (PNG or PDF) of a specified element.
 
+### 🩹Limitations
+- Application can support only English.
+- Application works effectively on desktops only.
+- Installation packages must require because an application can not publish to shiny server on the [shinyapps.io](https://www.shinyapps.io/) website. However, we encountered a problem because shinyapps.io only supports packages that are located in CRAN, which is R’s central software repository supported by the R Foundation [2]. Unfortunately, the ```R-INLA package``` is not included in CRAN, which prevented us from deploying the app to the cloud.
 
+## References📖
+1. Paula Moraga (2017), SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. Spatial and Spatio-temporal Epidemiology, 23:47-57 DOI: https://doi.org/10.1016/j.sste.2017.08.001
 
-## References 📄
-- Paula Moraga (2017), SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. Spatial and Spatio-temporal Epidemiology, 23:47-57 DOI: https://doi.org/10.1016/j.sste.2017.08.001
+2. CRAN Repository Maintainers. (n.d.). CRAN Repository Policy. Retrieved from R-Packages website: https://cran.r-project.org/web/packages/policies.html
 
-
-
-##  **Credits Section**
+## Credits Section📄
 * logo of STEHealth application was modified from <a href="https://www.canva.com/templates/EAE6wliCycg-green-tosca-simple-business-logo/">logo by Ally Hamid</a> on Canva 
 
 * Image in Home page <a href="https://www.freepik.com/free-vector/business-landing-page-template_10263302.htm">created by pikisuperstar</a> on Freepik 

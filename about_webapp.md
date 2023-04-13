@@ -76,19 +76,10 @@ Code and data used for case study are available on
 [leaflet](https://cran.r-project.org/web/packages/shinyjs/index.html) | Create Interactive Web Maps with the JavaScript 'Leaflet' Library
 [RColorBrewer](https://cran.r-project.org/web/packages/shinyjs/index.html)  | Provides color schemes for maps and other graphics
 [rgdal](https://cran.r-project.org/web/packages/shinyjs/index.html) | Provides bindings to Frank Warmerdam's Geospatial Data Abstraction Library (GDAL)
-[R-INLA](https://cran.r-project.org/web/packages/shinyjs/index.html)  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
+[R-INLA](https://www.r-inla.org/)  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
 [spdep](https://cran.r-project.org/web/packages/spdep/index.html)| Spatial Dependence: Weighting Schemes, Statistics
+[capture](https://github.com/dreamRs/capture) | Add a button in Shiny application or R Markdown document to take a screenshot (PNG or PDF) of a specified element.
 
-
-<!--
-[geoR](https://cran.r-project.org/web/packages/geoR/index.html) | Geostatistical analysis including variogram-based, likelihood-based and Bayesian methods. Software companion for Diggle and Ribeiro
-[fields](https://cran.r-project.org/web/packages/fields/index.html)| Tools for Spatial Data  
-[lattice](https://cran.r-project.org/web/packages/lattice/index.html)| A powerful and elegant high-level data visualization system inspired by Trellis graphics, with an emphasis on multivariate data. Lattice is sufficient for typical graphics needs, and is also flexible enough to handle most nonstandard requirements. See ?Lattice for an introduction
-[abind](https://cran.r-project.org/web/packages/abind/index.html)| Combine multidimensional arrays into a single array. This is a generalization of 'cbind' and 'rbind'. Works with vectors, matrices, and higher-dimensional arrays. Also provides functions 'adrop', 'asub', and 'afill' for manipulating, extracting and replacing data in arrays
-[sf](https://cran.r-project.org/web/packages/sf/index.html)| Support for simple features, a standardized way to encode spatial vector data. Binds to 'GDAL' for reading and writing data, to 'GEOS' for geometrical operations, and to 'PROJ' for projection conversions and datum transformations. Uses by default the 's2' package for spherical geometry operations on ellipsoidal (long/lat) coordinates     
-[splancs](https://cran.r-project.org/web/packages/splancs/index.html)| The Splancs package was written as an enhancement to S-Plus for display and analysis of spatial point pattern data; it has been ported to R and is in "maintenance mode"
-[sp](https://cran.r-project.org/web/packages/sp/index.html)| Classes and methods for spatial data; the classes document where the spatial location information resides, for 2D or 3D data. Utility functions are provided, e.g. for plotting data as maps, spatial selection, as well as methods for retrieving coordinates, for subsetting, print, summary, etc          
--->
 
 
 ###  **References**

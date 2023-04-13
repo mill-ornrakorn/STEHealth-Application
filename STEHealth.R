@@ -858,10 +858,10 @@ shinyApp(
 
   server <- function(input, output, session) { 
   
-    observe(
-      print(paste(input$asso_select_column, collapse = ","))
-      
-      )
+    # observe(
+    #   print(paste(input$asso_select_column, collapse = ","))
+    #   
+    #   )
       
     # แบบ text
     # output$status_map <- renderPrint({

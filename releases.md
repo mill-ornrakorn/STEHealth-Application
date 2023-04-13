@@ -5,10 +5,23 @@
 ### **Version History**
 <img width="40px" height="10px" src="Rectangle.svg">
 
-* #### version 1.1 
+- #### version 1.1 
     ##### 1 May 2023
-    Fixed a 
+    This version according to **the usability test**:
+    - Added select column to download option in 'Association with Risk Factors' tap.
+    - Added download map option by pressing 'screenshot map' button.
+    - Added 'Releases' page.
+    - Added details about analysis in 'Upload Data' page.
+    - Added details about in 'Manual' page.
+    - Added details about model and how the significance is measured in 'Help' page.
+    - Added examples of interpretation on 'Spatiotemporal Epidemiological Analysis' page
+    - Added approach link to internal pages.
+    - Fixed manual is not displayed.
+    - Changed the 'time period' filter from slider to dropdown.
+    - Edited application manual.
+    - Edited the variable name on 'Association with Risk Factors' tap from 'percent_increase_riskfactor' is 'riskfactor_percent_increase'. According to the usability test, some users are unable to choose their preferred risk factor. Because on the screen of variable names, not all of them are visible, only the word front.
+    - Fixed bug of 'Download results' on 'Association with Risk Factors' tap that cannot be downloaded if less than 7 covariates are included.
 
-* #### version 1.0  
+- #### version 1.0  
     ##### 27 March 2023
-    Initial release
+    This version is **initial release**.
