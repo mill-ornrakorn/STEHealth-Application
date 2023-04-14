@@ -1,27 +1,29 @@
 
 # ================================================================
 
-# @13-4-23
+# @14-4-23
 # เพิ่ม:
-# - ลืงก์ไปยัง tap อื่น
-# - เพิ่มตัวอย่างแปลผลในหน้า analysis
-# - แก้บัคหน้าคู่มือ
-# - โหลดข้อมูลแบบเป็นภาพ
-# - เลือกส่วนที่อยากโหลด
-
+# - แก้บัคโหลดผลตอนใส่ cova 1 ตัว
+# - เพิ่ม fullscreen ใน map leaflet
+# - แก้ logo app
 
 # เหลือ: 
 # - เพิ่มรายละเอียดโมเดล และการวัดค่า sig ในแอป
 
 
 # อาจจะเพิ่มถ้าเวลาเหลือ:
+# - ทำ INTRODUCTION TOUR popup ขึ้นวิธีใช้
 # - ทำเป็น report
 # - แสดงตารางในหน้า asso
 # - เลือก model
 # - ตรงเลือกว่าประเทศไทย บังคับ
 
-
 # ของเก่าที่ทำไปแล้ว:
+# - ลืงก์ไปยัง tap อื่น
+# - เพิ่มตัวอย่างแปลผลในหน้า analysis
+# - แก้บัคหน้าคู่มือ
+# - โหลดข้อมูลแบบเป็นภาพ
+# - เลือกส่วนที่อยากโหลด
 # - เปลี่ยน time filter จาก slider เป็น dropdown
 # - ไม่ขึ้น error หน้าเว็บแล้ว
 # - แก้ชื่อตัวแปรใน asso เอา pi ไว้ข้างหลัง
@@ -61,7 +63,7 @@ library(spdep) # อันนี้ใช้ nb2mat
 
 # remotes::install_github("dreamRs/capture")
 library(capture)
-
+library(leaflet.extras)
 
 # By default the file size limit is 5MB. Here limit is 70MB.
 options(shiny.maxRequestSize = 70*1024^2)
@@ -2227,7 +2229,11 @@ shinyApp(
                                         #"Stamen Watercolor", "Stamen Toner"
                                         ),
                          position = c("topleft"),
-                         options = layersControlOptions(collapsed =  TRUE))
+                         options = layersControlOptions(collapsed =  TRUE)
+        ) %>%
+        addFullscreenControl()
+      
+      
 
     })
 
@@ -2307,9 +2313,11 @@ shinyApp(
           )%>%
           addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
                                           #"Stamen Watercolor", "Stamen Toner"
-          ),
-          position = c("topleft"),
-          options = layersControlOptions(collapsed =  TRUE))
+                                          ),
+                            position = c("topleft"),
+                            options = layersControlOptions(collapsed =  TRUE)
+          )%>%
+          addFullscreenControl()
         
         #labels  =  c("hotspot", "non-hotspot")
         
@@ -2475,58 +2483,11 @@ shinyApp(
         ) %>%
         addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
                                         #"Stamen Watercolor", "Stamen Toner"
-        ),
-        position = c("topleft"),
-        options = layersControlOptions(collapsed =  TRUE))
-      
-      
-      
-      
-      # อันเก่า
-      # association_wsf_df <- rv$association_wsf_df 
-      # 
-      # # datafiltered <- data
-      # # ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
-      # # map@data <- datafiltered[ordercounties, ]
-      # 
-      # # Create leaflet
-      # l <- leaflet(association_wsf_df) %>% addTiles()
-      # pal <- colorNumeric(palette = input$color_asso, domain = association_wsf_df[, input$risk_factor_filter])
-      # labels <- sprintf("<strong> %s </strong> <br/>  %s : %s ",
-      #                   association_wsf_df[, input$columnidareainmap] , input$risk_factor_filter, association_wsf_df[, input$risk_factor_filter]
-      # ) %>%
-      #   lapply(htmltools::HTML)
-      # 
-      # l %>%
-      #   addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
-      #   addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
-      #   addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
-      #   addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
-      #   #addProviderTiles(providers$Stamen.Watercolor, group = "Stamen Watercolor") %>%
-      #   #addProviderTiles(providers$Stamen.Toner, group = "Stamen Toner") %>%
-      #   
-      #   addPolygons(
-      #     color = "grey", weight = 1,
-      #     fillColor = ~ pal(association_wsf_df[, input$risk_factor_filter]), fillOpacity = 0.7,
-      #     highlightOptions = highlightOptions(weight = 4),
-      #     label = labels,
-      #     labelOptions = labelOptions(
-      #       style = list(
-      #         "font-weight" = "normal",
-      #         padding = "3px 8px"
-      #       ),
-      #       textsize = "15px", direction = "auto"
-      #     )
-      #   ) %>%
-      #   addLegend(
-      #     pal = pal, values = ~association_wsf_df[, input$risk_factor_filter], opacity = 0.7,
-      #     title = input$risk_factor_filter, position = "bottomright"
-      #   ) %>%
-      #   addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
-      #                                   #"Stamen Watercolor", "Stamen Toner"
-      #   ),
-      #   position = c("topleft"),
-      #   options = layersControlOptions(collapsed =  TRUE))
+                                        ),
+                                        position = c("topleft"),
+                                        options = layersControlOptions(collapsed =  TRUE)
+        )%>%
+        addFullscreenControl()
       
       
     })
@@ -2577,7 +2538,7 @@ shinyApp(
         
         # print("all null")
         
-      }else if (x1 != ""& x2== ""& x3== ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+      }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
         col_order <- c(input$columnidareainmap,
                        paste(input$columncov1indata,"_percent_increase", sep=""),
                        paste(input$columncov1indata,"_lowerbound", sep=""),
@@ -2750,7 +2711,7 @@ shinyApp(
           
           # print("all null")
           
-        }else if (x1 != ""& x2== ""& x3== ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
                          paste(input$columncov1indata,"_lowerbound", sep=""),
@@ -2894,7 +2855,7 @@ shinyApp(
           
           # print("all null")
           
-        }else if (x1 != ""& x2== ""& x3== ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
                          paste(input$columncov1indata,"_upperbound", sep=""),
@@ -3038,7 +2999,7 @@ shinyApp(
           
           # print("all null")
           
-        }else if (x1 != ""& x2== ""& x3== ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
                          paste(input$columncov1indata,"_lowerbound", sep=""),
@@ -3182,7 +3143,7 @@ shinyApp(
           
           # print("all null")
           
-        }else if (x1 != ""& x2== ""& x3== ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
                          paste(input$columncov1indata,"_lowerbound", sep=""))
@@ -3299,7 +3260,7 @@ shinyApp(
           
           # print("all null")
           
-        }else if (x1 != ""& x2== ""& x3== ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
                          paste(input$columncov1indata,"_upperbound", sep=""))
@@ -3416,7 +3377,7 @@ shinyApp(
           
           # print("all null")
           
-        }else if (x1 != ""& x2== ""& x3== ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
                          paste(input$columncov1indata,"_significance", sep=""))
@@ -3536,7 +3497,7 @@ shinyApp(
       
       # print("all null")
       
-    }else if (x1 != ""& x2== ""& x3== ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+    }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
       col_order <- c(input$columnidareainmap,
                      paste(input$columncov1indata,"_percent_increase", sep=""))
       

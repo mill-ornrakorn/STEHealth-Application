@@ -8,12 +8,13 @@
 - #### version 1.1 
     ##### 1 May 2023
     This version according to **the usability test**:
+    - Added 'fullscreen' button in all map.
     - Added select column to download option in 'Association with Risk Factors' tap.
     - Added download map option by pressing 'screenshot map' button.
     - Added 'Releases' page.
     - Added details about analysis in 'Upload Data' page.
     - Added details about in 'Manual' page.
-    - Added details about model and how the significance is measured in 'Help' page.
+    <!-- - Added details about model and how the significance is measured in 'Help' page. -->
     - Added examples of interpretation on 'Spatiotemporal Epidemiological Analysis' page
     - Added approach link to internal pages.
     - Fixed manual is not displayed.
