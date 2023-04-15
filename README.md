@@ -12,9 +12,9 @@ This application is part of ```Spatiotemporal Analysis with Application Developm
 3. ```Download results``` of analysis from the application.
 
 ### 📝Developer Team
-1. [Papin Thanutchapat](https://github.com/Jappapin)
-2. [Chiraphat Phoncharoenwirote](https://github.com/Chiraphatt)
-3. [Ornrakorn Mekchaiporn](https://github.com/mill-ornrakorn)
+1. [Papin Thanutchapat](https://github.com/Jappapin); Space-time pattern detection model and association with risk factors for suicide.
+2. [Chiraphat Phoncharoenwirote](https://github.com/Chiraphatt); Insights information of spatiotemporal epidemiology of suicide mortality and association with risk factors analysis.
+3. [Ornrakorn Mekchaiporn](https://github.com/mill-ornrakorn); Application design and development.
 
 
 ### 📚Advisor
@@ -25,8 +25,9 @@ This application is part of ```Spatiotemporal Analysis with Application Developm
 ## Manual📗
 This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://github.com/mill-ornrakorn/STEHealth-Application/blob/feature-select-download/www/STEHealth_Application_Manual.pdf)
 
-![STEHealth_Manual](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/STEHealth_Application_Manual_cover.png?raw=true)
-
+<p align="center">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/STEHealth_Application_Manual_cover.png?raw=true" alt= “STEHealth_Manual” height="600">
+</p>
 
 ## Style Guide 🎨
 ![STEHealth_styleguide](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/STEHealth_styleguide.png?raw=true)
@@ -59,7 +60,7 @@ This manual includes step-by-step instructions on how to use each page of the ap
 ### 🩹Limitations
 - Application can support only English.
 - Application works effectively on desktops only.
-- Installation packages must require because an application can not publish to shiny server on the [shinyapps.io](https://www.shinyapps.io/) website. However, we encountered a problem because shinyapps.io only supports packages that are located in CRAN, which is R’s central software repository supported by the R Foundation [2]. Unfortunately, the ```R-INLA package``` is not included in CRAN, which prevented us from deploying the app to the cloud.
+- Installation packages must require because an application can not publish to shiny server on the [shinyapps.io](https://www.shinyapps.io/) website. However, we encountered a problem because shinyapps.io only supports packages that are located in CRAN, which is R’s central software repository supported by the R Foundation [[2]](https://cran.r-project.org/web/packages/policies.html). Unfortunately, the ```R-INLA package``` is not included in CRAN, which prevented us from deploying the app to the cloud.
 
 ## References📖
 1. Paula Moraga (2017), SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. Spatial and Spatio-temporal Epidemiology, 23:47-57 DOI: https://doi.org/10.1016/j.sste.2017.08.001
