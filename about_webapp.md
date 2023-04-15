@@ -39,9 +39,9 @@ Code and data used for case study are available on
 ###  **Developer**
 <img width="40px" height="10px" src="Rectangle.svg">
 
-1. **Papin Thanutchapat**; Space-time pattern detection model and association with risk factors for suicide.
-2. **Chiraphat Phoncharoenwirote**; Insights information of spatiotemporal epidemiology of suicide mortality and association with risk factors analysis.
-3. **Ornrakorn Mekchaiporn**; Application design and development.
+1. Papin Thanutchapat
+2. Chiraphat Phoncharoenwirote
+3. Ornrakorn Mekchaiporn
 
 
 ###  **Advisor**
@@ -74,7 +74,6 @@ Code and data used for case study are available on
 [dplyr](https://cran.r-project.org/web/packages/shinyjs/index.html)  | A fast, consistent tool for working with data frame like objects, both in memory and out of memory
 [ggplot2](https://cran.r-project.org/web/packages/shinyjs/index.html)   | Creates elegant data visualisations using the grammar of graphics
 [leaflet](https://cran.r-project.org/web/packages/shinyjs/index.html) | Create Interactive Web Maps with the JavaScript 'Leaflet' Library
-[leaflet.extras](https://cran.r-project.org/web/packages/leaflet.extras/index.html) | The 'leaflet' JavaScript library provides many plugins some of which are available in the core 'leaflet' package, but there are many more. It is not possible to support them all in the core 'leaflet' package. This package serves as an add-on to the 'leaflet' package by providing extra functionality via 'leaflet' plugins.
 [RColorBrewer](https://cran.r-project.org/web/packages/shinyjs/index.html)  | Provides color schemes for maps and other graphics
 [rgdal](https://cran.r-project.org/web/packages/shinyjs/index.html) | Provides bindings to Frank Warmerdam's Geospatial Data Abstraction Library (GDAL)
 [R-INLA](https://www.r-inla.org/)  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
