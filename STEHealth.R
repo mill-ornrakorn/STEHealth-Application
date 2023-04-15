@@ -84,6 +84,10 @@ body <- dashboardBody(
           }
         " ), # ทำให้ checkboxGroupInput เรียงเป็นระเบียบ
     
+    tags$style('.well { 
+               border-color: #FFFFFF;
+               }'), # สีกรอบ sidebar
+      
     tags$script(src="js/index.js") # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่น ๆ
 
 
@@ -363,17 +367,25 @@ body <- dashboardBody(
                   ))),
       
       # ==================================== Map_Distribution ==================================== 
+      # sidebarLayout(
+      #   
+      #   sidebarPanel(
+      # mainPanel
       
       tabItem(tabName = "Map_Distribution",
               HTML("<div class = 'heading_container'>
                      <h1>Map Distribution</h1>
                    </div>"),
-              fluidRow(
-                column(12,
-                div(class = "box-gray", 
-                    # class = "box",
-                    # status = "primary",
-                    # style = "padding: 20px 20px 20px 20px;",
+              div(class = "box-gray", 
+          sidebarLayout(
+           sidebarPanel(
+              #fluidRow(
+                #column(12,
+                
+                    #class = "box",
+                    
+                        style = "height: 80vh; overflow-y: auto;",
+                    #style = "padding: 5%;",
                 fluidRow(
                   column(3,
                           HTML("<div class='box-gray'>
@@ -442,16 +454,16 @@ body <- dashboardBody(
                                 ))
                          
                          
-                  ), 
+                  )
                   
-                  column(9,
-                         #\verbatimTextOutput("status_map_dis"),
-                         uiOutput("status_map_dis"),
-                         #leafletOutput("map_distribution", height = "70vh")
-                         addSpinner(
-                           leafletOutput("map_distribution", height = "75vh"),
-                           spin = "bounce", color = "#735DFB"
-                         )
+                  # column(9,
+                  #        #\verbatimTextOutput("status_map_dis"),
+                  #        uiOutput("status_map_dis"),
+                  #        #leafletOutput("map_distribution", height = "70vh")
+                  #        addSpinner(
+                  #          leafletOutput("map_distribution", height = "75vh"),
+                  #          spin = "bounce", color = "#735DFB"
+                  #        )
                          
                          
                   # fluidRow(column(3,
@@ -465,13 +477,20 @@ body <- dashboardBody(
                   #         ))    
                          
                   )
-                )
+                
               )
                          
                          
           
-              )
-              )
+              ,
+           mainPanel(uiOutput("status_map_dis"),
+                     #leafletOutput("map_distribution", height = "70vh")
+                     addSpinner(
+                       leafletOutput("map_distribution", height = "75vh"),
+                       spin = "bounce", color = "#735DFB")
+           
+           )
+              ))
               
               ),
               

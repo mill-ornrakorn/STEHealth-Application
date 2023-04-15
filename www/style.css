@@ -3,6 +3,11 @@
   font-family: 'Poppins', sans-serif; /*!important ใส่ไม่ได้เพราะเหมือน iconบางส่วนหาย*/
 }
 
+html{
+  font-size: calc(60% + 0.8vmin);
+}
+
+
 .nav-tabs-custom .nav-tabs li.active {
     border-top-color: #735DFB;
 }
