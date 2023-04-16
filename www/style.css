@@ -7,6 +7,14 @@ html{
   font-size: calc(60% + 0.8vmin);
 }
 
+a {
+  color: #6c5dde;
+}
+
+a:hover{
+  color: #9389e4;
+}
+
 
 .nav-tabs-custom .nav-tabs li.active {
     border-top-color: #735DFB;
@@ -132,7 +140,7 @@ html{
 
 
 
-/* ปุ่มที่เป็นขอบ */
+/* ปุ่มที่เป็นขอบ หน้าแรก */
 .btn-outline-primary,  .btn-outline-primary:active, 
 .btn-outline-primary:visited {
   color: #735DFB;
@@ -169,6 +177,28 @@ html{
   background-color: #735DFB !important;
   
 }
+
+
+/* ปุ่มที่เป็นขอบ หน้าอื่น */
+.btn-outline-primary2,  .btn-outline-primary2:active, 
+.btn-outline-primary2:visited {
+  color: #735DFB;
+  background-color: #FFF;
+  border-color: #735DFB;
+  border-radius: 100px;
+  
+  padding-left: 15px;
+  padding-right: 15px;
+  
+  
+} 
+
+.btn-outline-primary2:hover{
+  color: #FFF;
+  background-color: #8673fb !important;
+  
+}
+
 
 
 .heading_container h1 {
@@ -212,49 +242,9 @@ h2, h3, h4, h5 {
 
 .box-gray h4, .box-gray h5{
   text-align: left; 
-  color: #5549b2;
-  
-
-
+  color: #735DFB;
 }
 
-
-.box-gray-1 {
-  background: #FFFFFF; 
-  /* background: #EFEFEF; > */
-  box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
-  border-radius: 14px;
-
-  text-align: justify; 
-
-  padding-left: 40px; 
-  padding-right: 40px; 
-  padding-top: 20px; 
-  padding-bottom: 20px;
-  
-  margin-bottom: 20px;
-  margin-right: 20px;
-
-  /* 
-  max-width: 400px;
-  height: 25vh;
-   */
-  
-}
-
-.box-gray-1 h4, h5{
-  text-align: left; 
-  color: #5549b2;
-
-}
-
-.box-gray-1 a{
-  color: #5549b2;
-}
-
-.box-gray-1 a:hover{
-  color: #9389e4;
-}
 
 
 .box-purple {
@@ -279,7 +269,11 @@ h2, h3, h4, h5 {
 
 .box-purple h4, h5{
   text-align: left; 
+  color: #5549b2;
+   /* 
   color: #403a68;
+   */
+
 }
 
 .box-purple a{

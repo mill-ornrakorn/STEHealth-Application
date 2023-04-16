@@ -419,15 +419,16 @@ body <- dashboardBody(
                          
                          div(
                            class = "box-gray",
-                         HTML('<h5>
+                         HTML('<h4>
                                 Capture screenshot
-                               </h5>
+                               </h4>
                                <p>
                                 Take a screenshot of map. The captured image is downloaded as a PNG image.
                                </p>
                               '),
                          
                          capture(
+                           class="btn btn-outline-primary2",
                            selector = "#map_distribution",
                            filename = paste("map_distribution-", Sys.Date(), ".png", sep=""),
                            icon("camera"), "Screenshot Map",
@@ -489,7 +490,7 @@ body <- dashboardBody(
                                   fluidRow(
                                     column(12,
                                            div(
-                                             class = "box-gray-1",
+                                             class = "box-gray",
                                              tags$img(align='left',width='52px',height='52px',src='cluster.png',style='margin-top: 10px; margin-right: 10px'),
                                              tags$h4("Cluster Detection"),
                                              HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
@@ -536,6 +537,7 @@ body <- dashboardBody(
                                              
                                            
                                              downloadButton("downloadData_cluster", "Download (.csv)", 
+                                                            class="btn btn-outline-primary2",
                                                             style = "border-radius: 100px;"), 
                                              
                                              HTML('</br>
@@ -550,6 +552,7 @@ body <- dashboardBody(
                                                   '),
                                              
                                              capture(
+                                               class="btn btn-outline-primary2",
                                                selector = "#map_cluster",
                                                filename = paste("map_cluster-", Sys.Date(), ".png", sep=""),
                                                icon("camera"), "Screenshot Map",
@@ -612,7 +615,7 @@ body <- dashboardBody(
                                   fluidRow(
                                     column(12,
                                            div(
-                                             class = "box-gray-1",
+                                             class = "box-gray",
                                              HTML("
                                             <img align='left' width='52px' height='52px' src='risk.png' style='margin-top: 10px; margin-right: 10px' >
                                             <h4>Association with Risk Factors</h4>
@@ -656,6 +659,7 @@ body <- dashboardBody(
                                       
                                       
                                       downloadButton("downloadData_asso_risk", "Download (.csv)", 
+                                                     class="btn btn-outline-primary2",
                                                      style = "border-radius: 100px;"),
                                       
                                       
@@ -670,6 +674,7 @@ body <- dashboardBody(
                                            '),
                                       
                                       capture(
+                                        class="btn btn-outline-primary2",
                                         selector = "#map_risk_fac",
                                         filename = paste("map_risk_fac-", Sys.Date(), ".png", sep=""),
                                         icon("camera"), "Screenshot Map",
