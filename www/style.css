@@ -16,6 +16,31 @@ a:hover{
 }
 
 
+
+h2, h3, h4, h5 {
+  font-family: 'Poppins';
+  font-weight: bold;
+
+}
+
+
+h5{
+  text-align: left; 
+  color: #735DFB;
+   /* 
+  color: #403a68; 
+   */
+
+}
+
+
+.heading_container h1 {
+  font-family: 'Poppins';
+  color: #735DFB;
+  font-weight: bold;
+
+}
+
 .nav-tabs-custom .nav-tabs li.active {
     border-top-color: #735DFB;
 }
@@ -200,22 +225,6 @@ a:hover{
 }
 
 
-
-.heading_container h1 {
-  font-family: 'Poppins';
-  color: #735DFB;
-  font-weight: bold;
-
-}
-
-
-h2, h3, h4, h5 {
-  font-family: 'Poppins';
-  font-weight: bold;
-
-}
-
-
 .box-gray {
   background: #FFFFFF; 
   /* background: #EFEFEF; > */
@@ -267,7 +276,7 @@ h2, h3, h4, h5 {
 }
 
 
-.box-purple h4, h5{
+.box-purple h4, .box-purple h5{
   text-align: left; 
   color: #5549b2;
    /* 
