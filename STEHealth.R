@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @14-4-23
+# @16-4-23
 
 # ================================================================
 
@@ -367,11 +367,7 @@ body <- dashboardBody(
                   ))),
       
       # ==================================== Map_Distribution ==================================== 
-      # sidebarLayout(
-      #   
-      #   sidebarPanel(
-      # mainPanel
-      
+  
       tabItem(tabName = "Map_Distribution",
               HTML("<div class = 'heading_container'>
                      <h1>Map Distribution</h1>
@@ -387,7 +383,7 @@ body <- dashboardBody(
                         style = "height: 80vh; overflow-y: auto;",
                     #style = "padding: 5%;",
                 fluidRow(
-                  column(3,
+                  column(12,
                           HTML("<div class='box-gray'>
                                              
                                             <img align='left' width='52px'; height='52px'; src='mapdis.png' style = 'margin-top: 10px; margin-right: 10px;' >
@@ -455,27 +451,6 @@ body <- dashboardBody(
                          
                          
                   )
-                  
-                  # column(9,
-                  #        #\verbatimTextOutput("status_map_dis"),
-                  #        uiOutput("status_map_dis"),
-                  #        #leafletOutput("map_distribution", height = "70vh")
-                  #        addSpinner(
-                  #          leafletOutput("map_distribution", height = "75vh"),
-                  #          spin = "bounce", color = "#735DFB"
-                  #        )
-                         
-                         
-                  # fluidRow(column(3,
-                  #         offset=9,
-                  #         actionButton("nextpage",
-                  #                    strong("Go to analysis page ►"), 
-                  #                    onclick = "$('li:eq(3) a').tab('show');",
-                  #                    class = 'btn-primary',
-                  #                    style='color: #FFFFFF; margin-top: 20px;'
-                  #                     )
-                  #         ))    
-                         
                   )
                 
               )
@@ -495,6 +470,7 @@ body <- dashboardBody(
               ),
               
           # ==================================== Analysis ==================================== 
+      
           tabItem(
             tabName = "Analysis",
                   HTML("
@@ -503,89 +479,17 @@ body <- dashboardBody(
                    </div>"),
                   
                   tabBox(width=12,id="tabBox_next_previous",
-                         # tabPanel(HTML("<h4>Model Setting</h4>"),
-                         #          fluidRow(
-                         #            column(3,
-                         #            fluidRow(column(4, offset=4, actionButton("startAnalysisButton",
-                         #                                                    strong("Start analysis"),
-                         #                                                    #onclick = "$('li:eq(2) a').tab('show');",
-                         #                                                    class = 'btn-primary',
-                         #                                                    style='color: #FFFFFF;'
-                         #                                                    )))
-                         #          ))
-                         #          ),
-                         
-                         # tabPanel(HTML("<h4>Map Distribution</h4>"),
-                         #   fluidRow(
-                         #     column(3,
-                         #              HTML("
-                         #                  <div class='box-gray'>
-                         #                     
-                         #                    <img align='left' width='52px'; height='52px'; src='mapdis.png' style = 'margin-top: 10px; margin-right: 10px;' >
-                         #                
-                         #                    <h4>Map Distribution Tap</h4>
-                         #                    <p>
-                         #                      The Map Distribution Tap displays an interactive distribution map of the user uploaded shapefile 
-                         #                      and csv file on the Upload data page using <strong>case column</strong> to plot. 
-                         #                      Users can visualize and select filters including time period and color scheme.
-                         #                    </p>
-                         #                   
-                         #                  </div>
-                         #                   "),
-                         #      
-                         #            
-                         #        
-                         #        div(
-                         #          class = "box-gray",
-                         #          HTML("<h4>Fillter</h4>"),
-                         #          
-                         #          # เลือกช่วงเวลา
-                         #          sliderInput("time_period_filter", label = "Time Period:" , min = 1 ,
-                         #                      max = 10 , value = 1, step = 1),
-                         #          
-                         #          #selectInput("time_period_filter", label = "Time Period:", choices = c(""), selected = ""),
-                         #          
-                         #      
-                         #          # เลือกสีแมพ
-                         #          selectInput("color", label = "Color Scheme:", 
-                         #                      choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
-                         #                                     "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
-                         #          ),
-                         #        #HTML("</br>"),
-                         #        #verbatimTextOutput("status_map_dis")
-                         #        
-                         # 
-                         # 
-                         #   ), 
-                         #   
-                         #   column(9,
-                         #          #\verbatimTextOutput("status_map_dis"),
-                         #          uiOutput("status_map_dis"),
-                         #          #leafletOutput("map_distribution", height = "70vh")
-                         #          addSpinner(
-                         #            leafletOutput("map_distribution", height = "70vh"),
-                         #            spin = "bounce", color = "#735DFB"
-                         #                    )
-                         #   
-                         #   
-                         #          ))),
-                         
                          
                          # ==================================== Cluster Detection ==================================== 
                          
                          tabPanel(HTML("<h4>Cluster Detection</h4>"),
+                              sidebarLayout(
+                                sidebarPanel(
+                                  style = "height: 80vh; overflow-y: auto;",
                                   fluidRow(
-                                    column(3,
-                                           # <img align='left' width='52px' height='52px' src='cluster.png' style='margin-top: 10px; margin-right: 10px' >
-                                           # <h4>Cluster Detection</h4>
-                                           # <p>
-                                           # The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong> and <strong>non-hotspot</strong>. 
-                                           # Users can visualize and select filters including time period and color scheme. For details of the model, please refer to the 
-                                           #   <a onclick='customHref('Help')'>Help page</a>.
-                                           # </p>
-                                           
+                                    column(12,
                                            div(
-                                             class = "box-gray",
+                                             class = "box-gray-1",
                                              tags$img(align='left',width='52px',height='52px',src='cluster.png',style='margin-top: 10px; margin-right: 10px'),
                                              tags$h4("Cluster Detection"),
                                              HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
@@ -594,17 +498,7 @@ body <- dashboardBody(
                                              
                                            ),
                                            
-                                           # เลือกสีแมพ
-                                           # selectInput("color_cluster", label = "Color Scheme:", 
-                                           #             choices = list("Red and Yellow" = c("#e65d5d", "#f9ac66"),
-                                           #                            "Red and Blue" = c("#e65d5d", "#4e53b4"), 
-                                           #                            "Yellow and Blue" = c("#f9ac66", "#4e53b4"),
-                                           #                            "Purple and Yellow" = c("#b95eb3", "#f9ac66"),
-                                           #                            "Green and Blue" = c("#3fae80", "#4e53b4"),
-                                           #                            "Green and Yellow" = c("#3fae80", "#f9ac66")
-                                           #                            )
-                                           #             )
-                                           
+                                      
                                            div(
                                              class = "box-gray",
                                              HTML("<h4>Fillter</h4>"),
@@ -665,44 +559,63 @@ body <- dashboardBody(
                                              )
                                                       
                                            
+                                           ),
+                                           
+                                           
+                                           div(
+                                             class = "box-purple",
+                                             HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                            • If the area has a <strong>hotspot</strong>: </br>
+                                              &emsp;In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides). 
+                                              
+                                              </br></br>
+                                              For other examples of interpretation, please refer to the
+                                            "
+                                             ),
+                                             tags$a("Manual page.", onclick="customHref('Manual')")
                                            )
                                   
 
 
                                       ),
-                                  column(9,
-                                    uiOutput("status_cluster"),
-                                    verbatimTextOutput("map_cluster_value"),
-                                    #leafletOutput("map_cluster", height = "70vh")
-                                    addSpinner(
-                                      leafletOutput("map_cluster", height = "75vh"),
-                                      spin = "bounce", color = "#735DFB"
-                                              ),
+                                  
                                     
-                                    div(
-                                    HTML("<h4>Examples of interpretation (from sample data)</h4>
-                                            If the area has a <strong>hotspot</strong>: </br>
-                                              In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides).
-                                              For other examples of interpretation, please refer to the
-                                            "
-                                         ),
-                                    tags$a("Manual page.", onclick="customHref('Manual')")
 
-                                        )
-                                        )
-                                      )
+                                        
+                                        
+                                      )),
+                                
+                                mainPanel(
+                                          uiOutput("status_cluster"),
+                                          verbatimTextOutput("map_cluster_value"),
+                                          #leafletOutput("map_cluster", height = "70vh")
+                                          addSpinner(
+                                            leafletOutput("map_cluster", height = "80vh"),
+                                            spin = "bounce", color = "#735DFB"
+                                          )
+                                          
+                                          
+                                          )
+                                
+                                
+                                )
                                   ),
                          
                          # ==================================== Association with Risk Factors ==================================== 
-                         
+                         # sidebarLayout(
+                         #   
+                         #   sidebarPanel(
+                         # mainPanel
                          tabPanel(HTML("<h4>Association with Risk Factors</h4>"),
+                              sidebarLayout(
+                                sidebarPanel(style = "height: 80vh; overflow-y: auto;",
                                   fluidRow(
-                                    column(3,
+                                    column(12,
                                            div(
-                                             class = "box-gray",
+                                             class = "box-gray-1",
                                              HTML("
                                             <img align='left' width='52px' height='52px' src='risk.png' style='margin-top: 10px; margin-right: 10px' >
-                                            <h5>Association with Risk Factors</h5>
+                                            <h4>Association with Risk Factors</h4>
                                             
                                              
                                              This tab displays an association between risk factors and case outcomes. 
@@ -766,27 +679,52 @@ body <- dashboardBody(
                                       )
                                       
                                       
+                                    ),
+                                    
+                                    div(
+                                      class = "box-purple",
+                                      HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                            • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
+                                              &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
+                                              the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
+                                            
+                                            </br></br> 
+                                            • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
+                                              &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
+                                              the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
+                                            
+                                            </br></br>     
+                                            •If the significance is <strong>not significant</strong>: </br>  
+                                              &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
+                                            
+                                            </br></br>   
+                                              For other examples of interpretation, please refer to the
+                                             "),
+                                      tags$a("Manual page.", onclick="customHref('Manual')")
+                                    
                                     )
 
                                            
-                                    ),
-                                    column(9,
-                                           uiOutput("status_risk_fac"),
-                                           verbatimTextOutput("status_risk_fac_nocova"),
-                                           addSpinner(
-                                             leafletOutput("map_risk_fac", height = "80vh"),
-                                             spin = "bounce", color = "#735DFB"
-                                           ),
-                                           HTML("<h4>Examples of interpretation (from sample data)</h4>
-                                            If the significance is <strong>significant</strong> and value is <strong>positive (+)</strong>: </br>
-                                              In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
-                                              the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
-                                              For other examples of interpretation, please refer to the
-                                             "),
-                                           tags$a("Manual page.", onclick="customHref('Manual')")
-                                           
                                     )
+                                   
+                                           
+                                           
+                                    
                                   )
+                         ),
+                         
+                         mainPanel(
+                           uiOutput("status_risk_fac"),
+                                   verbatimTextOutput("status_risk_fac_nocova"),
+                                   addSpinner(
+                                     leafletOutput("map_risk_fac", height = "80vh"),
+                                     spin = "bounce", color = "#735DFB"
+                                   )
+                                   
+                           
+                         )
+                         
+                         )
 
 
                                 )
@@ -839,38 +777,6 @@ shinyApp(
 
   server <- function(input, output, session) { 
   
-    # observe(
-    #   print(paste(input$asso_select_column, collapse = ","))
-    #   
-    #   )
-      
-    # แบบ text
-    # output$status_map <- renderPrint({
-    #   if (!is.null(input$filemap)) { 
-    #     return("Upload data complete.")
-    #   } else {
-    #     return("Please upload data to preview data.")
-    #   }
-    # })
-    # 
-    
-    # แบบ text
-    # output$status_map <- renderPrint({
-    #   if (is.null(input$filemap)) { 
-    #    return(HTML('Please upload "shapefile" to preview data.'))
-    #   } 
-    # })
-    
-    # แบบรูป position:absolute
-    # output$status_map <- renderUI({
-    #   if (is.null(input$filemap)) { 
-    #     HTML("<p style='margin-top: 60px; margin-bottom: 60px; left: 35%; position:absolute;'> 
-    #      <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>")
-    #     
-    #   } 
-    # })
-    
-    
     # แบบรูปไม่ position:absolute
     output$status_map <- renderUI({
       if (is.null(input$filemap)) { 
@@ -906,7 +812,7 @@ shinyApp(
     
     output$status_map_dis <- renderUI({
       if (is.null(input$filemap) &  is.null(input$file1)) { 
-      HTML("<p style='margin-top: 20px; left: 20%; position:absolute;'> 
+      HTML("<p style='margin-top: 10%; left: 10%; position:absolute;'> 
          <img src='undraw_world_re.svg',  height  = '500px', width = '700px'>")
         
       } 
@@ -923,7 +829,7 @@ shinyApp(
     
     output$status_cluster <- renderUI({
       if (is.null(input$filemap) &  is.null(input$file1)) {
-        HTML("<p style='margin-top: 100px; left: 25%; position:absolute;'>
+        HTML("<p style='margin-top: 15%; left: 15%; position:absolute;'>
          <img src='undraw_location_search_re.svg',  height  = '450px', width = '600px'>")
 
       }
@@ -950,7 +856,7 @@ shinyApp(
     
     output$status_risk_fac <- renderUI({
       if (is.null(input$filemap) &  is.null(input$file1)) { 
-        HTML("<p style='margin-top: 100px; left: 25%; position:absolute;'>
+        HTML("<p style='margin-top: 15%; left: 15%; position:absolute;'>
          <img src='undraw_adventure_re.svg',  height  = '450px', width = '600px'>")
         
       } 
@@ -966,7 +872,7 @@ shinyApp(
       x7 <- input$columncov7indata
       
       if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-        return(HTML('There are no covariates have been select !'))
+        return(HTML('📌 There are no covariates have been select ❗'))
       }
       
       
