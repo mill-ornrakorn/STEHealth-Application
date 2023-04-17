@@ -8,7 +8,7 @@
 <!--<div style = "width:40px; height:5px; background: #735DFB;"> </div>-->
 
 <!-- ใส่ว่าเว็บมีกี่หน้า และอธิยบายแต่ละหน้าคืออะไรอย่างละเอียด -->
-The application consists of seven pages:
+The application consists of eight pages:
 
 **1.Home page**
 
@@ -52,6 +52,11 @@ The application consists of seven pages:
 **7.Help page**
 
 &emsp;&emsp; The "help" page is a page that describes structure of each page, dependencies, and data used for case study of the  application.
+
+
+**8.Releases page**
+
+&emsp;&emsp;  The "Releases" page is a page that describes version history of application.
 
 
 ### **Sample Data**

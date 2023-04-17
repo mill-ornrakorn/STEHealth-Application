@@ -3,39 +3,222 @@
   font-family: 'Poppins', sans-serif; /*!important ใส่ไม่ได้เพราะเหมือน iconบางส่วนหาย*/
 }
 
+html{
+  font-size: calc(60% + 0.8vmin);
+}
+
+a {
+  color: #6c5dde;
+}
+
+a:hover{
+  color: #9389e4;
+}
+
+
+
+h2, h3, h4, h5 {
+  font-family: 'Poppins';
+  font-weight: bold;
+
+}
+
+
+h5{
+  text-align: left; 
+  color: #735DFB;
+   /* 
+  color: #403a68; 
+   */
+
+}
+
+/* Space between the Sidebar Menu Items*/
+.sidebar-menu li { 
+  margin-bottom: 10px; 
+}
+
+
+.heading_container h1 {
+  font-family: 'Poppins';
+  color: #735DFB;
+  font-weight: bold;
+
+}
+
 .nav-tabs-custom .nav-tabs li.active {
     border-top-color: #735DFB;
 }
 
 
-
 /* logo */
 .skin-purple .main-header .logo {
-          background-color: #735DFB;
+          background-color: #ffffff;
         }
         
 /* logo when hovered */
  .skin-purple .main-header .logo:hover {
-          background-color: #735DFB;
+          background-color: #ffffff;
         }
         
 /* navbar (rest of the header) */
 .skin-purple .main-header .navbar  {
-          background-color: #735DFB;
+          background-color: #ffffff;
+          box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
         }
-         
+
+.skin-purple .main-header .navbar .sidebar-toggle {
+        color: #5c5c68;
+        background-color: #ffffff;
+       }
+        
 /* toggle button when hovered  */
 .skin-purple .main-header .navbar .sidebar-toggle:hover {
-          background-color: #735DFB;
+        color: #735DFB;
+        background-color: #ffffff;
         }
         
+/* main sidebar  color: #FFF;*/
+.skin-purple .main-sidebar {
+  background-color: #ffffff;
+  box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
+  
+      }
+
+/* active selected tab in the sidebarmenu */
+.skin-purple .main-sidebar .sidebar .sidebar-menu .active a{
+  color: #ffffff;
+  background-color: #735DFB;
+  border-radius: 100px;
+  box-shadow: 1px 3px 18px -2px rgba(46, 45, 49, 0.416);
+  }
+
+.skin-purple .main-sidebar .sidebar .sidebar-menu .active a:hover{
+    color: #ffffff;
+    background-color: #735DFB;
+    border-radius: 100px;
+    box-shadow: 1px 3px 18px -2px rgba(46, 45, 49, 0.416);
+  }
+
+/* active selected tab in the sidebarmenu */
+.skin-purple .main-sidebar .sidebar .sidebar-menu a:hover{
+  color: #735DFB;
+  background-color: #ffffff;
+  }
+
+
+.skin-purple .main-sidebar .sidebar .sidebar-menu a{
+    color: #5c5c68;
+    }
+
+
+
 /* body */
 .content-wrapper, .right-side {
           background-color: #ECF0F5;
         }
-        
-       
-          
+
+/* tabPanel */
+.nav-tabs-custom .nav-tabs li.active {
+  border-top-color: #735DFB;
+  border-top-width: 3px;
+
+ 
+}
+
+.nav-tabs-custom>.nav-tabs>li.active>a {
+  border-right-color: #e4e5fa;
+  border-right-width: 2px;
+
+  border-left-color: #e4e5fa;
+  border-left-width: 2px;
+
+}
+
+
+.nav-tabs-custom>.nav-tabs {
+  border-bottom-color: #e4e5fa;
+  border-bottom-width: 2px;
+}
+
+
+
+
+/* แทบ progress อัปข้อมูล */
+.progress-bar{
+  background-color:#735DFB;
+}      
+
+
+/* DataTable */
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+  z-index: 3;
+  color: #fff;
+  cursor: default;
+  background-color: #735DFB;
+  border-color: #735DFB;
+}
+
+
+/* radioButtons  from https://stackoverflow.com/questions/66437237/css-rshiny-widgets-how-to-color-the-radiobuttons-and-checkboxgroupinput */
+label > input[type='radio'] {
+  opacity: 0;
+  position: absolute;
+}
+label > input[type='radio'] + *::before {
+  content: '';
+  margin: 4px 0 0;
+  width: 13px;
+  height: 13px;
+  position: absolute;
+  margin-left: -20px;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 0.1rem;
+  border-color: #735DFB;
+}
+label > input[type='radio']:checked + *::before {
+  background: radial-gradient(white 0%, white 30%, #735DFB 30%, #735DFB);
+  border-color: #735DFB;
+}
+
+/*
+
+input:checked + span {
+  color: #735DFB;
+}
+
+
+label > input[type='checkbox'] {
+  opacity: 0;
+  position: absolute;
+}
+
+label > input[type='checkbox'] + *::before {
+content: '✔';
+position: absolute;
+margin: 4px 0 0;
+margin-left: -20px;
+align: center;
+width: 13px;
+height: 13px;
+margin-right: 1rem;
+border-radius: 0%;
+border-style: solid;
+border-width: 0.1rem;
+border-color: #735DFB;
+color: #ffffff;
+}
+
+label > input[type='checkbox']:checked + *::before {
+content: '✔';
+width: 13px;
+height: 13px;
+background-color: #735DFB;
+color: #ffffff;
+}
+*/
+
 .header .container {
   height: 100%;
   display: -webkit-box;
@@ -127,7 +310,7 @@
 
 
 
-/* ปุ่มที่เป็นขอบ */
+/* ปุ่มที่เป็นขอบ หน้าแรก */
 .btn-outline-primary,  .btn-outline-primary:active, 
 .btn-outline-primary:visited {
   color: #735DFB;
@@ -166,18 +349,24 @@
 }
 
 
-.heading_container h1 {
-  font-family: 'Poppins';
+/* ปุ่มที่เป็นขอบ หน้าอื่น */
+.btn-outline-primary2,  .btn-outline-primary2:active, 
+.btn-outline-primary2:visited {
   color: #735DFB;
-  font-weight: bold;
+  background-color: #FFF;
+  border-color: #735DFB;
+  border-radius: 100px;
+  
+  padding-left: 15px;
+  padding-right: 15px;
+  
+  
+} 
 
-}
-
-
-h2, h3, h4, h5 {
-  font-family: 'Poppins';
-  font-weight: bold;
-
+.btn-outline-primary2:hover{
+  color: #FFF;
+  background-color: #8673fb !important;
+  
 }
 
 
@@ -186,8 +375,9 @@ h2, h3, h4, h5 {
   /* background: #EFEFEF; > */
   box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
   border-radius: 14px;
-  
+
   text-align: justify; 
+
   padding-left: 40px; 
   padding-right: 40px; 
   padding-top: 20px; 
@@ -201,4 +391,49 @@ h2, h3, h4, h5 {
   height: 25vh;
    */
   
+}
+
+
+.box-gray h4, .box-gray h5{
+  text-align: left; 
+  color: #735DFB;
+}
+
+
+
+.box-purple {
+  background: #f3f3fd; 
+
+  box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
+  border-radius: 14px;
+
+  text-align: justify; 
+
+  padding-left: 40px; 
+  padding-right: 40px; 
+  padding-top: 20px; 
+  padding-bottom: 20px;
+  
+  margin-bottom: 20px;
+  margin-right: 20px;
+
+  
+}
+
+
+.box-purple h4, .box-purple h5{
+  text-align: left; 
+  color: #5549b2;
+   /* 
+  color: #403a68;
+   */
+
+}
+
+.box-purple a{
+  color: #5549b2;
+}
+
+.box-purple a:hover{
+  color: #9389e4;
 }
