@@ -118,6 +118,32 @@ h5{
           background-color: #ECF0F5;
         }
 
+/* tabPanel */
+.nav-tabs-custom .nav-tabs li.active {
+  border-top-color: #735DFB;
+  border-top-width: 3px;
+
+ 
+}
+
+.nav-tabs-custom>.nav-tabs>li.active>a {
+  border-right-color: #e4e5fa;
+  border-right-width: 2px;
+
+  border-left-color: #e4e5fa;
+  border-left-width: 2px;
+
+}
+
+
+.nav-tabs-custom>.nav-tabs {
+  border-bottom-color: #e4e5fa;
+  border-bottom-width: 2px;
+}
+
+
+
+
 /* แทบ progress อัปข้อมูล */
 .progress-bar{
   background-color:#735DFB;
