@@ -148,24 +148,15 @@ h5{
 .progress-bar{
   background-color:#735DFB;
 }      
-          
 
 
-.header .container {
-  height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.header .container .infos {
-  margin-top: 200px;
-  width: 50%;
+/* DataTable */
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+  z-index: 3;
+  color: #fff;
+  cursor: default;
+  background-color: #735DFB;
+  border-color: #735DFB;
 }
 
 
@@ -227,6 +218,25 @@ background-color: #735DFB;
 color: #ffffff;
 }
 */
+
+.header .container {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.header .container .infos {
+  margin-top: 200px;
+  width: 50%;
+}
+
+
 
 .header .container .infos .title {
   font-family: 'Poppins';

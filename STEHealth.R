@@ -792,7 +792,7 @@ shinyApp(
 
   server <- function(input, output, session) { 
     
-
+    #observe(print(input$shapefile_from_thailand))
     
     # message menu
 
