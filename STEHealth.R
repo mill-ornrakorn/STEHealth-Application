@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @16-4-23
+# @17-4-23
 
 # ================================================================
 
@@ -25,6 +25,8 @@ library(spdep) # อันนี้ใช้ nb2mat
 library(capture)
 library(leaflet.extras)
 
+
+
 # By default the file size limit is 5MB. Here limit is 70MB.
 options(shiny.maxRequestSize = 70*1024^2)
 
@@ -37,7 +39,13 @@ options(shiny.maxRequestSize = 70*1024^2)
 # ==================================== header ==========================================
 
 
-header <- dashboardHeader(title = 'STEHealth')
+header <- dashboardHeader(title = 'STEHealth',
+                          
+                          # tags$li(class = "dropdown",
+                          #         tags$div(
+                          #                  
+                          #         )),
+                          dropdownMenuOutput("messageMenu"))
 
 header$children[[2]]$children <- tags$img(src='STEHealth_logo1.png',width='180', style = "margin-left: -10px; ")
 
@@ -88,7 +96,7 @@ body <- dashboardBody(
     tags$style('.well { 
                border-color: #FFFFFF;
                }'), # สีกรอบ sidebar
-      
+  
     tags$script(src="js/index.js") # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่น ๆ
 
 
@@ -105,7 +113,7 @@ body <- dashboardBody(
       # ==================================== Home ==================================== 
       
       tabItem(tabName = "Home",
-              
+            
               HTML('
               <div class="header" id="home">
                    <div class="container">
@@ -783,6 +791,26 @@ shinyApp(
 ###############################################################
 
   server <- function(input, output, session) { 
+    
+
+    
+    # message menu
+
+    output$messageMenu <- renderMenu({
+      dropdownMenu(type = "messages", 
+                   messageItem(
+                     from = "Project in Github", 
+                     message = "Documentation, Source, Citation",
+                     icon = icon("github", style = 'color: #5c5c68;'),
+                     href = "https://github.com/mill-ornrakorn/STEHealth-Application"),
+
+                   badgeStatus = NULL,
+                   icon = tags$i(tags$img(src='info.png', height='16', width='16')),
+                   #icon = icon("circle-info", style = 'color: #5c5c68;'),
+                   headerText = "App Information"
+      )
+    })
+    
   
     # แบบรูปไม่ position:absolute
     output$status_map <- renderUI({

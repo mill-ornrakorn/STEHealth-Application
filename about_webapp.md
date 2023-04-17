@@ -60,9 +60,11 @@ Code and data used for case study are available on
 
 |  |   |
 --- | ----
-**Software**   | 
+**Software**   |  **Detail**                                                                           	
 [R](https://cran.r-project.org/)  | Language and environment for statistical computing and graphics
-**R packages** |
+[R-Portable](https://sourceforge.net/projects/rportable/) | R portable configures R to work with the PortableApps framework, so that R can be ran from a thumb drive or portable hard drive without leaving artifacts on the computer.
+[Google Chrome Portable](https://portableapps.com/apps/internet/google_chrome_portable) | Google Chrome Portable can run from a cloud folder, external drive, or local folder without installing into Windows.
+**R packages** | **Detail**
 [shiny](https://cran.r-project.org/web/packages/shiny/index.html)  | Makes to build interactive web apps from R
 [shinydashboard](https://cran.r-project.org/web/packages/shinydashboard/index.html)| Use with shiny to create dashboards
 [shinyjs](https://cran.r-project.org/web/packages/shinyjs/index.html)| Perform common useful JavaScript operations in Shiny apps that will greatly improve the apps without having to know any JavaScript
