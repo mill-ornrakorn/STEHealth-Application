@@ -18,9 +18,9 @@
     - Added examples of interpretation on 'Spatiotemporal Epidemiological Analysis' page.
     - Added approach link to internal pages.
     - Fixed manual is not displayed.
+    - Changed UI style.
     - Changed the 'time period' filter from slider to dropdown.
     - Changed button and title color on these pages: Map Distribution and Spatiotemporal Epidemiological Analysis.
-    - Edited UI to make it more responsive by added slider bar on these pages: Map Distribution and Spatiotemporal Epidemiological Analysis.
     - Edited application manual.
     - Edited the variable name on 'Association with Risk Factors' tap from 'percent_increase_riskfactor' is 'riskfactor_percent_increase'. According to the usability test, some users are unable to choose their preferred risk factor. Because on the screen of variable names, not all of them are visible, only the word front.
     - Fixed bug of 'Download results' on 'Association with Risk Factors' tap that cannot be downloaded if less than 7 covariates are included.

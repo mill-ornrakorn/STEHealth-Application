@@ -33,6 +33,11 @@ h5{
 
 }
 
+/* Space between the Sidebar Menu Items*/
+.sidebar-menu li { 
+  margin-bottom: 10px; 
+}
+
 
 .heading_container h1 {
   font-family: 'Poppins';
@@ -46,34 +51,80 @@ h5{
 }
 
 
-
 /* logo */
 .skin-purple .main-header .logo {
-          background-color: #735DFB;
+          background-color: #ffffff;
         }
         
 /* logo when hovered */
  .skin-purple .main-header .logo:hover {
-          background-color: #735DFB;
+          background-color: #ffffff;
         }
         
 /* navbar (rest of the header) */
 .skin-purple .main-header .navbar  {
-          background-color: #735DFB;
+          background-color: #ffffff;
+          box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
         }
-         
+
+.skin-purple .main-header .navbar .sidebar-toggle {
+        color: #5c5c68;
+        background-color: #ffffff;
+       }
+        
 /* toggle button when hovered  */
 .skin-purple .main-header .navbar .sidebar-toggle:hover {
-          background-color: #735DFB;
+        color: #735DFB;
+        background-color: #ffffff;
         }
         
+/* main sidebar  color: #FFF;*/
+.skin-purple .main-sidebar {
+  background-color: #ffffff;
+  box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
+  
+      }
+
+/* active selected tab in the sidebarmenu */
+.skin-purple .main-sidebar .sidebar .sidebar-menu .active a{
+  color: #ffffff;
+  background-color: #735DFB;
+  border-radius: 100px;
+  box-shadow: 1px 3px 18px -2px rgba(46, 45, 49, 0.416);
+  }
+
+.skin-purple .main-sidebar .sidebar .sidebar-menu .active a:hover{
+    color: #ffffff;
+    background-color: #735DFB;
+    border-radius: 100px;
+    box-shadow: 1px 3px 18px -2px rgba(46, 45, 49, 0.416);
+  }
+
+/* active selected tab in the sidebarmenu */
+.skin-purple .main-sidebar .sidebar .sidebar-menu a:hover{
+  color: #735DFB;
+  background-color: #ffffff;
+  }
+
+
+.skin-purple .main-sidebar .sidebar .sidebar-menu a{
+    color: #5c5c68;
+    }
+
+
+
 /* body */
 .content-wrapper, .right-side {
           background-color: #ECF0F5;
         }
-        
-       
+
+/* แทบ progress อัปข้อมูล */
+.progress-bar{
+  background-color:#735DFB;
+}      
           
+
+
 .header .container {
   height: 100%;
   display: -webkit-box;
@@ -92,6 +143,64 @@ h5{
 }
 
 
+/* radioButtons  from https://stackoverflow.com/questions/66437237/css-rshiny-widgets-how-to-color-the-radiobuttons-and-checkboxgroupinput */
+label > input[type='radio'] {
+  opacity: 0;
+  position: absolute;
+}
+label > input[type='radio'] + *::before {
+  content: '';
+  margin: 4px 0 0;
+  width: 13px;
+  height: 13px;
+  position: absolute;
+  margin-left: -20px;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 0.1rem;
+  border-color: #735DFB;
+}
+label > input[type='radio']:checked + *::before {
+  background: radial-gradient(white 0%, white 30%, #735DFB 30%, #735DFB);
+  border-color: #735DFB;
+}
+
+/*
+
+input:checked + span {
+  color: #735DFB;
+}
+
+
+label > input[type='checkbox'] {
+  opacity: 0;
+  position: absolute;
+}
+
+label > input[type='checkbox'] + *::before {
+content: '✔';
+position: absolute;
+margin: 4px 0 0;
+margin-left: -20px;
+align: center;
+width: 13px;
+height: 13px;
+margin-right: 1rem;
+border-radius: 0%;
+border-style: solid;
+border-width: 0.1rem;
+border-color: #735DFB;
+color: #ffffff;
+}
+
+label > input[type='checkbox']:checked + *::before {
+content: '✔';
+width: 13px;
+height: 13px;
+background-color: #735DFB;
+color: #ffffff;
+}
+*/
 
 .header .container .infos .title {
   font-family: 'Poppins';

@@ -39,13 +39,13 @@ options(shiny.maxRequestSize = 70*1024^2)
 
 header <- dashboardHeader(title = 'STEHealth')
 
-header$children[[2]]$children <- tags$img(src='STEHealth_logo2.png',width='180', style = "margin-left: -10px;")
+header$children[[2]]$children <- tags$img(src='STEHealth_logo1.png',width='180', style = "margin-left: -10px; ")
 
 
 # ==================================== menuItem ==================================== 
 
-sidebar <- dashboardSidebar(
-  sidebarMenu(id="tabs",
+sidebar <- dashboardSidebar( 
+  sidebarMenu(id="tabs", 
               menuItem(HTML("&ensp;Home"), tabName = "Home", icon = icon("house")),
               menuItem(HTML("&ensp;Upload Data"), tabName = "Upload_data", icon = icon("folder-open")),
               menuItem(HTML("&ensp;Map Distribution"), tabName = "Map_Distribution", icon = icon("map")),
@@ -81,7 +81,8 @@ body <- dashboardBody(
          .checkbox-inline+.checkbox-inline {
                     margin-left: 0px;
                     margin-right: 10px;
-          }
+         }
+        
         " ), # ทำให้ checkboxGroupInput เรียงเป็นระเบียบ
     
     tags$style('.well { 
@@ -109,11 +110,12 @@ body <- dashboardBody(
               <div class="header" id="home">
                    <div class="container">
                      <div class="infos">
-                        <img src="STEHealth_logo.png", alt="STEHealth_logo" , height  = "37px", width = "174px">
+                        <img src="STEHealth_logo1.png", alt="STEHealth_logo" , height  = "37px", width = "174px">
                         <h1 class="title">
                             Spatiotemporal Epidemiological Analysis
                         </h1>
-                        <p>This is a application for analyzing space-time pattern and 
+                        <p style = "text-align: justify;">
+                            This is a application for analyzing space-time pattern and 
                              association with risk factors of suicide and other health outcomes, 
                              which allows users to import their own data, analyze, and visualize.</p>
                       
@@ -122,7 +124,7 @@ body <- dashboardBody(
                                  onclick="$(\'li:eq(2) a\').tab(\'show\');" 
                                  role="button"
                                  style = "border-color: #735DFB;" >
-                           <strong>Get Started</strong>
+                           <strong>← Get Started</strong>
                         </a>
                         
                         
@@ -180,7 +182,7 @@ body <- dashboardBody(
                               div(style = "margin-left: 220px; margin-top: -40px;",
                               bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
 
-                              bsPopover(id = "question_shapefile", title = "Shapefile",
+                              bsPopover(id = "question_shapefile", title = "Shapefile", 
                                         content = paste0(strong("What is a shapefile? "),br(),
                                                          "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
                                                          a("(5)",
@@ -210,7 +212,7 @@ body <- dashboardBody(
                                                  #column(6, selectInput("columnnameareainmap", label = "area name", choices = c(""), selected = ""))
                                                  ),
                           
-                                           HTML("<font color= \"#735DFB\"><strong>Note: </font>Area name</strong> is name of the area. Area name in the data must be the same name and order as area name in the <strong>csv file</strong>.
+                                           HTML("<font color= \"#735DFB\" style = 'text-align: justify;'><strong>Note: </font>Area name</strong> is name of the area. Area name in the data must be the same name and order as area name in the <strong>csv file</strong>.
                                            
                                             </br></br>"),
                           
@@ -270,7 +272,7 @@ body <- dashboardBody(
                           ),
                         
                           HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
-                                             <ul>
+                                             <ul style = 'text-align: justify;'>
                                               <li><strong>Area id</strong>: a number starting at 1, used to identify provinces.</li> 
                                               <li><strong>Area name</strong>: name of the area. Area name in the data must be the same as area name in the shapefile.</li> 
                                               <li><strong>Expected value</strong>: expected value in data.</li> 
@@ -303,7 +305,7 @@ body <- dashboardBody(
                           ),
                           
                           HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
-                                             <ul>
+                                             <ul style = 'text-align: justify;'>
                                               <li>If the user select 1 covariate, the analysis is <strong>univariate</strong>.</li> 
                                               <li>If the user selects covariates more than 1, all covariates will be calculated at the same time, which is a 
                                                 <strong>multivariate</strong> analysis. However, the results will be displayed one by one on the 'Spatiotemporal Epidemiological Analysis' page ('Association with Risk Factors' tap).</li>  
@@ -653,7 +655,7 @@ body <- dashboardBody(
                                                   
                                                   "),
                                     
-                                      checkboxGroupInput('asso_select_column', 'Column', inline=TRUE,
+                                      checkboxGroupInput('asso_select_column', 'Column', inline=TRUE, 
                                                          c("lower bound" = "lowerbound", 'upper bound' = 'upperbound', 'significance' = 'significance'),
                                                          selected = c("lowerbound", 'upperbound', 'significance' )),
                                       
