@@ -2,6 +2,9 @@
 <div style = "text-align: justify; margin-right: 80px; font-size: 16px">
 
 ## <span style="color:#735DFB"> **About Application** </span>
+
+<div class='box-white'>
+
 ###  **Background**   
 <img width="40px" height="10px" src="Rectangle.svg" >
 
@@ -17,7 +20,7 @@ This application is part of "Spatiotemporal Analysis with Application Developmen
 
 
 
-<img align="left" width="500px" height="420px" src="undraw_file_searching.svg" >
+
 <!-- style = " margin-bottom: 20px;"> -->
 
 ###  **Purpose**
@@ -25,16 +28,9 @@ This application is part of "Spatiotemporal Analysis with Application Developmen
 
 &emsp;&emsp; To develop a application to facilitate visualization and analysis for spatial and spatiotemporal epidemiological studies. 
 
-<!--
-###  **Code**
-<img width="40px" height="10px" src="Rectangle.svg">
+</div>
 
-Code and data used for case study are available on 
-[Github]().
--->
-
-
-
+<div class='box-white'>
 
 ###  **Developer**
 <img width="40px" height="10px" src="Rectangle.svg">
@@ -51,9 +47,18 @@ Code and data used for case study are available on
 2. Asst. Prof. Dr. Chawarat Rotejanaprasert
 3. Asst. Prof. Dr. Peerut Chienwichai
 
+</div>
 
-</br>
-</br>
+
+<div class='box-white'>
+
+###  **Code**
+<img width="40px" height="10px" src="Rectangle.svg">
+
+Code and data used for case study are available on 
+[Github](https://github.com/mill-ornrakorn/STEHealth-Application).
+
+
 
 ###  **Dependencies**
 <img width="40px" height="10px" src="Rectangle.svg">
@@ -85,6 +90,12 @@ Code and data used for case study are available on
 <!-- [R-Portable](https://sourceforge.net/projects/rportable/) | R portable configures R to work with the PortableApps framework, so that R can be ran from a thumb drive or portable hard drive without leaving artifacts on the computer.
 [Google Chrome Portable](https://portableapps.com/apps/internet/google_chrome_portable)  | Google Chrome Portable can run from a cloud folder, external drive, or local folder without installing into Windows. -->
 
+</div>
+
+<div class='box-white'>
+
+<!-- <img align="left" width="500px" height="420px" src="undraw_file_searching.svg" style = " margin-bottom: 40px;  margin-top: 40px;"> -->
+
 ###  **References**
 <img width="40px" height="10px" src="Rectangle.svg">
 
@@ -100,7 +111,9 @@ Code and data used for case study are available on
 
 5. ArcMap. (n.d.). Retrieved March 8, 2023, from https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm
 
+</div>
 
+<div class='box-white'>
 
 ###  **Credits Section**
 <img width="40px" height="10px" src="Rectangle.svg">
@@ -118,5 +131,7 @@ Code and data used for case study are available on
 * Document icons in Spatiotemporal Epidemiological Analysis Result page <a href="https://www.flaticon.com/free-icons/document" title="document icons">created by smalllikeart</a> on Flaticon
 
 * Manual cover in STEHealth web application was modified from <a href="https://www.canva.com/p/templates/EAE9h5vtwXM-peach-modern-minimal-annual-report-cover/">report cover by Temptackle</a> on Canva 
+
+</div>
 
 </div>

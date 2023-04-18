@@ -35,7 +35,7 @@ h5{
 
 /* Space between the Sidebar Menu Items*/
 .sidebar-menu li { 
-  margin-bottom: 10px; 
+  margin-bottom: 15px; 
 }
 
 
@@ -89,14 +89,14 @@ h5{
 .skin-purple .main-sidebar .sidebar .sidebar-menu .active a{
   color: #ffffff;
   background-color: #735DFB;
-  border-radius: 100px;
+  border-radius: 10px;
   box-shadow: 1px 3px 18px -2px rgba(46, 45, 49, 0.416);
   }
 
 .skin-purple .main-sidebar .sidebar .sidebar-menu .active a:hover{
     color: #ffffff;
     background-color: #735DFB;
-    border-radius: 100px;
+    border-radius: 10px;
     box-shadow: 1px 3px 18px -2px rgba(46, 45, 49, 0.416);
   }
 
@@ -370,7 +370,7 @@ color: #ffffff;
 }
 
 
-.box-gray {
+.box-white {
   background: #FFFFFF; 
   /* background: #EFEFEF; > */
   box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
@@ -394,7 +394,7 @@ color: #ffffff;
 }
 
 
-.box-gray h4, .box-gray h5{
+.box-white h4, .box-white h5{
   text-align: left; 
   color: #735DFB;
 }
@@ -436,4 +436,16 @@ color: #ffffff;
 
 .box-purple a:hover{
   color: #9389e4;
+}
+
+span.purple {
+  color: rgb(115, 93, 251);
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6em;
+  margin-right: 5px;
+  text-align: center;
+  width: 1.6em;
+  background: rgb(241, 238, 255);
+  border-radius: 0.3em;
 }

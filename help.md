@@ -2,6 +2,8 @@
 
 ## <span style="color:#735DFB"> **Help** </span>
 
+<div class='box-white'>
+
 ###  **Structure**
 <img width="40px" height="10px" src="Rectangle.svg">
 
@@ -58,9 +60,16 @@ The application consists of eight pages:
 
 &emsp;&emsp;  The "Releases" page is a page that describes version history of application.
 
+</div>
+
+<div class='box-white'>
 
 ### **Sample Data**
 <img width="40px" height="10px" src="Rectangle.svg">
+
+<!-- <img align="right" width="500px" height="420px" src="undraw_file_searching.svg" style = " margin-left: 60px;"> -->
+
+
 
 &emsp;&emsp; The sample data used for case study in this application consists of Thailand shapefile and csv file which can be [downloaded here📑](https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link).
 
@@ -82,6 +91,8 @@ The application consists of eight pages:
 
     **7-13. 7 covariates:** debt, income, poverty, expenditure, homicide crime, property crime and shocking crime.
 
+</div>
+
 <!--
 ### **When Error Occurred ?**
 <img width="40px" height="10px" src="Rectangle.svg">
@@ -94,10 +105,13 @@ If an error occurs in usage, for example:
 | > ERROR: trying to get slot "data" from an object of a basic class ("NULL") with no slots     | If the message displayed in "Association with Risk Factors" tab on the map, it means the user forgot to import the data before beginning the analysis or did not press the "go to analysis page" button on the Map Distribution page.
 |  > Application crashes                                                                                 | It may be because the user uploaded data that is not as specified making it unable to analyze the data.
 -->
+<div class='box-white'>
 
 ### **Contact us**
 <img width="40px" height="10px" src="Rectangle.svg">
 
 If you have any trouble with this  application or have any further questions or feedback, then please contact us at: ornrakorn.mek@outlook.com and we will be happy to help.
+
+</div>
 
 </div>

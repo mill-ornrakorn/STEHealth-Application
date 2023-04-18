@@ -129,7 +129,7 @@ body <- dashboardBody(
                       
                       <div class="button">
                         <a class="btn btn-primary" 
-                                 onclick="$(\'li:eq(2) a\').tab(\'show\');" 
+                                 onclick="$(\'li:eq(6) a\').tab(\'show\');" 
                                  role="button"
                                  style = "border-color: #735DFB;" >
                            <strong>← Get Started</strong>
@@ -137,7 +137,7 @@ body <- dashboardBody(
                         
                         
                         <a class="btn btn-outline-primary"
-                                 onclick="$(\'li:eq(6) a\').tab(\'show\');"
+                                 onclick="$(\'li:eq(10) a\').tab(\'show\');"
                                  role="button"
                                  >
                             <strong>How to use?</strong>
@@ -184,10 +184,12 @@ body <- dashboardBody(
                           # ==================================== Upload map (shapefile) ==================================== 
                           # ปุ่ม ? แต่ติดปัญหาตรงที่มันไม่บรรทัดเดียวกัน แม้จะใส่  inline-block แล้ว
                           div(style="display: inline-block;",
-                              HTML("<h3>Upload shapefile</h3>"),
-                              
+                              HTML('<h3><span class="purple">1.</span>
+                                   Upload shapefile</h3>
+                                   '),
+                                    
                               # เลยต้องแก้แบบนี้แทน 
-                              div(style = "margin-left: 220px; margin-top: -40px;",
+                              div(style = "margin-left: 280px; margin-top: -45px;",
                               bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
 
                               bsPopover(id = "question_shapefile", title = "Shapefile", 
@@ -216,7 +218,7 @@ body <- dashboardBody(
                                         fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
 
                                         helpText("Select columns area name in the map."),
-                                        fluidRow(column(6, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")),
+                                        fluidRow(column(12, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")),
                                                  #column(6, selectInput("columnnameareainmap", label = "area name", choices = c(""), selected = ""))
                                                  ),
                           
@@ -237,10 +239,11 @@ body <- dashboardBody(
                           # ==================================== Upload data (.csv file) ==================================== 
                           # ปุ่ม ? แต่ติดปัญหาตรงที่มันไม่บรรทัดเดียวกัน แม้จะใส่  inline-block แล้ว
                           div(style="display: inline-block;",
-                              HTML("<h3>Upload csv file</h3>"),
+                              HTML('<h3><span class="purple">2.</span>
+                                   Upload csv file</h3>'),
                               
                               # เลยต้องแก้แบบนี้แทน 
-                              div(style = "margin-left: 200px; margin-top: -40px;",
+                              div(style = "margin-left: 240px; margin-top: -45px;",
                                   bsButton("question_csvfile", label = "", icon = icon("question"), style = "Question"),
                                   
                                   bsPopover(id = "question_csvfile", title = "csv file",
@@ -325,12 +328,14 @@ body <- dashboardBody(
 
                           fluidRow(column(4, offset=3, actionButton("Preview_Map_Distribution",
                                                                     strong("Preview Map Distribution"),
-                                                                    onclick = "$('li:eq(3) a').tab('show');",
+                                                                    onclick = "$('li:eq(7) a').tab('show');",
                                                                     class = 'btn-primary',
                                                                     style='color: #FFFFFF;'
                           ))),
                           
-                          # fluidRow(verbatimTextOutput("messageCheckData"))
+                          
+                          fluidRow(textOutput('error_msg'),
+                                   textOutput("success_msg"))
 
       
                  
@@ -382,7 +387,7 @@ body <- dashboardBody(
               HTML("<div class = 'heading_container'>
                      <h1>Map Distribution</h1>
                    </div>"),
-              div(class = "box-gray", 
+              div(class = "box-white", 
           sidebarLayout(
            sidebarPanel(
               #fluidRow(
@@ -394,7 +399,7 @@ body <- dashboardBody(
                     #style = "padding: 5%;",
                 fluidRow(
                   column(12,
-                          HTML("<div class='box-gray'>
+                          HTML("<div class='box-white'>
                                              
                                             <img align='left' width='52px'; height='52px'; src='mapdis.png' style = 'margin-top: 10px; margin-right: 10px;' >
                                         
@@ -409,7 +414,7 @@ body <- dashboardBody(
                                            "),
                          
                          div(
-                           class = "box-gray",
+                           class = "box-white",
                            HTML("<h4>Fillter</h4>"),
                            
                            # เลือกช่วงเวลา
@@ -428,7 +433,7 @@ body <- dashboardBody(
                          #verbatimTextOutput("status_map_dis")
                          
                          div(
-                           class = "box-gray",
+                           class = "box-white",
                          HTML('<h4>
                                 Capture screenshot
                                </h4>
@@ -454,7 +459,7 @@ body <- dashboardBody(
                                          offset=3,
                                          actionButton("nextpage",
                                                       strong("Go to analysis page"), # ► ◄
-                                                      onclick = "$('li:eq(4) a').tab('show');",
+                                                      onclick = "$('li:eq(8) a').tab('show');",
                                                       class = 'btn-primary',
                                                       style='color: #FFFFFF; margin-top: 20px;'
                                          )
@@ -500,7 +505,7 @@ body <- dashboardBody(
                                   fluidRow(
                                     column(12,
                                            div(
-                                             class = "box-gray",
+                                             class = "box-white",
                                              tags$img(align='left',width='52px',height='52px',src='cluster.png',style='margin-top: 10px; margin-right: 10px'),
                                              tags$h4("Cluster Detection"),
                                              HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
@@ -511,7 +516,7 @@ body <- dashboardBody(
                                            
                                       
                                            div(
-                                             class = "box-gray",
+                                             class = "box-white",
                                              HTML("<h4>Fillter</h4>"),
                                              
                                            # เลือกช่วงเวลา
@@ -535,7 +540,7 @@ body <- dashboardBody(
                                            ),
                                            
                                            div(
-                                             class = "box-gray",
+                                             class = "box-white",
                                              HTML('<h4>Download Result</h4>
                                                   <p>
                                                      The data obtained from the cluster detection consists of the original data and the <strong>label column</strong>, 
@@ -625,7 +630,7 @@ body <- dashboardBody(
                                   fluidRow(
                                     column(12,
                                            div(
-                                             class = "box-gray",
+                                             class = "box-white",
                                              HTML("
                                             <img align='left' width='52px' height='52px' src='risk.png' style='margin-top: 10px; margin-right: 10px' >
                                             <h4>Association with Risk Factors</h4>
@@ -643,7 +648,7 @@ body <- dashboardBody(
                                            ),
                                           
                                     div(
-                                      class = "box-gray",
+                                      class = "box-white",
                                       HTML("<h4>Fillter</h4>"),
                                       selectInput("risk_factor_filter", label = "Risk factor:", choices = c(""), selected = ""),
                                       
@@ -656,7 +661,7 @@ body <- dashboardBody(
                                       ),
                                     
                                     div(
-                                      class = "box-gray",
+                                      class = "box-white",
                                       HTML("<h4>Download Result</h4>
                                             <p>
                                             The data obtained from the association with risk factors consists of area name, each risk factor calculated as a percentage increase, lower bound, upper bound, and significance                                              </p>
@@ -810,6 +815,25 @@ shinyApp(
                    headerText = "App Information"
       )
     })
+    
+    
+    # output$error_msg <- renderText({
+    #   shiny::validate(
+    #     shiny::need(is.null(input$filemap), 'Please upload shapefile'
+    #     ),
+    #     shiny::need(is.null(input$file1), "Please upload csv file")
+    #   )
+    #   
+    # })
+    
+    # observeEvent(input$Preview_Map_Distribution, {
+    #   
+    #   shiny::req(input$filemap)
+    #   shiny::req(input$file1)
+    #   output$success_msg <- renderText({"Success"})
+    #   
+    # })
+    
     
   
     # แบบรูปไม่ position:absolute
@@ -1076,8 +1100,11 @@ shinyApp(
     # INI DATA - filter areas in map depending of state and risk
     ################################################
     
+    
+    
     # Upload shapefile
     observe({
+      
       shpdf <- input$filemap
       if(is.null(shpdf)){
         return()
@@ -1096,6 +1123,9 @@ shinyApp(
       map <- spTransform(map, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
       
       rv$map<-map
+      
+      
+     
       
     })
     
