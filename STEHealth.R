@@ -334,8 +334,8 @@ body <- dashboardBody(
                           ))),
                           
                           
-                          fluidRow(textOutput('error_msg'),
-                                   textOutput("success_msg"))
+                          # fluidRow(textOutput('error_msg'),
+                          #          textOutput("success_msg"))
 
       
                  
@@ -476,6 +476,7 @@ body <- dashboardBody(
               ,
            mainPanel(uiOutput("status_map_dis"),
                      #leafletOutput("map_distribution", height = "70vh")
+                     verbatimTextOutput("messageCheckData"),
                      addSpinner(
                        leafletOutput("map_distribution", height = "75vh"),
                        spin = "bounce", color = "#735DFB")
@@ -605,7 +606,7 @@ body <- dashboardBody(
                                 
                                 mainPanel(
                                           uiOutput("status_cluster"),
-                                          verbatimTextOutput("map_cluster_value"),
+                                          verbatimTextOutput("status_map_cluster"),
                                           #leafletOutput("map_cluster", height = "70vh")
                                           addSpinner(
                                             leafletOutput("map_cluster", height = "80vh"),
@@ -735,6 +736,7 @@ body <- dashboardBody(
                          
                          mainPanel(
                            uiOutput("status_risk_fac"),
+                                  verbatimTextOutput("status_map_asso"),
                                    verbatimTextOutput("status_risk_fac_nocova"),
                                    addSpinner(
                                      leafletOutput("map_risk_fac", height = "80vh"),
@@ -816,26 +818,8 @@ shinyApp(
       )
     })
     
+
     
-    # output$error_msg <- renderText({
-    #   shiny::validate(
-    #     shiny::need(is.null(input$filemap), 'Please upload shapefile'
-    #     ),
-    #     shiny::need(is.null(input$file1), "Please upload csv file")
-    #   )
-    #   
-    # })
-    
-    # observeEvent(input$Preview_Map_Distribution, {
-    #   
-    #   shiny::req(input$filemap)
-    #   shiny::req(input$file1)
-    #   output$success_msg <- renderText({"Success"})
-    #   
-    # })
-    
-    
-  
     # แบบรูปไม่ position:absolute
     output$status_map <- renderUI({
       if (is.null(input$filemap)) { 
@@ -921,6 +905,9 @@ shinyApp(
       } 
     })
     
+    # ==================================== write error messages ==================================== 
+    
+    
     output$status_risk_fac_nocova <- renderPrint({
       x1 <- input$columncov1indata
       x2 <- input$columncov2indata
@@ -931,12 +918,11 @@ shinyApp(
       x7 <- input$columncov7indata
       
       if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-        return(HTML('📌 There are no covariates have been select ❗'))
+        return(HTML('📌 There are no covariates have been selected ❗'))
       }
       
       
     })
-    
     
     
     output$messageCheckData<-renderText(
@@ -944,7 +930,95 @@ shinyApp(
     )
     
     
+    observeEvent(input$Preview_Map_Distribution, {
+      
+      if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
+        rv$messageCheckDataText<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
+        return(NULL)
+      }
+      
+      
+      else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        rv$messageCheckDataText<-"📌 Error: There are no shapefile have been uploaded ❗"
+        return(NULL)
+      }
+      
+      
+      else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+        rv$messageCheckDataText<-"📌 Error: There is no csv file have been uploaded ❗"
+        return(NULL)
+      }
+      
+      else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        rv$messageCheckDataText<-NULL
+        return(NULL)
+      }
+      
+      
+    })
     
+    
+    
+    
+    # Go to analysis page button
+    output$status_map_cluster <- renderPrint({
+      
+        if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
+          return(HTML('📌 Error: There are no data (shapefile and csv file) have been uploaded ❗'))
+          
+        }
+        
+        
+        else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+          return(HTML('📌 Error: There are no shapefile have been uploaded ❗'))
+          
+        }
+        
+        
+        else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+          return(HTML('📌 Error: There is no csv file have been uploaded ❗'))
+          
+        }
+        
+        # else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        #   return(NULL)
+        # }
+      
+    })
+    
+    
+    
+    output$status_map_asso <- renderPrint({
+      
+      if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
+        return(HTML('📌 Error: There are no data (shapefile and csv file) have been uploaded ❗'))
+        
+      }
+      
+      
+      else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        return(HTML('📌 Error: There are no shapefile have been uploaded ❗'))
+        
+      }
+      
+      
+      else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+        return(HTML('📌 Error: There is no csv file have been uploaded ❗'))
+        
+      }
+      
+      # else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+      #   return(NULL)
+      # }
+      
+      
+    })
+    
+    
+      
+    # ======================================================================== 
+      
+      
     observe({
       if (is.null(names(rv$datosOriginal)))
         xd <- character(0)
@@ -2189,17 +2263,6 @@ shinyApp(
 
     
     # ==================================== cluster_dec ver ลองplot ==================================== 
-    
-    
-    output$map_cluster_value <- renderPrint({  
-      if(is.null(input$columncov2indata)){
-        
-        print("2null")
-    
-      }
-    })
-    
-    
     
     output$map_cluster <- #renderPrint({  
       renderLeaflet({
