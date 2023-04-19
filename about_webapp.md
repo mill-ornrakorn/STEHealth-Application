@@ -63,7 +63,7 @@ Code and data used for case study are available on
 ###  **Dependencies**
 <img width="40px" height="10px" src="Rectangle.svg">
 
-|  |   |
+| <div style="margin-right: 20em"> |   |
 --- | ----
 **Software**   |  **Detail**                                                                           	
 [R](https://cran.r-project.org/)  | Language and environment for statistical computing and graphics
