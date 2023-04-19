@@ -930,21 +930,21 @@ shinyApp(
       output$warn_map_dis <- renderUI({
         if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
           rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
-          div(class = 'box-warning' ,
+          div(class = 'box-error' ,
               
               textOutput("messageCheckData_1")
           )
           
         }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
           rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
-          div(class = 'box-warning' ,
+          div(class = 'box-error' ,
               
               textOutput("messageCheckData_1")
           )
           
         }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
           rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
-          div(class = 'box-warning' ,
+          div(class = 'box-error' ,
               
               textOutput("messageCheckData_1")
           )
@@ -973,21 +973,21 @@ shinyApp(
       output$warn_map_clus <- renderUI({
         if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
           rv$messageCheckDataText_2<-"Error: There are no data (shapefile and csv file) have been uploaded"
-          div(class = 'box-warning' ,
+          div(class = 'box-error' ,
               
               textOutput("messageCheckData_2")
           )
           
         }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
           rv$messageCheckDataText_2<-"Error: There are no shapefile have been uploaded"
-          div(class = 'box-warning' ,
+          div(class = 'box-error' ,
               
               textOutput("messageCheckData_2")
           )
           
         }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
           rv$messageCheckDataText_2<-"Error: There is no csv file have been uploaded"
-          div(class = 'box-warning' ,
+          div(class = 'box-error' ,
               
               textOutput("messageCheckData_2")
           )
@@ -1002,21 +1002,21 @@ shinyApp(
         output$warn_map_asso <- renderUI({
           if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
             rv$messageCheckDataText_3<-"Error: There are no data (shapefile and csv file) have been uploaded"
-            div(class = 'box-warning' ,
+            div(class = 'box-error' ,
                 
                 textOutput("messageCheckData_3")
             )
             
           }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
             rv$messageCheckDataText_3<-"Error: There are no shapefile have been uploaded"
-            div(class = 'box-warning' ,
+            div(class = 'box-error' ,
                 
                 textOutput("messageCheckData_3")
             )
             
           }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
             rv$messageCheckDataText_3<-"Error: There is no csv file have been uploaded"
-            div(class = 'box-warning' ,
+            div(class = 'box-error' ,
                 
                 textOutput("messageCheckData_3")
             )

@@ -452,11 +452,27 @@ span.purple {
 }
 
 
-.box-warning {
+.box-error {
   background-image: url('warning.png');
-
+   /* 
   border: 2px solid #FFC048;
+  */
   
+  border: 2px solid #FF6174; 
+
+  padding: 1em 1em 1em 4em;
+  margin: 10px 0;
+  
+  background-position: 0.5em 0.5em;
+  background-size: 2.5em;
+  background-repeat: no-repeat;
+  
+}
+
+.box-warning {
+  background-image: url('empty-folder.png');
+  
+  border: 2px solid #FFC048; 
 
   padding: 1em 1em 1em 4em;
   margin: 10px 0;
