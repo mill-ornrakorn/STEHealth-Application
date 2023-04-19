@@ -450,3 +450,21 @@ span.purple {
   background: rgb(241, 238, 255);
   border-radius: 0.3em;
 }
+
+
+.box-warning {
+  background-image: url('warning.png');
+
+  border: 2px solid #FFC048;
+  
+
+  padding: 1em 1em 1em 4em;
+  margin: 10px 0;
+  
+  background-position: 0.5em 0.5em;
+  background-size: 2.5em;
+  background-repeat: no-repeat;
+  
+
+
+}

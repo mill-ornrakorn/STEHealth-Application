@@ -476,7 +476,12 @@ body <- dashboardBody(
               ,
            mainPanel(uiOutput("status_map_dis"),
                      #leafletOutput("map_distribution", height = "70vh")
-                     verbatimTextOutput("messageCheckData_1"),
+                     #verbatimTextOutput("messageCheckData_1"),
+                     # div(class = 'box-warning' ,
+                     #     HTML('dsadasdas')
+                     #     #verbatimTextOutput("messageCheckData_1")
+                     #     ),
+                     uiOutput('warn_map_dis'),
                      addSpinner(
                        leafletOutput("map_distribution", height = "75vh"),
                        spin = "bounce", color = "#735DFB")
@@ -606,7 +611,8 @@ body <- dashboardBody(
                                 
                                 mainPanel(
                                           uiOutput("status_cluster"),
-                                          verbatimTextOutput("messageCheckData_2"),
+                                          uiOutput('warn_map_clus'),
+                                          #verbatimTextOutput("messageCheckData_2"),
                                           #verbatimTextOutput("status_map_cluster"),
                                           #leafletOutput("map_cluster", height = "70vh")
                                           addSpinner(
@@ -737,9 +743,10 @@ body <- dashboardBody(
                          
                          mainPanel(
                            uiOutput("status_risk_fac"),
-                           verbatimTextOutput("messageCheckData_3"),  
+                           uiOutput('warn_map_asso'),
+                           #verbatimTextOutput("messageCheckData_3"),  
                            #verbatimTextOutput("status_map_asso"),
-                           verbatimTextOutput("status_risk_fac_nocova"),
+                           uiOutput("status_risk_fac_nocova"),
                            addSpinner(
                              leafletOutput("map_risk_fac", height = "80vh"),
                              spin = "bounce", color = "#735DFB"
@@ -910,22 +917,8 @@ shinyApp(
     # ==================================== write error messages ==================================== 
     
     
-    output$status_risk_fac_nocova <- renderPrint({
-      x1 <- input$columncov1indata
-      x2 <- input$columncov2indata
-      x3 <- input$columncov3indata
-      x4 <- input$columncov4indata
-      x5 <- input$columncov5indata
-      x6 <- input$columncov6indata
-      x7 <- input$columncov7indata
-      
-      if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-        return(HTML('📌 There are no covariates have been selected ❗'))
-      }
-      
-      
-    })
-    
+    # textOutput
+    # renderText
     
     output$messageCheckData_1<-renderText(
       paste(rv$messageCheckDataText_1)
@@ -934,27 +927,33 @@ shinyApp(
     
     observeEvent(input$Preview_Map_Distribution, {
       
-      if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
-        rv$messageCheckDataText_1<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
-        return(NULL)
-      }
-      
-      
-      else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        rv$messageCheckDataText_1<-"📌 Error: There are no shapefile have been uploaded ❗"
-        return(NULL)
-      }
-      
-      
-      else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-        rv$messageCheckDataText_1<-"📌 Error: There is no csv file have been uploaded ❗"
-        return(NULL)
-      }
-      
-      else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        rv$messageCheckDataText_1<-NULL
-        return(NULL)
-      }
+      output$warn_map_dis <- renderUI({
+        if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
+          rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
+          div(class = 'box-warning' ,
+              
+              textOutput("messageCheckData_1")
+          )
+          
+        }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+          rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
+          div(class = 'box-warning' ,
+              
+              textOutput("messageCheckData_1")
+          )
+          
+        }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+          rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
+          div(class = 'box-warning' ,
+              
+              textOutput("messageCheckData_1")
+          )
+          
+        }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+          
+          
+        }
+      })
       
       
     })
@@ -971,41 +970,107 @@ shinyApp(
     
     observeEvent(input$nextpage, {
       
-      if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
-        rv$messageCheckDataText_2<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
-        rv$messageCheckDataText_3<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
+      output$warn_map_clus <- renderUI({
+        if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
+          rv$messageCheckDataText_2<-"Error: There are no data (shapefile and csv file) have been uploaded"
+          div(class = 'box-warning' ,
+              
+              textOutput("messageCheckData_2")
+          )
+          
+        }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+          rv$messageCheckDataText_2<-"Error: There are no shapefile have been uploaded"
+          div(class = 'box-warning' ,
+              
+              textOutput("messageCheckData_2")
+          )
+          
+        }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+          rv$messageCheckDataText_2<-"Error: There is no csv file have been uploaded"
+          div(class = 'box-warning' ,
+              
+              textOutput("messageCheckData_2")
+          )
+          
+        }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+          
+          
+        }
         
-        return(NULL)
-      }
-      
-      
-      else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        rv$messageCheckDataText_2<-"📌 Error: There are no shapefile have been uploaded ❗"
-        rv$messageCheckDataText_3<-"📌 Error: There are no shapefile have been uploaded ❗"
+      }) 
         
-        return(NULL)
-      }
-      
-      
-      else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-        rv$messageCheckDataText_2<-"📌 Error: There is no csv file have been uploaded ❗"
-        rv$messageCheckDataText_3<-"📌 Error: There is no csv file have been uploaded ❗"
+        output$warn_map_asso <- renderUI({
+          if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
+            rv$messageCheckDataText_3<-"Error: There are no data (shapefile and csv file) have been uploaded"
+            div(class = 'box-warning' ,
+                
+                textOutput("messageCheckData_3")
+            )
+            
+          }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+            rv$messageCheckDataText_3<-"Error: There are no shapefile have been uploaded"
+            div(class = 'box-warning' ,
+                
+                textOutput("messageCheckData_3")
+            )
+            
+          }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+            rv$messageCheckDataText_3<-"Error: There is no csv file have been uploaded"
+            div(class = 'box-warning' ,
+                
+                textOutput("messageCheckData_3")
+            )
+            
+          }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+            
+            
+          }
         
-        return(NULL)
-      }
-      
-      else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        rv$messageCheckDataText_2<-NULL
-        rv$messageCheckDataText_3<-NULL
         
-        return(NULL)
-      }
+      })
       
       
     })
     
     
     
+    output$status_risk_fac_nocova <- renderUI({
+      x1 <- input$columncov1indata
+      x2 <- input$columncov2indata
+      x3 <- input$columncov3indata
+      x4 <- input$columncov4indata
+      x5 <- input$columncov5indata
+      x6 <- input$columncov6indata
+      x7 <- input$columncov7indata
+      
+      if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+        
+        div(class = 'box-warning' ,
+        
+        HTML('There are no covariates have been selected'))
+        
+        
+        
+      }
+      
+      
+    })
+    
+    # output$status_risk_fac_nocova <- renderPrint({
+    #   x1 <- input$columncov1indata
+    #   x2 <- input$columncov2indata
+    #   x3 <- input$columncov3indata
+    #   x4 <- input$columncov4indata
+    #   x5 <- input$columncov5indata
+    #   x6 <- input$columncov6indata
+    #   x7 <- input$columncov7indata
+    #   
+    #   if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+    #     return(HTML('📌 There are no covariates have been selected ❗'))
+    #   }
+    #   
+    #   
+    # })
 
     
     
