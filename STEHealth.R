@@ -476,7 +476,7 @@ body <- dashboardBody(
               ,
            mainPanel(uiOutput("status_map_dis"),
                      #leafletOutput("map_distribution", height = "70vh")
-                     verbatimTextOutput("messageCheckData"),
+                     verbatimTextOutput("messageCheckData_1"),
                      addSpinner(
                        leafletOutput("map_distribution", height = "75vh"),
                        spin = "bounce", color = "#735DFB")
@@ -606,7 +606,8 @@ body <- dashboardBody(
                                 
                                 mainPanel(
                                           uiOutput("status_cluster"),
-                                          verbatimTextOutput("status_map_cluster"),
+                                          verbatimTextOutput("messageCheckData_2"),
+                                          #verbatimTextOutput("status_map_cluster"),
                                           #leafletOutput("map_cluster", height = "70vh")
                                           addSpinner(
                                             leafletOutput("map_cluster", height = "80vh"),
@@ -736,12 +737,13 @@ body <- dashboardBody(
                          
                          mainPanel(
                            uiOutput("status_risk_fac"),
-                                  verbatimTextOutput("status_map_asso"),
-                                   verbatimTextOutput("status_risk_fac_nocova"),
-                                   addSpinner(
-                                     leafletOutput("map_risk_fac", height = "80vh"),
-                                     spin = "bounce", color = "#735DFB"
-                                   )
+                           verbatimTextOutput("messageCheckData_3"),  
+                           #verbatimTextOutput("status_map_asso"),
+                           verbatimTextOutput("status_risk_fac_nocova"),
+                           addSpinner(
+                             leafletOutput("map_risk_fac", height = "80vh"),
+                             spin = "bounce", color = "#735DFB"
+                               )
                                    
                            
                          )
@@ -925,32 +927,77 @@ shinyApp(
     })
     
     
-    output$messageCheckData<-renderText(
-      paste(rv$messageCheckDataText)
+    output$messageCheckData_1<-renderText(
+      paste(rv$messageCheckDataText_1)
     )
     
     
     observeEvent(input$Preview_Map_Distribution, {
       
       if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
-        rv$messageCheckDataText<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
+        rv$messageCheckDataText_1<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
         return(NULL)
       }
       
       
       else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        rv$messageCheckDataText<-"📌 Error: There are no shapefile have been uploaded ❗"
+        rv$messageCheckDataText_1<-"📌 Error: There are no shapefile have been uploaded ❗"
         return(NULL)
       }
       
       
       else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-        rv$messageCheckDataText<-"📌 Error: There is no csv file have been uploaded ❗"
+        rv$messageCheckDataText_1<-"📌 Error: There is no csv file have been uploaded ❗"
         return(NULL)
       }
       
       else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        rv$messageCheckDataText<-NULL
+        rv$messageCheckDataText_1<-NULL
+        return(NULL)
+      }
+      
+      
+    })
+    
+    
+    output$messageCheckData_2<-renderText(
+      paste(rv$messageCheckDataText_2)
+    )
+    
+    output$messageCheckData_3<-renderText(
+      paste(rv$messageCheckDataText_3)
+    )
+    
+    
+    observeEvent(input$nextpage, {
+      
+      if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
+        rv$messageCheckDataText_2<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
+        rv$messageCheckDataText_3<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
+        
+        return(NULL)
+      }
+      
+      
+      else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        rv$messageCheckDataText_2<-"📌 Error: There are no shapefile have been uploaded ❗"
+        rv$messageCheckDataText_3<-"📌 Error: There are no shapefile have been uploaded ❗"
+        
+        return(NULL)
+      }
+      
+      
+      else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+        rv$messageCheckDataText_2<-"📌 Error: There is no csv file have been uploaded ❗"
+        rv$messageCheckDataText_3<-"📌 Error: There is no csv file have been uploaded ❗"
+        
+        return(NULL)
+      }
+      
+      else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        rv$messageCheckDataText_2<-NULL
+        rv$messageCheckDataText_3<-NULL
+        
         return(NULL)
       }
       
@@ -959,60 +1006,7 @@ shinyApp(
     
     
     
-    
-    # Go to analysis page button
-    output$status_map_cluster <- renderPrint({
-      
-        if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
-          return(HTML('📌 Error: There are no data (shapefile and csv file) have been uploaded ❗'))
-          
-        }
-        
-        
-        else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-          return(HTML('📌 Error: There are no shapefile have been uploaded ❗'))
-          
-        }
-        
-        
-        else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-          return(HTML('📌 Error: There is no csv file have been uploaded ❗'))
-          
-        }
-        
-        # else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        #   return(NULL)
-        # }
-      
-    })
-    
-    
-    
-    output$status_map_asso <- renderPrint({
-      
-      if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
-        return(HTML('📌 Error: There are no data (shapefile and csv file) have been uploaded ❗'))
-        
-      }
-      
-      
-      else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        return(HTML('📌 Error: There are no shapefile have been uploaded ❗'))
-        
-      }
-      
-      
-      else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-        return(HTML('📌 Error: There is no csv file have been uploaded ❗'))
-        
-      }
-      
-      # else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-      #   return(NULL)
-      # }
-      
-      
-    })
+
     
     
       
@@ -1089,7 +1083,7 @@ shinyApp(
       columnidareainmap=NULL,  columnnameareainmap=NULL, #columnnamesuperareainmap=NULL,
       idpolyhighlighted = NULL, posinmapFilteredIdpolyhighlighted=NULL, colores=NULL,
       minrisk=0, maxrisk=1,
-      vblePintar="Risk", textareareactive="NULL",messageCheckDataText="",
+      vblePintar="Risk", textareareactive="NULL",messageCheckDataText_1="", messageCheckDataText_2="", messageCheckDataText_3="",
       map=NULL,datosOriginal=NULL,
       datoswithvaluesforeachidandtime=NULL,
       datossatscan=NULL,
