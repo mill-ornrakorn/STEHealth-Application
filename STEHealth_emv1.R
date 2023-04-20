@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @20-4-23
+# @19-4-23
 
 # ================================================================
 
@@ -476,9 +476,7 @@ body <- dashboardBody(
                     ,
                     mainPanel(uiOutput("status_map_dis"),
                               #leafletOutput("map_distribution", height = "70vh")
-                              div(class = 'error',
-                              verbatimTextOutput("messageCheckData_1")
-                                ),
+                              verbatimTextOutput("messageCheckData_1"),
                               addSpinner(
                                 leafletOutput("map_distribution", height = "75vh"),
                                 spin = "bounce", color = "#735DFB")
@@ -608,9 +606,7 @@ body <- dashboardBody(
                           
                           mainPanel(
                             uiOutput("status_cluster"),
-                            div(class = 'error',
-                            verbatimTextOutput("messageCheckData_2")
-                                ),
+                            verbatimTextOutput("messageCheckData_2"),
                             #verbatimTextOutput("status_map_cluster"),
                             #leafletOutput("map_cluster", height = "70vh")
                             addSpinner(
@@ -741,13 +737,9 @@ body <- dashboardBody(
                           
                           mainPanel(
                             uiOutput("status_risk_fac"),
-                            div(class = 'error',
-                            verbatimTextOutput("messageCheckData_3")
-                              ),  
+                            verbatimTextOutput("messageCheckData_3"),  
                             #verbatimTextOutput("status_map_asso"),
-                            div(class = 'warning',
-                            verbatimTextOutput("status_risk_fac_nocova")
-                              ),
+                            verbatimTextOutput("status_risk_fac_nocova"),
                             addSpinner(
                               leafletOutput("map_risk_fac", height = "80vh"),
                               spin = "bounce", color = "#735DFB"
