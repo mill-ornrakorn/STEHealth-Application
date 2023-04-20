@@ -476,12 +476,7 @@ body <- dashboardBody(
                     ,
                     mainPanel(uiOutput("status_map_dis"),
                               #leafletOutput("map_distribution", height = "70vh")
-                              #verbatimTextOutput("messageCheckData_1"),
-                              # div(class = 'box-warning' ,
-                              #     HTML('dsadasdas')
-                              #     #verbatimTextOutput("messageCheckData_1")
-                              #     ),
-                              uiOutput('warn_map_dis'),
+                              verbatimTextOutput("messageCheckData_1"),
                               addSpinner(
                                 leafletOutput("map_distribution", height = "75vh"),
                                 spin = "bounce", color = "#735DFB")
@@ -611,8 +606,7 @@ body <- dashboardBody(
                           
                           mainPanel(
                             uiOutput("status_cluster"),
-                            uiOutput('warn_map_clus'),
-                            #verbatimTextOutput("messageCheckData_2"),
+                            verbatimTextOutput("messageCheckData_2"),
                             #verbatimTextOutput("status_map_cluster"),
                             #leafletOutput("map_cluster", height = "70vh")
                             addSpinner(
@@ -743,10 +737,11 @@ body <- dashboardBody(
                           
                           mainPanel(
                             uiOutput("status_risk_fac"),
-                            uiOutput('warn_map_asso'),
-                            #verbatimTextOutput("messageCheckData_3"),  
+                            verbatimTextOutput("messageCheckData_3"),  
                             #verbatimTextOutput("status_map_asso"),
-                            uiOutput("status_risk_fac_nocova"),
+                            div(class = 'warning',
+                            verbatimTextOutput("status_risk_fac_nocova")
+                            ),
                             addSpinner(
                               leafletOutput("map_risk_fac", height = "80vh"),
                               spin = "bounce", color = "#735DFB"
@@ -917,8 +912,22 @@ shinyApp(
     # ==================================== write error messages ==================================== 
     
     
-    # textOutput
-    # renderText
+    output$status_risk_fac_nocova <- renderPrint({
+      x1 <- input$columncov1indata
+      x2 <- input$columncov2indata
+      x3 <- input$columncov3indata
+      x4 <- input$columncov4indata
+      x5 <- input$columncov5indata
+      x6 <- input$columncov6indata
+      x7 <- input$columncov7indata
+      
+      if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+        return(HTML('📌 There are no covariates have been selected ❗'))
+      }
+      
+      
+    })
+    
     
     output$messageCheckData_1<-renderText(
       paste(rv$messageCheckDataText_1)
@@ -927,33 +936,27 @@ shinyApp(
     
     observeEvent(input$Preview_Map_Distribution, {
       
-      output$warn_map_dis <- renderUI({
-        if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-          rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
-          div(class = 'box-error' ,
-              
-              textOutput("messageCheckData_1")
-          )
-          
-        }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-          rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
-          div(class = 'box-error' ,
-              
-              textOutput("messageCheckData_1")
-          )
-          
-        }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-          rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
-          div(class = 'box-error' ,
-              
-              textOutput("messageCheckData_1")
-          )
-          
-        }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-          
-          
-        }
-      })
+      if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
+        rv$messageCheckDataText_1<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
+        return(NULL)
+      }
+      
+      
+      else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        rv$messageCheckDataText_1<-"📌 Error: There are no shapefile have been uploaded ❗"
+        return(NULL)
+      }
+      
+      
+      else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+        rv$messageCheckDataText_1<-"📌 Error: There is no csv file have been uploaded ❗"
+        return(NULL)
+      }
+      
+      else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        rv$messageCheckDataText_1<-NULL
+        return(NULL)
+      }
       
       
     })
@@ -968,109 +971,43 @@ shinyApp(
     )
     
     
-    # observeEvent(input$nextpage, {
-    #   
-    #   output$warn_map_clus <- renderUI({
-    #     if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-    #       rv$messageCheckDataText_2<-"Error: There are no data (shapefile and csv file) have been uploaded"
-    #       div(class = 'box-error' ,
-    #           
-    #           textOutput("messageCheckData_2")
-    #       )
-    #       
-    #     }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-    #       rv$messageCheckDataText_2<-"Error: There are no shapefile have been uploaded"
-    #       div(class = 'box-error' ,
-    #           
-    #           textOutput("messageCheckData_2")
-    #       )
-    #       
-    #     }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-    #       rv$messageCheckDataText_2<-"Error: There is no csv file have been uploaded"
-    #       div(class = 'box-error' ,
-    #           
-    #           textOutput("messageCheckData_2")
-    #       )
-    #       
-    #     }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-    #       
-    #       
-    #     }
-    #     
-    #   }) 
-    #   
-    #   output$warn_map_asso <- renderUI({
-    #     if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-    #       rv$messageCheckDataText_3<-"Error: There are no data (shapefile and csv file) have been uploaded"
-    #       div(class = 'box-error' ,
-    #           
-    #           textOutput("messageCheckData_3")
-    #       )
-    #       
-    #     }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-    #       rv$messageCheckDataText_3<-"Error: There are no shapefile have been uploaded"
-    #       div(class = 'box-error' ,
-    #           
-    #           textOutput("messageCheckData_3")
-    #       )
-    #       
-    #     }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-    #       rv$messageCheckDataText_3<-"Error: There is no csv file have been uploaded"
-    #       div(class = 'box-error' ,
-    #           
-    #           textOutput("messageCheckData_3")
-    #       )
-    #       
-    #     }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-    #       
-    #       
-    #     }
-    #     
-    #     
-    #   })
-    #   
-    #   
-    # })
-    
-    
-    
-    output$status_risk_fac_nocova <- renderUI({
-      x1 <- input$columncov1indata
-      x2 <- input$columncov2indata
-      x3 <- input$columncov3indata
-      x4 <- input$columncov4indata
-      x5 <- input$columncov5indata
-      x6 <- input$columncov6indata
-      x7 <- input$columncov7indata
+    observeEvent(input$nextpage, {
       
-      if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+      if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
+        rv$messageCheckDataText_2<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
+        rv$messageCheckDataText_3<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
         
-        div(class = 'box-warning' ,
-            
-            HTML('There are no covariates have been selected'))
+        return(NULL)
+      }
+      
+      
+      else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        rv$messageCheckDataText_2<-"📌 Error: There are no shapefile have been uploaded ❗"
+        rv$messageCheckDataText_3<-"📌 Error: There are no shapefile have been uploaded ❗"
         
+        return(NULL)
+      }
+      
+      
+      else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+        rv$messageCheckDataText_2<-"📌 Error: There is no csv file have been uploaded ❗"
+        rv$messageCheckDataText_3<-"📌 Error: There is no csv file have been uploaded ❗"
         
+        return(NULL)
+      }
+      
+      else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+        rv$messageCheckDataText_2<-NULL
+        rv$messageCheckDataText_3<-NULL
         
+        return(NULL)
       }
       
       
     })
     
-    # output$status_risk_fac_nocova <- renderPrint({
-    #   x1 <- input$columncov1indata
-    #   x2 <- input$columncov2indata
-    #   x3 <- input$columncov3indata
-    #   x4 <- input$columncov4indata
-    #   x5 <- input$columncov5indata
-    #   x6 <- input$columncov6indata
-    #   x7 <- input$columncov7indata
-    #   
-    #   if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-    #     return(HTML('📌 There are no covariates have been selected ❗'))
-    #   }
-    #   
-    #   
-    # })
+    
+    
     
     
     
@@ -1306,72 +1243,11 @@ shinyApp(
     # observeEvent(input$startAnalysisButton, {
     observeEvent(input$nextpage, {
       
-      # if (is.null(rv$datosOriginal) | is.null(rv$map))
-      #   return(NULL)
+      if (is.null(rv$datosOriginal) | is.null(rv$map))
+        return(NULL)
       
-     # if (is.null(rv$map) | (is.null(rv$datosOriginal))) {
-     #  output$warn_map_clus <- renderUI({
-     #    if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-     #      rv$messageCheckDataText_2<-"Error: There are no data (shapefile and csv file) have been uploaded"
-     #      div(class = 'box-error' ,
-     #          
-     #          textOutput("messageCheckData_2")
-     #      )
-     #      
-     #    }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-     #      rv$messageCheckDataText_2<-"Error: There are no shapefile have been uploaded"
-     #      div(class = 'box-error' ,
-     #          
-     #          textOutput("messageCheckData_2")
-     #      )
-     #      
-     #    }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-     #      rv$messageCheckDataText_2<-"Error: There is no csv file have been uploaded"
-     #      div(class = 'box-error' ,
-     #          
-     #          textOutput("messageCheckData_2")
-     #      )
-     #      
-     #    }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-     #      
-     #      
-     #    }
-     #    
-     #  }) 
-     #  
-     #  output$warn_map_asso <- renderUI({
-     #    if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-     #      rv$messageCheckDataText_3<-"Error: There are no data (shapefile and csv file) have been uploaded"
-     #      div(class = 'box-error' ,
-     #          
-     #          textOutput("messageCheckData_3")
-     #      )
-     #      
-     #    }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-     #      rv$messageCheckDataText_3<-"Error: There are no shapefile have been uploaded"
-     #      div(class = 'box-error' ,
-     #          
-     #          textOutput("messageCheckData_3")
-     #      )
-     #      
-     #    }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-     #      rv$messageCheckDataText_3<-"Error: There is no csv file have been uploaded"
-     #      div(class = 'box-error' ,
-     #          
-     #          textOutput("messageCheckData_3")
-     #      )
-     #      
-     #    }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-     # 
-     # 
-     # }
-     #    
-     #    
-     #  })
       
-      # }else 
-        
-      if(!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+      if(input$tabs == "Analysis"){
         data <- rv$datosOriginal
         
         #updateSliderInput(session, "time_period_filter_cluster", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
