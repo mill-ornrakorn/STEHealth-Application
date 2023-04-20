@@ -808,7 +808,7 @@ shinyApp(
 
   server <- function(input, output, session) { 
     
-    #observe(print(input$shapefile_from_thailand))
+    observe(print(input$tabs))
     
     # message menu
 
@@ -924,39 +924,39 @@ shinyApp(
       paste(rv$messageCheckDataText_1)
     )
     
-    
-    observeEvent(input$Preview_Map_Distribution, {
-      
-      output$warn_map_dis <- renderUI({
-        if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-          rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
-          div(class = 'box-error' ,
-              
-              textOutput("messageCheckData_1")
-          )
-          
-        }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-          rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
-          div(class = 'box-error' ,
-              
-              textOutput("messageCheckData_1")
-          )
-          
-        }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-          rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
-          div(class = 'box-error' ,
-              
-              textOutput("messageCheckData_1")
-          )
-          
-        }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-          
-          
-        }
-      })
-      
-      
-    })
+    # 
+    # observeEvent(input$Preview_Map_Distribution, {
+    #   
+    #   output$warn_map_dis <- renderUI({
+    #     if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
+    #       rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
+    #       div(class = 'box-error' ,
+    #           
+    #           textOutput("messageCheckData_1")
+    #       )
+    #       
+    #     }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+    #       rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
+    #       div(class = 'box-error' ,
+    #           
+    #           textOutput("messageCheckData_1")
+    #       )
+    #       
+    #     }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+    #       rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
+    #       div(class = 'box-error' ,
+    #           
+    #           textOutput("messageCheckData_1")
+    #       )
+    #       
+    #     }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+    #       
+    #       
+    #     }
+    #   })
+    #   
+    #   
+    # })
     
     
     output$messageCheckData_2<-renderText(
@@ -1274,30 +1274,132 @@ shinyApp(
     
     # ==================================== ปุ่ม preview map dis ==================================== 
     
-    observeEvent(input$Preview_Map_Distribution  , {
-      if (is.null(rv$datosOriginal)| is.null(rv$map))
-        return(NULL)
+    
+    observeEvent(input$tabs == "Map_Distribution"  , {
       
-      #print(input$tabs)
-      if(input$tabs == "Map_Distribution"){
+      if(!is.null(rv$map) & (!is.null(rv$datosOriginal))){
+        
       data <- rv$datosOriginal
       
       #updateSelectInput(session, "columnidareainmap",        choices = x,  selected = head(x, 1))
       updateSelectInput(session, "time_period_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
-                        #min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
+      #min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
       # print(min(data[,input$columndateindata]))
       # print(max(data[,input$columndateindata]))
       # print(range(data[,input$columndateindata]))
       
       updateSelectInput(session, "time_period_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
       
+      
+      } else if (is.null(rv$map) | (is.null(rv$datosOriginal))){
+          
+        observeEvent(input$Preview_Map_Distribution  , {
+        
+          output$warn_map_dis <- renderUI({
+            if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
+              rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
+              div(class = 'box-error' ,
+                  
+                  textOutput("messageCheckData_1")
+              )
+              
+            }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+              rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
+              div(class = 'box-error' ,
+                  
+                  textOutput("messageCheckData_1")
+              )
+              
+            }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+              rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
+              div(class = 'box-error' ,
+                  
+                  textOutput("messageCheckData_1")
+              )
+              
+            }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+              
+              
+            }
+            
+            
+            
+          })
+        
+        
+        
+        })
+      
       }
       
+        
     })
     
     
+      
+      
+      
+
     
+        
     
+
+# 
+#     observeEvent(input$Preview_Map_Distribution  , {
+#       if (is.null(rv$datosOriginal)| is.null(rv$map))
+#         return(NULL)
+# 
+# 
+# 
+#         output$warn_map_dis <- renderUI({
+#           if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
+#             rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
+#             div(class = 'box-error' ,
+# 
+#                 textOutput("messageCheckData_1")
+#             )
+# 
+#           }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+#             rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
+#             div(class = 'box-error' ,
+# 
+#                 textOutput("messageCheckData_1")
+#             )
+# 
+#           }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+#             rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
+#             div(class = 'box-error' ,
+# 
+#                 textOutput("messageCheckData_1")
+#             )
+# 
+#           }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+# 
+# 
+#           }
+#         })
+# 
+# 
+#       #print(input$tabs)
+#       if(input$tabs == "Map_Distribution"){
+#       data <- rv$datosOriginal
+# 
+#       #updateSelectInput(session, "columnidareainmap",        choices = x,  selected = head(x, 1))
+#       updateSelectInput(session, "time_period_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
+#                         #min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
+#       # print(min(data[,input$columndateindata]))
+#       # print(max(data[,input$columndateindata]))
+#       # print(range(data[,input$columndateindata]))
+# 
+#       updateSelectInput(session, "time_period_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
+# 
+#       }
+# 
+#     })
+
+
+
+
     
     
   

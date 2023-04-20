@@ -453,7 +453,7 @@ span.purple {
 
 
 .box-error {
-  background-image: url('warning.png');
+  background-image: url('close.png');
    /* 
   border: 2px solid #FFC048;
   */
@@ -470,7 +470,7 @@ span.purple {
 }
 
 .box-warning {
-  background-image: url('empty-folder.png');
+  background-image: url('warning.png');
   
   border: 2px solid #FFC048; 
 
