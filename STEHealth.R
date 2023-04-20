@@ -62,7 +62,7 @@ sidebar <- dashboardSidebar(
               menuItem(HTML("&ensp;Manual"), tabName = "Manual", icon = icon("book")),
               menuItem(HTML("&ensp;Help"), tabName = "Help", icon=icon("question")),
               menuItem(HTML("&ensp;Releases"), tabName = "Releases", icon=icon("tasks"))
-
+              
   )
 )
 
@@ -71,7 +71,7 @@ body <- dashboardBody(
   tags$script("document.title = 'STEHealth | Spatiotemporal Epidemiological Analysis'"),
   tags$head(tags$link(rel="icon", 
                       href="STEHealth_logo_0.ico")
-            ),
+  ),
   
   tags$head(
     tags$meta(charset="utf-8"),
@@ -82,7 +82,7 @@ body <- dashboardBody(
                ".shiny-output-error:before { visibility: hidden; }" ), # ไม่แสดง error หน้าเว็บ
     
     tags$style(
-        ".checkbox-inline { 
+      ".checkbox-inline { 
                     margin-left: 0px;
                     margin-right: 10px;
           }
@@ -96,24 +96,24 @@ body <- dashboardBody(
     tags$style('.well { 
                border-color: #FFFFFF;
                }'), # สีกรอบ sidebar
-  
+    
     tags$script(src="js/index.js") # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่น ๆ
-
-
+    
+    
   ),
   
   # font
   HTML("<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>"),
   
   #HTML('<link href="https://fonts.googleapis.com/css?family=Poppins:400,500|Raleway:400,500&display=swap" rel="stylesheet">'),
-
-
+  
+  
   fluidRow(
     tabItems(
       # ==================================== Home ==================================== 
       
       tabItem(tabName = "Home",
-            
+              
               HTML('
               <div class="header" id="home">
                    <div class="container">
@@ -171,118 +171,118 @@ body <- dashboardBody(
               sidebarLayout(
                 
                 sidebarPanel(
-                          style = "height: 80vh; overflow-y: auto;",
-                          
-                          
-                          #width = 8,
-                          tags$style(".well {background-color:#FFFFFF;}"),
-                                #div(style = "background-color: #FFFFFF;" ),
-                                #HTML("<h2>Input Data</h2>"),
-                          #HTML("<h3><strong>Upload map (shapefile)</strong></h3>"),
-                          
-                          
-                          # ==================================== Upload map (shapefile) ==================================== 
-                          # ปุ่ม ? แต่ติดปัญหาตรงที่มันไม่บรรทัดเดียวกัน แม้จะใส่  inline-block แล้ว
-                          div(style="display: inline-block;",
-                              HTML('<h3><span class="purple">1.</span>
+                  style = "height: 80vh; overflow-y: auto;",
+                  
+                  
+                  #width = 8,
+                  tags$style(".well {background-color:#FFFFFF;}"),
+                  #div(style = "background-color: #FFFFFF;" ),
+                  #HTML("<h2>Input Data</h2>"),
+                  #HTML("<h3><strong>Upload map (shapefile)</strong></h3>"),
+                  
+                  
+                  # ==================================== Upload map (shapefile) ==================================== 
+                  # ปุ่ม ? แต่ติดปัญหาตรงที่มันไม่บรรทัดเดียวกัน แม้จะใส่  inline-block แล้ว
+                  div(style="display: inline-block;",
+                      HTML('<h3><span class="purple">1.</span>
                                    Upload shapefile</h3>
                                    '),
-                                    
-                              # เลยต้องแก้แบบนี้แทน 
-                              div(style = "margin-left: 280px; margin-top: -45px;",
-                              bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
-
-                              bsPopover(id = "question_shapefile", title = "Shapefile", 
-                                        content = paste0(strong("What is a shapefile? "),br(),
-                                                         "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
-                                                         a("(5)",
-                                                           href = "https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm",
-                                                           target="_blank"),
-                                                         
-                                                         br(),br(),
-                                                         strong("Examples of shapefiles"),br(),
-                                                         "This examples shapefiles include shp, dbf, shx, prj. ",
-                                                         a("click here to downloads shapefiles",
-                                                           href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
-                                                           target="_blank")
-                                                         ),
-                                        placement = "right",
-                                        trigger = "click",
-                                        options = list(container = "body")
-                                        ))
-                               ),
+                      
+                      # เลยต้องแก้แบบนี้แทน 
+                      div(style = "margin-left: 280px; margin-top: -45px;",
+                          bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
                           
-                                        hr(),
-                                        #width = 7,
-                                        HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile at once:</font></strong> shp, dbf, shx and prj."),
-                                        fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
-
-                                        helpText("Select columns area name in the map."),
-                                        fluidRow(column(12, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")),
-                                                 #column(6, selectInput("columnnameareainmap", label = "area name", choices = c(""), selected = ""))
-                                                 ),
-                          
-                                           HTML("<font color= \"#735DFB\" style = 'text-align: justify;'><strong>Note: </font>Area name</strong> is name of the area. Area name in the data must be the same name and order as area name in the <strong>csv file</strong>.
+                          bsPopover(id = "question_shapefile", title = "Shapefile", 
+                                    content = paste0(strong("What is a shapefile? "),br(),
+                                                     "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
+                                                     a("(5)",
+                                                       href = "https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm",
+                                                       target="_blank"),
+                                                     
+                                                     br(),br(),
+                                                     strong("Examples of shapefiles"),br(),
+                                                     "This examples shapefiles include shp, dbf, shx, prj. ",
+                                                     a("click here to downloads shapefiles",
+                                                       href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
+                                                       target="_blank")
+                                    ),
+                                    placement = "right",
+                                    trigger = "click",
+                                    options = list(container = "body")
+                          ))
+                  ),
+                  
+                  hr(),
+                  #width = 7,
+                  HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile at once:</font></strong> shp, dbf, shx and prj."),
+                  fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
+                  
+                  helpText("Select columns area name in the map."),
+                  fluidRow(column(12, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")),
+                           #column(6, selectInput("columnnameareainmap", label = "area name", choices = c(""), selected = ""))
+                  ),
+                  
+                  HTML("<font color= \"#735DFB\" style = 'text-align: justify;'><strong>Note: </font>Area name</strong> is name of the area. Area name in the data must be the same name and order as area name in the <strong>csv file</strong>.
                                            
                                             </br></br>"),
-                          
-                                        radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
-                          
-
-                                        # fluidRow(column(12, helpText(div("Optional. Select column name of the regions in the map."),
-                                        #                             div("If the number of areas is big, the leaflet map will not render. By specifying regions containing a small number of areas,
-                                        #                                 only areas within the selected region will be shown in the interactive results.")))),
-                                        # fluidRow(column(6, selectInput("columnnamesuperareainmap", label = "region name", choices = c(""), selected = ""))),
-                          
-                          
-                          
-                          # ==================================== Upload data (.csv file) ==================================== 
-                          # ปุ่ม ? แต่ติดปัญหาตรงที่มันไม่บรรทัดเดียวกัน แม้จะใส่  inline-block แล้ว
-                          div(style="display: inline-block;",
-                              HTML('<h3><span class="purple">2.</span>
+                  
+                  radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
+                  
+                  
+                  # fluidRow(column(12, helpText(div("Optional. Select column name of the regions in the map."),
+                  #                             div("If the number of areas is big, the leaflet map will not render. By specifying regions containing a small number of areas,
+                  #                                 only areas within the selected region will be shown in the interactive results.")))),
+                  # fluidRow(column(6, selectInput("columnnamesuperareainmap", label = "region name", choices = c(""), selected = ""))),
+                  
+                  
+                  
+                  # ==================================== Upload data (.csv file) ==================================== 
+                  # ปุ่ม ? แต่ติดปัญหาตรงที่มันไม่บรรทัดเดียวกัน แม้จะใส่  inline-block แล้ว
+                  div(style="display: inline-block;",
+                      HTML('<h3><span class="purple">2.</span>
                                    Upload csv file</h3>'),
-                              
-                              # เลยต้องแก้แบบนี้แทน 
-                              div(style = "margin-left: 240px; margin-top: -45px;",
-                                  bsButton("question_csvfile", label = "", icon = icon("question"), style = "Question"),
-                                  
-                                  bsPopover(id = "question_csvfile", title = "csv file",
-                                            content = paste0(strong("The csv file "),br(),
-                                                             ".csv file needs to have columns: ",
-                                                             strong("<area id> <area name> <expected value> <cases> <time period> <population>"),
-                                                             br(),br(),
-                                                             strong("Examples of csv file "),
-                                                             #"This examples csv file include column: ....... ",
-                                                             a("click here to downloads csv file",
-                                                               href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
-                                                               target="_blank")
-                                            ),
-                                            placement = "right",
-                                            trigger = "click",
-                                            options = list(container = "body")
-                                  ))
-                          ),
+                      
+                      # เลยต้องแก้แบบนี้แทน 
+                      div(style = "margin-left: 240px; margin-top: -45px;",
+                          bsButton("question_csvfile", label = "", icon = icon("question"), style = "Question"),
                           
-                          
-                          
-                          hr(),
-                          HTML("<h4>Select Data*</h4>"),
-                          #width = 7,
-                          HTML("*.csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time period, expected value, cases, population</font></strong>"),
-                          fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-                          
-                          helpText("Select columns:"),
-                          fluidRow(column(6, selectInput("columnidareaindata",  label = "area id",  choices = c(""), selected = "")),
-                                   column(6, selectInput("columnidareanamedata", label = "area name", choices = c(""), selected = ""))
-                          ),
-                          fluidRow(column(6, selectInput("columnexpvalueindata", label = "expected value", choices = c(""), selected = "")),
-                                   column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = ""))
-                          ),
-                          fluidRow(column(6, selectInput("columndateindata", label = "time period", choices = c(""), selected = "")),
-                                   column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = ""))
-                          ),
-                        
-                          HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
+                          bsPopover(id = "question_csvfile", title = "csv file",
+                                    content = paste0(strong("The csv file "),br(),
+                                                     ".csv file needs to have columns: ",
+                                                     strong("<area id> <area name> <expected value> <cases> <time period> <population>"),
+                                                     br(),br(),
+                                                     strong("Examples of csv file "),
+                                                     #"This examples csv file include column: ....... ",
+                                                     a("click here to downloads csv file",
+                                                       href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
+                                                       target="_blank")
+                                    ),
+                                    placement = "right",
+                                    trigger = "click",
+                                    options = list(container = "body")
+                          ))
+                  ),
+                  
+                  
+                  
+                  hr(),
+                  HTML("<h4>Select Data*</h4>"),
+                  #width = 7,
+                  HTML("*.csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time period, expected value, cases, population</font></strong>"),
+                  fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+                  
+                  helpText("Select columns:"),
+                  fluidRow(column(6, selectInput("columnidareaindata",  label = "area id",  choices = c(""), selected = "")),
+                           column(6, selectInput("columnidareanamedata", label = "area name", choices = c(""), selected = ""))
+                  ),
+                  fluidRow(column(6, selectInput("columnexpvalueindata", label = "expected value", choices = c(""), selected = "")),
+                           column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = ""))
+                  ),
+                  fluidRow(column(6, selectInput("columndateindata", label = "time period", choices = c(""), selected = "")),
+                           column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = ""))
+                  ),
+                  
+                  HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
                                              <ul style = 'text-align: justify;'>
                                               <li><strong>Area id</strong>: a number starting at 1, used to identify provinces.</li> 
                                               <li><strong>Area name</strong>: name of the area. Area name in the data must be the same as area name in the shapefile.</li> 
@@ -294,28 +294,28 @@ body <- dashboardBody(
                                             </ul>
                                                 
                                             </br>"),
-                          
-                          HTML("<h4><strong>Select Covariates*</strong></h4>"),
-                          HTML("*Put covariate in order from 1 to 7, with no blanks."),
-                          
-                          helpText("Select columns:"),
-                          fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
-                                   column(6, selectInput("columncov2indata", label = "covariate 2", choices = c(""), selected = ""))
-                          ),
-                          
-                          fluidRow(column(6, selectInput("columncov3indata", label = "covariate 3", choices = c(""), selected = "")),
-                                   column(6, selectInput("columncov4indata", label = "covariate 4", choices = c(""), selected = ""))
-                          ),
-                          
-                          fluidRow(column(6, selectInput("columncov5indata", label = "covariate 5", choices = c(""), selected = "")),
-                                   column(6, selectInput("columncov6indata", label = "covariate 6", choices = c(""), selected = ""))
-                          ),
-                          
-                          fluidRow(column(6, selectInput("columncov7indata", label = "covariate 7", choices = c(""), selected = "")),
-                                   #column(6, selectInput("columncov8indata", label = "covariate 8", choices = c(""), selected = ""))
-                          ),
-                          
-                          HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
+                  
+                  HTML("<h4><strong>Select Covariates*</strong></h4>"),
+                  HTML("*Put covariate in order from 1 to 7, with no blanks."),
+                  
+                  helpText("Select columns:"),
+                  fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
+                           column(6, selectInput("columncov2indata", label = "covariate 2", choices = c(""), selected = ""))
+                  ),
+                  
+                  fluidRow(column(6, selectInput("columncov3indata", label = "covariate 3", choices = c(""), selected = "")),
+                           column(6, selectInput("columncov4indata", label = "covariate 4", choices = c(""), selected = ""))
+                  ),
+                  
+                  fluidRow(column(6, selectInput("columncov5indata", label = "covariate 5", choices = c(""), selected = "")),
+                           column(6, selectInput("columncov6indata", label = "covariate 6", choices = c(""), selected = ""))
+                  ),
+                  
+                  fluidRow(column(6, selectInput("columncov7indata", label = "covariate 7", choices = c(""), selected = "")),
+                           #column(6, selectInput("columncov8indata", label = "covariate 8", choices = c(""), selected = ""))
+                  ),
+                  
+                  HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
                                              <ul style = 'text-align: justify;'>
                                               <li>If the user select 1 covariate, the analysis is <strong>univariate</strong>.</li> 
                                               <li>If the user selects covariates more than 1, all covariates will be calculated at the same time, which is a 
@@ -324,82 +324,82 @@ body <- dashboardBody(
                                              </ul>
                                                 
                                             </br>"),
-                          
-
-                          fluidRow(column(4, offset=3, actionButton("Preview_Map_Distribution",
-                                                                    strong("Preview Map Distribution"),
-                                                                    onclick = "$('li:eq(7) a').tab('show');",
-                                                                    class = 'btn-primary',
-                                                                    style='color: #FFFFFF;'
-                          ))),
-                          
-                          
-                          # fluidRow(textOutput('error_msg'),
-                          #          textOutput("success_msg"))
-
-      
-                 
-                            
-              ),
-              # ==================================== Preview Input Data ==================================== 
-              mainPanel(
-                div(style = "margin-top: -60px;" ),
-                HTML("<h2>Preview Input Data</h2>"),
-
-                tabBox(width=12,id="tabBox_next_previous",
-                  tabPanel(HTML("<h4>Map data (shapefile)</h4>"), 
-                           #HTML("<p style='text-align:center; margin-top: 60px; margin-bottom: 60px;'> 
-                            #    <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>"),
-                           
-                           
-                           #verbatimTextOutput("status_map"),
-                          uiOutput('status_map'), 
-                              
-                           # div(
-                           #  plotOutput("uploadmapmap"),
-                           #  style = 'z-index: -1; position: relative; '
-                           #    ),
-                           verbatimTextOutput("uploadmapsummary"), 
-                           dataTableOutput('uploadmaptable')
-                           
-                           
-                           ),
-                  
-                  tabPanel(HTML("<h4>Data (.csv file)</h4>"), 
-                           #HTML("<p style='text-align:center; margin-top: 60px; margin-bottom: 60px;'> 
-                          #      <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>"),
-                          
-                          #verbatimTextOutput("status_csv"),
-                          uiOutput('status_csv'),
-                          verbatimTextOutput("uploaddatasummary"),
-                          dataTableOutput('uploaddatatable')
-                           )
                   
                   
-                  )
-
-                  
+                  fluidRow(column(4, offset=3, actionButton("Preview_Map_Distribution",
+                                                            strong("Preview Map Distribution"),
+                                                            onclick = "$('li:eq(7) a').tab('show');",
+                                                            class = 'btn-primary',
+                                                            style='color: #FFFFFF;'
                   ))),
+                  
+                  
+                  # fluidRow(textOutput('error_msg'),
+                  #          textOutput("success_msg"))
+                  
+                  
+                  
+                  
+                ),
+                # ==================================== Preview Input Data ==================================== 
+                mainPanel(
+                  div(style = "margin-top: -60px;" ),
+                  HTML("<h2>Preview Input Data</h2>"),
+                  
+                  tabBox(width=12,id="tabBox_next_previous",
+                         tabPanel(HTML("<h4>Map data (shapefile)</h4>"), 
+                                  #HTML("<p style='text-align:center; margin-top: 60px; margin-bottom: 60px;'> 
+                                  #    <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>"),
+                                  
+                                  
+                                  #verbatimTextOutput("status_map"),
+                                  uiOutput('status_map'), 
+                                  
+                                  # div(
+                                  #  plotOutput("uploadmapmap"),
+                                  #  style = 'z-index: -1; position: relative; '
+                                  #    ),
+                                  verbatimTextOutput("uploadmapsummary"), 
+                                  dataTableOutput('uploadmaptable')
+                                  
+                                  
+                         ),
+                         
+                         tabPanel(HTML("<h4>Data (.csv file)</h4>"), 
+                                  #HTML("<p style='text-align:center; margin-top: 60px; margin-bottom: 60px;'> 
+                                  #      <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>"),
+                                  
+                                  #verbatimTextOutput("status_csv"),
+                                  uiOutput('status_csv'),
+                                  verbatimTextOutput("uploaddatasummary"),
+                                  dataTableOutput('uploaddatatable')
+                         )
+                         
+                         
+                  )
+                  
+                  
+                ))),
       
       # ==================================== Map_Distribution ==================================== 
-  
+      
       tabItem(tabName = "Map_Distribution",
               HTML("<div class = 'heading_container'>
                      <h1>Map Distribution</h1>
                    </div>"),
               div(class = "box-white", 
-          sidebarLayout(
-           sidebarPanel(
-              #fluidRow(
-                #column(12,
-                
-                    #class = "box",
-                    
-                        style = "height: 80vh; overflow-y: auto;",
-                    #style = "padding: 5%;",
-                fluidRow(
-                  column(12,
-                          HTML("<div class='box-white'>
+                  sidebarLayout(
+                    sidebarPanel(
+                      #fluidRow(
+                      #column(12,
+                      
+                      #class = "box",
+                      
+                      style = "height: 80vh; overflow-y: auto;",
+                      #style = "padding: 5%;",
+                      fluidRow(
+                        column(12,
+                               HTML("<div class='box-white'>
                                              
                                             <img align='left' width='52px'; height='52px'; src='mapdis.png' style = 'margin-top: 10px; margin-right: 10px;' >
                                         
@@ -412,156 +412,156 @@ body <- dashboardBody(
                                            
                                           </div>
                                            "),
-                         
-                         div(
-                           class = "box-white",
-                           HTML("<h4>Fillter</h4>"),
-                           
-                           # เลือกช่วงเวลา
-                           selectInput("time_period_filter", label = "Time Period:" ,
-                                       choices = c(""), selected = ""),
-                           
-                           #selectInput("time_period_filter", label = "Time Period:", choices = c(""), selected = ""),
-                           
-                           
-                           # เลือกสีแมพ
-                           selectInput("color", label = "Color Scheme:", 
-                                       choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
-                                                      "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
-                         ),
-                         #HTML("</br>"),
-                         #verbatimTextOutput("status_map_dis")
-                         
-                         div(
-                           class = "box-white",
-                         HTML('<h4>
+                               
+                               div(
+                                 class = "box-white",
+                                 HTML("<h4>Fillter</h4>"),
+                                 
+                                 # เลือกช่วงเวลา
+                                 selectInput("time_period_filter", label = "Time Period:" ,
+                                             choices = c(""), selected = ""),
+                                 
+                                 #selectInput("time_period_filter", label = "Time Period:", choices = c(""), selected = ""),
+                                 
+                                 
+                                 # เลือกสีแมพ
+                                 selectInput("color", label = "Color Scheme:", 
+                                             choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
+                                                            "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
+                               ),
+                               #HTML("</br>"),
+                               #verbatimTextOutput("status_map_dis")
+                               
+                               div(
+                                 class = "box-white",
+                                 HTML('<h4>
                                 Capture screenshot
                                </h4>
                                <p>
                                 Take a screenshot of map. The captured image is downloaded as a PNG image.
                                </p>
                               '),
-                         
-                         capture(
-                           class="btn btn-outline-primary2",
-                           selector = "#map_distribution",
-                           filename = paste("map_distribution-", Sys.Date(), ".png", sep=""),
-                           icon("camera"), "Screenshot Map",
-                           scale = 3, # bigger scale
-                           options=list(backgroundColor = "white"),
-                           style = "border-radius: 100px;"
-                         )
-                         
-                         ),
-                         
-                         
-                         fluidRow(column(4,
-                                         offset=3,
-                                         actionButton("nextpage",
-                                                      strong("Go to analysis page"), # ► ◄
-                                                      onclick = "$('li:eq(8) a').tab('show');",
-                                                      class = 'btn-primary',
-                                                      style='color: #FFFFFF; margin-top: 20px;'
-                                         )
-                                ))
-                         
-                         
-                  )
-                  )
-                
-              )
-                         
-                         
-          
-              ,
-           mainPanel(uiOutput("status_map_dis"),
-                     #leafletOutput("map_distribution", height = "70vh")
-                     #verbatimTextOutput("messageCheckData_1"),
-                     # div(class = 'box-warning' ,
-                     #     HTML('dsadasdas')
-                     #     #verbatimTextOutput("messageCheckData_1")
-                     #     ),
-                     uiOutput('warn_map_dis'),
-                     addSpinner(
-                       leafletOutput("map_distribution", height = "75vh"),
-                       spin = "bounce", color = "#735DFB")
-           
-           )
-              ))
+                                 
+                                 capture(
+                                   class="btn btn-outline-primary2",
+                                   selector = "#map_distribution",
+                                   filename = paste("map_distribution-", Sys.Date(), ".png", sep=""),
+                                   icon("camera"), "Screenshot Map",
+                                   scale = 3, # bigger scale
+                                   options=list(backgroundColor = "white"),
+                                   style = "border-radius: 100px;"
+                                 )
+                                 
+                               ),
+                               
+                               
+                               fluidRow(column(4,
+                                               offset=3,
+                                               actionButton("nextpage",
+                                                            strong("Go to analysis page"), # ► ◄
+                                                            onclick = "$('li:eq(8) a').tab('show');",
+                                                            class = 'btn-primary',
+                                                            style='color: #FFFFFF; margin-top: 20px;'
+                                               )
+                               ))
+                               
+                               
+                        )
+                      )
+                      
+                    )
+                    
+                    
+                    
+                    ,
+                    mainPanel(uiOutput("status_map_dis"),
+                              #leafletOutput("map_distribution", height = "70vh")
+                              #verbatimTextOutput("messageCheckData_1"),
+                              # div(class = 'box-warning' ,
+                              #     HTML('dsadasdas')
+                              #     #verbatimTextOutput("messageCheckData_1")
+                              #     ),
+                              uiOutput('warn_map_dis'),
+                              addSpinner(
+                                leafletOutput("map_distribution", height = "75vh"),
+                                spin = "bounce", color = "#735DFB")
+                              
+                    )
+                  ))
               
-              ),
-              
-          # ==================================== Analysis ==================================== 
+      ),
       
-          tabItem(
-            tabName = "Analysis",
-                  HTML("
+      # ==================================== Analysis ==================================== 
+      
+      tabItem(
+        tabName = "Analysis",
+        HTML("
                   <div class = 'heading_container'>
                      <h1>Spatiotemporal Epidemiological Analysis</h1>
                    </div>"),
-                  
-                  tabBox(width=12,id="tabBox_next_previous",
-                         
-                         # ==================================== Cluster Detection ==================================== 
-                         
-                         tabPanel(HTML("<h4>Cluster Detection</h4>"),
-                              sidebarLayout(
-                                sidebarPanel(
-                                  style = "height: 80vh; overflow-y: auto;",
-                                  fluidRow(
-                                    column(12,
-                                           div(
-                                             class = "box-white",
-                                             tags$img(align='left',width='52px',height='52px',src='cluster.png',style='margin-top: 10px; margin-right: 10px'),
-                                             tags$h4("Cluster Detection"),
-                                             HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
+        
+        tabBox(width=12,id="tabBox_next_previous",
+               
+               # ==================================== Cluster Detection ==================================== 
+               
+               tabPanel(HTML("<h4>Cluster Detection</h4>"),
+                        sidebarLayout(
+                          sidebarPanel(
+                            style = "height: 80vh; overflow-y: auto;",
+                            fluidRow(
+                              column(12,
+                                     div(
+                                       class = "box-white",
+                                       tags$img(align='left',width='52px',height='52px',src='cluster.png',style='margin-top: 10px; margin-right: 10px'),
+                                       tags$h4("Cluster Detection"),
+                                       HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
                                                     Users can visualize and select filters including time period and color scheme. For details of the model, please refer to the"),
-                                             tags$a("Help page.", onclick="customHref('Help')")
-                                             
-                                           ),
-                                           
-                                      
-                                           div(
-                                             class = "box-white",
-                                             HTML("<h4>Fillter</h4>"),
-                                             
-                                           # เลือกช่วงเวลา
-                                           # sliderInput("time_period_filter_cluster", label = "Time Period:" , min = 1 ,
-                                           #             max = 10 , value = 1, step = 1),
-                                           
-                                           selectInput("time_period_filter_cluster", label = "Time Period:" ,
-                                                       choices = c(""), selected = ""),
-                                           
-                                           
-                                           
-                                           # เลือกสีแมพ
-                                           selectInput("color_cluster", label = "Color Scheme:", 
-                                                       choices = list("Red and Green" = "Set1", 
-                                                                      "Green and Purple" = "Dark2",
-                                                                      "Orange and Green" = "Spectral",
-                                                                      "Yellow and Green" = "BrBG",
-                                                                      "Red and Blue" = "RdBu",
-                                                                      "Purple and Orange" = "PuOr"
-                                                                      ))
-                                           ),
-                                           
-                                           div(
-                                             class = "box-white",
-                                             HTML('<h4>Download Result</h4>
+                                       tags$a("Help page.", onclick="customHref('Help')")
+                                       
+                                     ),
+                                     
+                                     
+                                     div(
+                                       class = "box-white",
+                                       HTML("<h4>Fillter</h4>"),
+                                       
+                                       # เลือกช่วงเวลา
+                                       # sliderInput("time_period_filter_cluster", label = "Time Period:" , min = 1 ,
+                                       #             max = 10 , value = 1, step = 1),
+                                       
+                                       selectInput("time_period_filter_cluster", label = "Time Period:" ,
+                                                   choices = c(""), selected = ""),
+                                       
+                                       
+                                       
+                                       # เลือกสีแมพ
+                                       selectInput("color_cluster", label = "Color Scheme:", 
+                                                   choices = list("Red and Green" = "Set1", 
+                                                                  "Green and Purple" = "Dark2",
+                                                                  "Orange and Green" = "Spectral",
+                                                                  "Yellow and Green" = "BrBG",
+                                                                  "Red and Blue" = "RdBu",
+                                                                  "Purple and Orange" = "PuOr"
+                                                   ))
+                                     ),
+                                     
+                                     div(
+                                       class = "box-white",
+                                       HTML('<h4>Download Result</h4>
                                                   <p>
                                                      The data obtained from the cluster detection consists of the original data and the <strong>label column</strong>, 
                                                      which in the label column will consist of hotspot and non-hotspot. 
                                                   </p>
                                                   
                                                   '),
-                                             
-                                             
-                                           
-                                             downloadButton("downloadData_cluster", "Download (.csv)", 
-                                                            class="btn btn-outline-primary2",
-                                                            style = "border-radius: 100px;"), 
-                                             
-                                             HTML('</br>
+                                       
+                                       
+                                       
+                                       downloadButton("downloadData_cluster", "Download (.csv)", 
+                                                      class="btn btn-outline-primary2",
+                                                      style = "border-radius: 100px;"), 
+                                       
+                                       HTML('</br>
                                                   </br>
                                                   <h5>
                                                      Capture screenshot
@@ -571,75 +571,75 @@ body <- dashboardBody(
                                                   </p>
                                                   
                                                   '),
-                                             
-                                             capture(
-                                               class="btn btn-outline-primary2",
-                                               selector = "#map_cluster",
-                                               filename = paste("map_cluster-", Sys.Date(), ".png", sep=""),
-                                               icon("camera"), "Screenshot Map",
-                                               scale = 3, # bigger scale
-                                               options=list(backgroundColor = "white"),
-                                               style = "border-radius: 100px;"
-                                             )
-                                                      
-                                           
-                                           ),
-                                           
-                                           
-                                           div(
-                                             class = "box-purple",
-                                             HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                       
+                                       capture(
+                                         class="btn btn-outline-primary2",
+                                         selector = "#map_cluster",
+                                         filename = paste("map_cluster-", Sys.Date(), ".png", sep=""),
+                                         icon("camera"), "Screenshot Map",
+                                         scale = 3, # bigger scale
+                                         options=list(backgroundColor = "white"),
+                                         style = "border-radius: 100px;"
+                                       )
+                                       
+                                       
+                                     ),
+                                     
+                                     
+                                     div(
+                                       class = "box-purple",
+                                       HTML("<h4>Examples of interpretation (from sample data)</h4>
                                             • If the area has a <strong>hotspot</strong>: </br>
                                               &emsp;In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides). 
                                               
                                               </br></br>
                                               For other examples of interpretation, please refer to the
                                             "
-                                             ),
-                                             tags$a("Manual page.", onclick="customHref('Manual')")
-                                           )
-                                  
-
-
-                                      ),
-                                  
-                                    
-
-                                        
-                                        
-                                      )),
-                                
-                                mainPanel(
-                                          uiOutput("status_cluster"),
-                                          uiOutput('warn_map_clus'),
-                                          #verbatimTextOutput("messageCheckData_2"),
-                                          #verbatimTextOutput("status_map_cluster"),
-                                          #leafletOutput("map_cluster", height = "70vh")
-                                          addSpinner(
-                                            leafletOutput("map_cluster", height = "80vh"),
-                                            spin = "bounce", color = "#735DFB"
-                                          )
-                                          
-                                          
-                                          )
-                                
-                                
-                                )
-                                  ),
-                         
-                         # ==================================== Association with Risk Factors ==================================== 
-                         # sidebarLayout(
-                         #   
-                         #   sidebarPanel(
-                         # mainPanel
-                         tabPanel(HTML("<h4>Association with Risk Factors</h4>"),
-                              sidebarLayout(
-                                sidebarPanel(style = "height: 80vh; overflow-y: auto;",
-                                  fluidRow(
-                                    column(12,
-                                           div(
-                                             class = "box-white",
-                                             HTML("
+                                       ),
+                                       tags$a("Manual page.", onclick="customHref('Manual')")
+                                     )
+                                     
+                                     
+                                     
+                              ),
+                              
+                              
+                              
+                              
+                              
+                            )),
+                          
+                          mainPanel(
+                            uiOutput("status_cluster"),
+                            uiOutput('warn_map_clus'),
+                            #verbatimTextOutput("messageCheckData_2"),
+                            #verbatimTextOutput("status_map_cluster"),
+                            #leafletOutput("map_cluster", height = "70vh")
+                            addSpinner(
+                              leafletOutput("map_cluster", height = "80vh"),
+                              spin = "bounce", color = "#735DFB"
+                            )
+                            
+                            
+                          )
+                          
+                          
+                        )
+               ),
+               
+               # ==================================== Association with Risk Factors ==================================== 
+               # sidebarLayout(
+               #   
+               #   sidebarPanel(
+               # mainPanel
+               tabPanel(HTML("<h4>Association with Risk Factors</h4>"),
+                        sidebarLayout(
+                          sidebarPanel(style = "height: 80vh; overflow-y: auto;",
+                                       fluidRow(
+                                         column(12,
+                                                div(
+                                                  class = "box-white",
+                                                  HTML("
                                             <img align='left' width='52px' height='52px' src='risk.png' style='margin-top: 10px; margin-right: 10px' >
                                             <h4>Association with Risk Factors</h4>
                                             
@@ -651,42 +651,42 @@ body <- dashboardBody(
                                              
                                              For details of the model and value, please refer to the
                                                   "),
-                                             
-                                            tags$a("Help page.", onclick="customHref('Help')")
-                                           ),
-                                          
-                                    div(
-                                      class = "box-white",
-                                      HTML("<h4>Fillter</h4>"),
-                                      selectInput("risk_factor_filter", label = "Risk factor:", choices = c(""), selected = ""),
-                                      
-                                      # เลือกสีแมพ
-                                      selectInput("color_asso", label = "Color Scheme:", 
-                                                  choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
-                                                                 "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
-                                      
-                                      
-                                      ),
-                                    
-                                    div(
-                                      class = "box-white",
-                                      HTML("<h4>Download Result</h4>
+                                                  
+                                                  tags$a("Help page.", onclick="customHref('Help')")
+                                                ),
+                                                
+                                                div(
+                                                  class = "box-white",
+                                                  HTML("<h4>Fillter</h4>"),
+                                                  selectInput("risk_factor_filter", label = "Risk factor:", choices = c(""), selected = ""),
+                                                  
+                                                  # เลือกสีแมพ
+                                                  selectInput("color_asso", label = "Color Scheme:", 
+                                                              choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
+                                                                             "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
+                                                  
+                                                  
+                                                ),
+                                                
+                                                div(
+                                                  class = "box-white",
+                                                  HTML("<h4>Download Result</h4>
                                             <p>
                                             The data obtained from the association with risk factors consists of area name, each risk factor calculated as a percentage increase, lower bound, upper bound, and significance                                              </p>
                                                   
                                                   "),
-                                    
-                                      checkboxGroupInput('asso_select_column', 'Column', inline=TRUE, 
-                                                         c("lower bound" = "lowerbound", 'upper bound' = 'upperbound', 'significance' = 'significance'),
-                                                         selected = c("lowerbound", 'upperbound', 'significance' )),
-                                      
-                                      
-                                      downloadButton("downloadData_asso_risk", "Download (.csv)", 
-                                                     class="btn btn-outline-primary2",
-                                                     style = "border-radius: 100px;"),
-                                      
-                                      
-                                      HTML('</br>
+                                                  
+                                                  checkboxGroupInput('asso_select_column', 'Column', inline=TRUE, 
+                                                                     c("lower bound" = "lowerbound", 'upper bound' = 'upperbound', 'significance' = 'significance'),
+                                                                     selected = c("lowerbound", 'upperbound', 'significance' )),
+                                                  
+                                                  
+                                                  downloadButton("downloadData_asso_risk", "Download (.csv)", 
+                                                                 class="btn btn-outline-primary2",
+                                                                 style = "border-radius: 100px;"),
+                                                  
+                                                  
+                                                  HTML('</br>
                                             </br>
                                             <h5>
                                               Capture screenshot
@@ -695,23 +695,23 @@ body <- dashboardBody(
                                             Take a screenshot of map. The captured image is downloaded as a PNG image.
                                             </p>
                                            '),
-                                      
-                                      capture(
-                                        class="btn btn-outline-primary2",
-                                        selector = "#map_risk_fac",
-                                        filename = paste("map_risk_fac-", Sys.Date(), ".png", sep=""),
-                                        icon("camera"), "Screenshot Map",
-                                        scale = 3, # bigger scale
-                                        options=list(backgroundColor = "white"),
-                                        style = "border-radius: 100px;"
-                                      )
-                                      
-                                      
-                                    ),
-                                    
-                                    div(
-                                      class = "box-purple",
-                                      HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                                  
+                                                  capture(
+                                                    class="btn btn-outline-primary2",
+                                                    selector = "#map_risk_fac",
+                                                    filename = paste("map_risk_fac-", Sys.Date(), ".png", sep=""),
+                                                    icon("camera"), "Screenshot Map",
+                                                    scale = 3, # bigger scale
+                                                    options=list(backgroundColor = "white"),
+                                                    style = "border-radius: 100px;"
+                                                  )
+                                                  
+                                                  
+                                                ),
+                                                
+                                                div(
+                                                  class = "box-purple",
+                                                  HTML("<h4>Examples of interpretation (from sample data)</h4>
                                             • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
                                               &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
                                               the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
@@ -728,65 +728,65 @@ body <- dashboardBody(
                                             </br></br>   
                                               For other examples of interpretation, please refer to the
                                              "),
-                                      tags$a("Manual page.", onclick="customHref('Manual')")
-                                    
-                                    )
-
-                                           
-                                    )
-                                   
-                                           
-                                           
-                                    
-                                  )
-                         ),
-                         
-                         mainPanel(
-                           uiOutput("status_risk_fac"),
-                           uiOutput('warn_map_asso'),
-                           #verbatimTextOutput("messageCheckData_3"),  
-                           #verbatimTextOutput("status_map_asso"),
-                           uiOutput("status_risk_fac_nocova"),
-                           addSpinner(
-                             leafletOutput("map_risk_fac", height = "80vh"),
-                             spin = "bounce", color = "#735DFB"
-                               )
-                                   
-                           
-                         )
-                         
-                         )
-
-
-                                )
-                               )
+                                                  tags$a("Manual page.", onclick="customHref('Manual')")
+                                                  
+                                                )
+                                                
+                                                
+                                         )
+                                         
+                                         
+                                         
+                                         
+                                       )
+                          ),
+                          
+                          mainPanel(
+                            uiOutput("status_risk_fac"),
+                            uiOutput('warn_map_asso'),
+                            #verbatimTextOutput("messageCheckData_3"),  
+                            #verbatimTextOutput("status_map_asso"),
+                            uiOutput("status_risk_fac_nocova"),
+                            addSpinner(
+                              leafletOutput("map_risk_fac", height = "80vh"),
+                              spin = "bounce", color = "#735DFB"
+                            )
+                            
+                            
+                          )
+                          
+                        )
+                        
+                        
+               )
+        )
       ),
-
+      
+      
+      
+      
+      
+      
+      tabItem(tabName = "About",
+              includeMarkdown("about_webapp.md")
               
+      ),
+      
+      
+      tabItem(tabName = "Manual",
+              includeMarkdown("Manual.md")
               
-        
-              
-          
-    tabItem(tabName = "About",
-            includeMarkdown("about_webapp.md")
-            
-    ),
-    
-    
-    tabItem(tabName = "Manual",
-            includeMarkdown("Manual.md")
-            
-    ),
-    
-    tabItem(tabName = "Help",
-            includeMarkdown("help.md")
-    ),
-    
-    tabItem(tabName = "Releases",
-            includeMarkdown("Releases.md")
-    ) 
-)
-))     
+      ),
+      
+      tabItem(tabName = "Help",
+              includeMarkdown("help.md")
+      ),
+      
+      tabItem(tabName = "Releases",
+              includeMarkdown("Releases.md")
+      ) 
+    )
+  ))     
 
 
 
@@ -800,18 +800,18 @@ shinyApp(
   
   
   
-###############################################################
-#  
-#                             server
-#
-###############################################################
-
+  ###############################################################
+  #  
+  #                             server
+  #
+  ###############################################################
+  
   server <- function(input, output, session) { 
     
-    observe(print(input$tabs))
+    #observe(print(input$shapefile_from_thailand))
     
     # message menu
-
+    
     output$messageMenu <- renderMenu({
       dropdownMenu(type = "messages", 
                    messageItem(
@@ -819,7 +819,7 @@ shinyApp(
                      message = "Documentation, Source, Citation",
                      icon = icon("github", style = 'color: #5c5c68;'),
                      href = "https://github.com/mill-ornrakorn/STEHealth-Application"),
-
+                   
                    badgeStatus = NULL,
                    icon = tags$i(tags$img(src='info.png', height='16', width='16')),
                    #icon = icon("circle-info", style = 'color: #5c5c68;'),
@@ -827,7 +827,7 @@ shinyApp(
       )
     })
     
-
+    
     
     # แบบรูปไม่ position:absolute
     output$status_map <- renderUI({
@@ -864,7 +864,7 @@ shinyApp(
     
     output$status_map_dis <- renderUI({
       if (is.null(input$filemap) &  is.null(input$file1)) { 
-      HTML("<p style='margin-top: 10%; left: 10%; position:absolute;'> 
+        HTML("<p style='margin-top: 10%; left: 10%; position:absolute;'> 
          <img src='undraw_world_re.svg',  height  = '500px', width = '700px'>")
         
       } 
@@ -883,7 +883,7 @@ shinyApp(
       if (is.null(input$filemap) &  is.null(input$file1)) {
         HTML("<p style='margin-top: 15%; left: 15%; position:absolute;'>
          <img src='undraw_location_search_re.svg',  height  = '450px', width = '600px'>")
-
+        
       }
     })
     
@@ -924,39 +924,39 @@ shinyApp(
       paste(rv$messageCheckDataText_1)
     )
     
-    # 
-    # observeEvent(input$Preview_Map_Distribution, {
-    #   
-    #   output$warn_map_dis <- renderUI({
-    #     if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-    #       rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
-    #       div(class = 'box-error' ,
-    #           
-    #           textOutput("messageCheckData_1")
-    #       )
-    #       
-    #     }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-    #       rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
-    #       div(class = 'box-error' ,
-    #           
-    #           textOutput("messageCheckData_1")
-    #       )
-    #       
-    #     }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-    #       rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
-    #       div(class = 'box-error' ,
-    #           
-    #           textOutput("messageCheckData_1")
-    #       )
-    #       
-    #     }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-    #       
-    #       
-    #     }
-    #   })
-    #   
-    #   
-    # })
+    
+    observeEvent(input$Preview_Map_Distribution, {
+      
+      output$warn_map_dis <- renderUI({
+        if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
+          rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
+          div(class = 'box-error' ,
+              
+              textOutput("messageCheckData_1")
+          )
+          
+        }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+          rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
+          div(class = 'box-error' ,
+              
+              textOutput("messageCheckData_1")
+          )
+          
+        }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+          rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
+          div(class = 'box-error' ,
+              
+              textOutput("messageCheckData_1")
+          )
+          
+        }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+          
+          
+        }
+      })
+      
+      
+    })
     
     
     output$messageCheckData_2<-renderText(
@@ -998,33 +998,33 @@ shinyApp(
         }
         
       }) 
-        
-        output$warn_map_asso <- renderUI({
-          if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-            rv$messageCheckDataText_3<-"Error: There are no data (shapefile and csv file) have been uploaded"
-            div(class = 'box-error' ,
-                
-                textOutput("messageCheckData_3")
-            )
-            
-          }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-            rv$messageCheckDataText_3<-"Error: There are no shapefile have been uploaded"
-            div(class = 'box-error' ,
-                
-                textOutput("messageCheckData_3")
-            )
-            
-          }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-            rv$messageCheckDataText_3<-"Error: There is no csv file have been uploaded"
-            div(class = 'box-error' ,
-                
-                textOutput("messageCheckData_3")
-            )
-            
-          }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-            
-            
-          }
+      
+      output$warn_map_asso <- renderUI({
+        if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
+          rv$messageCheckDataText_3<-"Error: There are no data (shapefile and csv file) have been uploaded"
+          div(class = 'box-error' ,
+              
+              textOutput("messageCheckData_3")
+          )
+          
+        }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+          rv$messageCheckDataText_3<-"Error: There are no shapefile have been uploaded"
+          div(class = 'box-error' ,
+              
+              textOutput("messageCheckData_3")
+          )
+          
+        }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
+          rv$messageCheckDataText_3<-"Error: There is no csv file have been uploaded"
+          div(class = 'box-error' ,
+              
+              textOutput("messageCheckData_3")
+          )
+          
+        }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
+          
+          
+        }
         
         
       })
@@ -1046,8 +1046,8 @@ shinyApp(
       if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
         
         div(class = 'box-warning' ,
-        
-        HTML('There are no covariates have been selected'))
+            
+            HTML('There are no covariates have been selected'))
         
         
         
@@ -1071,13 +1071,13 @@ shinyApp(
     #   
     #   
     # })
-
     
     
-      
+    
+    
     # ======================================================================== 
-      
-      
+    
+    
     observe({
       if (is.null(names(rv$datosOriginal)))
         xd <- character(0)
@@ -1098,7 +1098,7 @@ shinyApp(
       updateSelectInput(session, "columncasesindata",  choices = xd,  selected = head(xd, 1))
       updateSelectInput(session, "columnpopindata",  choices = xd,  selected = head(xd, 1))
       
-    
+      
       #columncov1indata
       updateSelectInput(session, "columncov1indata",  choices = xd,  selected =  "-")
       updateSelectInput(session, "columncov2indata",  choices = xd,  selected =  "-")
@@ -1139,7 +1139,7 @@ shinyApp(
     ################################################
     # END populate selectInput columns map
     ################################################
-
+    
     ################################################
     # INI reactiveValues
     ################################################
@@ -1158,7 +1158,7 @@ shinyApp(
       selectstage='stageuploaddata')
     
     
-
+    
     
     
     ################################################
@@ -1166,7 +1166,7 @@ shinyApp(
     ################################################
     
     
-  
+    
     
     
     
@@ -1258,7 +1258,7 @@ shinyApp(
       rv$map<-map
       
       
-     
+      
       
     })
     
@@ -1274,135 +1274,33 @@ shinyApp(
     
     # ==================================== ปุ่ม preview map dis ==================================== 
     
-    
-    observeEvent(input$tabs == "Map_Distribution"  , {
+    observeEvent(input$Preview_Map_Distribution  , {
+      if (is.null(rv$datosOriginal)| is.null(rv$map))
+        return(NULL)
       
-      if(!is.null(rv$map) & (!is.null(rv$datosOriginal))){
+      #print(input$tabs)
+      if(input$tabs == "Map_Distribution"){
+        data <- rv$datosOriginal
         
-      data <- rv$datosOriginal
-      
-      #updateSelectInput(session, "columnidareainmap",        choices = x,  selected = head(x, 1))
-      updateSelectInput(session, "time_period_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
-      #min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
-      # print(min(data[,input$columndateindata]))
-      # print(max(data[,input$columndateindata]))
-      # print(range(data[,input$columndateindata]))
-      
-      updateSelectInput(session, "time_period_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
-      
-      
-      } else if (is.null(rv$map) | (is.null(rv$datosOriginal))){
-          
-        observeEvent(input$Preview_Map_Distribution  , {
+        #updateSelectInput(session, "columnidareainmap",        choices = x,  selected = head(x, 1))
+        updateSelectInput(session, "time_period_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
+        #min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
+        # print(min(data[,input$columndateindata]))
+        # print(max(data[,input$columndateindata]))
+        # print(range(data[,input$columndateindata]))
         
-          output$warn_map_dis <- renderUI({
-            if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-              rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
-              div(class = 'box-error' ,
-                  
-                  textOutput("messageCheckData_1")
-              )
-              
-            }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-              rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
-              div(class = 'box-error' ,
-                  
-                  textOutput("messageCheckData_1")
-              )
-              
-            }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-              rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
-              div(class = 'box-error' ,
-                  
-                  textOutput("messageCheckData_1")
-              )
-              
-            }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-              
-              
-            }
-            
-            
-            
-          })
+        updateSelectInput(session, "time_period_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
         
-        
-        
-        })
-      
       }
       
-        
     })
     
     
-      
-      
-      
-
-    
-        
-    
-
-# 
-#     observeEvent(input$Preview_Map_Distribution  , {
-#       if (is.null(rv$datosOriginal)| is.null(rv$map))
-#         return(NULL)
-# 
-# 
-# 
-#         output$warn_map_dis <- renderUI({
-#           if (is.null(rv$map) &  is.null(rv$datosOriginal) ) {
-#             rv$messageCheckDataText_1<-"Error: There are no data (shapefile and csv file) have been uploaded"
-#             div(class = 'box-error' ,
-# 
-#                 textOutput("messageCheckData_1")
-#             )
-# 
-#           }else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-#             rv$messageCheckDataText_1<-"Error: There are no shapefile have been uploaded"
-#             div(class = 'box-error' ,
-# 
-#                 textOutput("messageCheckData_1")
-#             )
-# 
-#           }else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-#             rv$messageCheckDataText_1<-"Error: There is no csv file have been uploaded"
-#             div(class = 'box-error' ,
-# 
-#                 textOutput("messageCheckData_1")
-#             )
-# 
-#           }else if (!is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-# 
-# 
-#           }
-#         })
-# 
-# 
-#       #print(input$tabs)
-#       if(input$tabs == "Map_Distribution"){
-#       data <- rv$datosOriginal
-# 
-#       #updateSelectInput(session, "columnidareainmap",        choices = x,  selected = head(x, 1))
-#       updateSelectInput(session, "time_period_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
-#                         #min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
-#       # print(min(data[,input$columndateindata]))
-#       # print(max(data[,input$columndateindata]))
-#       # print(range(data[,input$columndateindata]))
-# 
-#       updateSelectInput(session, "time_period_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
-# 
-#       }
-# 
-#     })
-
-
-
-
     
     
-  
+    
+    
+    
     
     # ==================================== ปุ่ม action input$startAnalysisButto ==================================== 
     # observeEvent(input$startAnalysisButton, {
@@ -1413,163 +1311,91 @@ shinyApp(
       
       
       if(input$tabs == "Analysis"){
-      data <- rv$datosOriginal
-      
-      #updateSliderInput(session, "time_period_filter_cluster", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
-      
-      
-      
-      ######################### คำนวณ cluster ###################################
-      map <- rv$map
-      #data <- rv$datosOriginal
-
-
-
-      # y
-      data[,input$columncasesindata] <- as.numeric(data[,input$columncasesindata])
-
-      # E
-      data[,input$columnexpvalueindata] <- as.numeric(data[,input$columnexpvalueindata])
-
-      # area id (data$province)
-      data[,input$columnidareaindata] <- as.numeric(data[,input$columnidareaindata]) # id of province 1-77
-
-      # # year data$year
-      data[,input$columndateindata] <- as.numeric(data[,input$columndateindata]) # id of year 1-11 (?)
-
-      # # data$province_year <- seq(1, 1064) # id of province-year interaction
-      data$province_year <- seq(1, nrow(data)) # id of year 1-11 (?)
-
-      # # interaction id
-      province_int <- data[,input$columnidareaindata]
-      year_int <- data[,input$columndateindata]
-
-      
-      
-      
-      if(input$shapefile_from_thailand == "yes" ){
-
-      # build adj matrix from shape file
-      tha_adj <- nb2mat(
-        poly2nb(map),
-        style = "B",
-        zero.policy = TRUE)
-
-      # add path between Phuket and Pang nga (?)
-      tha_adj[38, 47] <- 1
-      tha_adj[47, 38] <- 1
-      
-      }else if (input$shapefile_from_thailand == "no" ){
+        data <- rv$datosOriginal
         
-        # build adj matrix from shape file
-        tha_adj <- nb2mat(
-          poly2nb(map),
-          style = "B",
-          zero.policy = TRUE)
-        
-      }
-      
-      # อันใหม่เด้อ
-      # formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-      #     f(data$x1_id, x1, model = "iid") +
-      #     f(data$x2_id, x2, model = "iid") +
-      #     f(data$x3_id, x3, model = "iid") +
-      #     f(data$x4_id, x4, model = "iid") +
-      #     f(data$x5_id, x5, model = "iid") +
-      #     f(data$x6_id, x6, model = "iid") +
-      #     f(data$x7_id, x7, model = "iid") +
-      #   f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-      #   f(data[,input$columndateindata], model = "rw1") +
-      #   f(province_int, model = "iid")
-      
-      
-      ####################   Cluter   #################### 
-      
-      
-      
-      formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
-        f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-        f(data[,input$columndateindata], model = "rw1") +
-        f(province_int, model = "iid")
-      
-      # computing part
-      model_Cluter <- inla(
-        formula_1_bym_rw1_Cluter,
-        family = "poisson",
-        data = data,
-        E = data[,input$columnexpvalueindata],
-        control.predictor = list(compute = TRUE),
-        control.compute = list(
-          dic = TRUE,
-          waic = TRUE,
-          cpo = TRUE,
-          return.marginals.predictor = TRUE))
-      
-      exceedance_prob <- sapply(
-        model_Cluter$marginals.fitted.values,
-        FUN = function(marg) {
-          1 - inla.pmarginal(q = 1, marginal = marg) })
-      
-      data[, "label"] <- exceedance_prob > 0.95
-      data[, "label"] <- ifelse(exceedance_prob > 0.95,
-                                "hotspot", "non-hotspot")
-      
-      rv$data <- data
-      
-      
-      rv$model_Cluter <- model_Cluter
-      
-      
-      # model2 <- rv$model
-      
-    
-      ####################################################
-      
-      
-      
-      ####################   asso   #################### 
-      
-      x1 <- input$columncov1indata
-      x2 <- input$columncov2indata
-      x3 <- input$columncov3indata
-      x4 <- input$columncov4indata
-      x5 <- input$columncov5indata
-      x6 <- input$columncov6indata
-      x7 <- input$columncov7indata
-      
-    
-        
-      if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-        
-        print("all null")
-     
-
+        #updateSliderInput(session, "time_period_filter_cluster", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
         
         
         
-      }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-        
-        print("1 not null")
-        x1 <- data[,input$columncov1indata]
-
+        ######################### คำนวณ cluster ###################################
+        map <- rv$map
+        #data <- rv$datosOriginal
         
         
-        # id for association each province
-        data$x1_id <- data[,input$columnidareaindata]
-
         
-        formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-          f(data$x1_id, x1, model = "iid") +
+        # y
+        data[,input$columncasesindata] <- as.numeric(data[,input$columncasesindata])
+        
+        # E
+        data[,input$columnexpvalueindata] <- as.numeric(data[,input$columnexpvalueindata])
+        
+        # area id (data$province)
+        data[,input$columnidareaindata] <- as.numeric(data[,input$columnidareaindata]) # id of province 1-77
+        
+        # # year data$year
+        data[,input$columndateindata] <- as.numeric(data[,input$columndateindata]) # id of year 1-11 (?)
+        
+        # # data$province_year <- seq(1, 1064) # id of province-year interaction
+        data$province_year <- seq(1, nrow(data)) # id of year 1-11 (?)
+        
+        # # interaction id
+        province_int <- data[,input$columnidareaindata]
+        year_int <- data[,input$columndateindata]
+        
+        
+        
+        
+        if(input$shapefile_from_thailand == "yes" ){
+          
+          # build adj matrix from shape file
+          tha_adj <- nb2mat(
+            poly2nb(map),
+            style = "B",
+            zero.policy = TRUE)
+          
+          # add path between Phuket and Pang nga (?)
+          tha_adj[38, 47] <- 1
+          tha_adj[47, 38] <- 1
+          
+        }else if (input$shapefile_from_thailand == "no" ){
+          
+          # build adj matrix from shape file
+          tha_adj <- nb2mat(
+            poly2nb(map),
+            style = "B",
+            zero.policy = TRUE)
+          
+        }
+        
+        # อันใหม่เด้อ
+        # formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+        #     f(data$x1_id, x1, model = "iid") +
+        #     f(data$x2_id, x2, model = "iid") +
+        #     f(data$x3_id, x3, model = "iid") +
+        #     f(data$x4_id, x4, model = "iid") +
+        #     f(data$x5_id, x5, model = "iid") +
+        #     f(data$x6_id, x6, model = "iid") +
+        #     f(data$x7_id, x7, model = "iid") +
+        #   f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+        #   f(data[,input$columndateindata], model = "rw1") +
+        #   f(province_int, model = "iid")
+        
+        
+        ####################   Cluter   #################### 
+        
+        
+        
+        formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
           f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
           f(data[,input$columndateindata], model = "rw1") +
           f(province_int, model = "iid")
         
         # computing part
-        model <- inla(
-          formula_1_bym_rw1,
+        model_Cluter <- inla(
+          formula_1_bym_rw1_Cluter,
           family = "poisson",
           data = data,
-          E = data[,input$columnpopindata],
+          E = data[,input$columnexpvalueindata],
           control.predictor = list(compute = TRUE),
           control.compute = list(
             dic = TRUE,
@@ -1577,780 +1403,852 @@ shinyApp(
             cpo = TRUE,
             return.marginals.predictor = TRUE))
         
+        exceedance_prob <- sapply(
+          model_Cluter$marginals.fitted.values,
+          FUN = function(marg) {
+            1 - inla.pmarginal(q = 1, marginal = marg) })
         
+        data[, "label"] <- exceedance_prob > 0.95
+        data[, "label"] <- ifelse(exceedance_prob > 0.95,
+                                  "hotspot", "non-hotspot")
         
         rv$data <- data
         
-    
-        rv$model <- model
+        
+        rv$model_Cluter <- model_Cluter
         
         
-        model2 <- rv$model
-        
-        association_df <- (data.frame(
-          c(exp(model2$summary.random$`data|S|x1_id`$mean))
-        ) -1 )*100
+        # model2 <- rv$model
         
         
-        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""))
-        
-        
-        association_wsf <- cbind(map, association_df)
-        
-        association_wsf_df <- data.frame(association_wsf)
-        
-        
-        #rv$association_wsf_df <- association_wsf_df
-        
-        
-        ad <- names(association_df)
-        updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-        
-        
-        # ค่า sig
-        # x1
-        association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-        association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-        
-        rv$association_wsf_df <- association_wsf_df
+        ####################################################
         
         
         
-      }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+        ####################   asso   #################### 
         
-        print("1,2 not null")
-        x1 <- data[,input$columncov1indata]
-        x2 <- data[,input$columncov2indata]
-
+        x1 <- input$columncov1indata
+        x2 <- input$columncov2indata
+        x3 <- input$columncov3indata
+        x4 <- input$columncov4indata
+        x5 <- input$columncov5indata
+        x6 <- input$columncov6indata
+        x7 <- input$columncov7indata
         
         
-        # id for association each province
-        data$x1_id <- data[,input$columnidareaindata]
-        data$x2_id <- data[,input$columnidareaindata]
-
         
-        formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-          f(data$x1_id, x1, model = "iid") +
-          f(data$x2_id, x2, model = "iid") +
-          f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-          f(data[,input$columndateindata], model = "rw1") +
-          f(province_int, model = "iid")
+        if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+          
+          print("all null")
+          
+          
+          
+          
+          
+        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+          
+          print("1 not null")
+          x1 <- data[,input$columncov1indata]
+          
+          
+          
+          # id for association each province
+          data$x1_id <- data[,input$columnidareaindata]
+          
+          
+          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+            f(data$x1_id, x1, model = "iid") +
+            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+            f(data[,input$columndateindata], model = "rw1") +
+            f(province_int, model = "iid")
+          
+          # computing part
+          model <- inla(
+            formula_1_bym_rw1,
+            family = "poisson",
+            data = data,
+            E = data[,input$columnpopindata],
+            control.predictor = list(compute = TRUE),
+            control.compute = list(
+              dic = TRUE,
+              waic = TRUE,
+              cpo = TRUE,
+              return.marginals.predictor = TRUE))
+          
+          
+          
+          rv$data <- data
+          
+          
+          rv$model <- model
+          
+          
+          model2 <- rv$model
+          
+          association_df <- (data.frame(
+            c(exp(model2$summary.random$`data|S|x1_id`$mean))
+          ) -1 )*100
+          
+          
+          colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""))
+          
+          
+          association_wsf <- cbind(map, association_df)
+          
+          association_wsf_df <- data.frame(association_wsf)
+          
+          
+          #rv$association_wsf_df <- association_wsf_df
+          
+          
+          ad <- names(association_df)
+          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+          
+          
+          # ค่า sig
+          # x1
+          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+          
+          rv$association_wsf_df <- association_wsf_df
+          
+          
+          
+        }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+          
+          print("1,2 not null")
+          x1 <- data[,input$columncov1indata]
+          x2 <- data[,input$columncov2indata]
+          
+          
+          
+          # id for association each province
+          data$x1_id <- data[,input$columnidareaindata]
+          data$x2_id <- data[,input$columnidareaindata]
+          
+          
+          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+            f(data$x1_id, x1, model = "iid") +
+            f(data$x2_id, x2, model = "iid") +
+            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+            f(data[,input$columndateindata], model = "rw1") +
+            f(province_int, model = "iid")
+          
+          # computing part
+          model <- inla(
+            formula_1_bym_rw1,
+            family = "poisson",
+            data = data,
+            E = data[,input$columnpopindata],
+            control.predictor = list(compute = TRUE),
+            control.compute = list(
+              dic = TRUE,
+              waic = TRUE,
+              cpo = TRUE,
+              return.marginals.predictor = TRUE))
+          
+          
+          
+          rv$model <- model
+          
+          
+          model2 <- rv$model
+          
+          association_df <- (data.frame(
+            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x2_id`$mean))
+          ) -1 )*100
+          
+          
+          colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                         paste(input$columncov2indata,"_percent_increase", sep=""))
+          
+          association_wsf <- cbind(map, association_df)
+          
+          association_wsf_df <- data.frame(association_wsf)
+          
+          
+          ad <- names(association_df)
+          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+          
+          
+          # ค่า sig
+          # x1
+          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+          
+          
+          # x2
+          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+          
+          
+          rv$association_wsf_df <- association_wsf_df
+          
+          
+          
+        }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+          
+          print("1,2,3 not null")
+          x1 <- data[,input$columncov1indata]
+          x2 <- data[,input$columncov2indata]
+          x3 <- data[,input$columncov3indata]
+          
+          
+          
+          # id for association each province
+          data$x1_id <- data[,input$columnidareaindata]
+          data$x2_id <- data[,input$columnidareaindata]
+          data$x3_id <- data[,input$columnidareaindata]
+          
+          
+          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+            f(data$x1_id, x1, model = "iid") +
+            f(data$x2_id, x2, model = "iid") +
+            f(data$x3_id, x3, model = "iid") +
+            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+            f(data[,input$columndateindata], model = "rw1") +
+            f(province_int, model = "iid")
+          
+          # computing part
+          model <- inla(
+            formula_1_bym_rw1,
+            family = "poisson",
+            data = data,
+            E = data[,input$columnpopindata],
+            control.predictor = list(compute = TRUE),
+            control.compute = list(
+              dic = TRUE,
+              waic = TRUE,
+              cpo = TRUE,
+              return.marginals.predictor = TRUE))
+          
+          
+          
+          rv$model <- model
+          
+          
+          model2 <- rv$model
+          
+          association_df <- (data.frame(
+            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x3_id`$mean))
+          ) -1 )*100
+          
+          
+          colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                         paste(input$columncov2indata,"_percent_increase", sep=""),
+                                         paste(input$columncov3indata,"_percent_increase", sep=""))
+          
+          association_wsf <- cbind(map, association_df)
+          
+          association_wsf_df <- data.frame(association_wsf)
+          
+          
+          ad <- names(association_df)
+          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+          
+          # ค่า sig
+          # x1
+          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+          
+          
+          # x2
+          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+          
+          # x3
+          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+          
+          
+          rv$association_wsf_df <- association_wsf_df
+          
+          
+          
+          
+        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+          
+          print("1,2,3,4 not null")
+          x1 <- data[,input$columncov1indata]
+          x2 <- data[,input$columncov2indata]
+          x3 <- data[,input$columncov3indata]
+          x4 <- data[,input$columncov4indata]
+          
+          
+          
+          # id for association each province
+          data$x1_id <- data[,input$columnidareaindata]
+          data$x2_id <- data[,input$columnidareaindata]
+          data$x3_id <- data[,input$columnidareaindata]
+          data$x4_id <- data[,input$columnidareaindata]
+          
+          
+          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+            f(data$x1_id, x1, model = "iid") +
+            f(data$x2_id, x2, model = "iid") +
+            f(data$x3_id, x3, model = "iid") +
+            f(data$x4_id, x4, model = "iid") +
+            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+            f(data[,input$columndateindata], model = "rw1") +
+            f(province_int, model = "iid")
+          
+          # computing part
+          model <- inla(
+            formula_1_bym_rw1,
+            family = "poisson",
+            data = data,
+            E = data[,input$columnpopindata],
+            control.predictor = list(compute = TRUE),
+            control.compute = list(
+              dic = TRUE,
+              waic = TRUE,
+              cpo = TRUE,
+              return.marginals.predictor = TRUE))
+          
+          
+          
+          rv$model <- model
+          
+          
+          model2 <- rv$model
+          
+          association_df <- (data.frame(
+            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x3_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x4_id`$mean))
+          ) -1 )*100
+          
+          
+          colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                         paste(input$columncov2indata,"_percent_increase", sep=""),
+                                         paste(input$columncov3indata,"_percent_increase", sep=""),
+                                         paste(input$columncov4indata,"_percent_increase", sep=""))
+          
+          
+          association_wsf <- cbind(map, association_df)
+          
+          association_wsf_df <- data.frame(association_wsf)
+          
+          ad <- names(association_df)
+          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+          
+          
+          # ค่า sig
+          # x1
+          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+          
+          
+          # x2
+          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+          
+          # x3
+          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+          
+          # x4
+          association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
+          association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
+          
+          rv$association_wsf_df <- association_wsf_df
+          
+          
+        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+          
+          print("1,2,3,4,5 not null")
+          x1 <- data[,input$columncov1indata]
+          x2 <- data[,input$columncov2indata]
+          x3 <- data[,input$columncov3indata]
+          x4 <- data[,input$columncov4indata]
+          x5 <- data[,input$columncov5indata]
+          
+          
+          
+          # id for association each province
+          data$x1_id <- data[,input$columnidareaindata]
+          data$x2_id <- data[,input$columnidareaindata]
+          data$x3_id <- data[,input$columnidareaindata]
+          data$x4_id <- data[,input$columnidareaindata]
+          data$x5_id <- data[,input$columnidareaindata]
+          
+          
+          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+            f(data$x1_id, x1, model = "iid") +
+            f(data$x2_id, x2, model = "iid") +
+            f(data$x3_id, x3, model = "iid") +
+            f(data$x4_id, x4, model = "iid") +
+            f(data$x5_id, x5, model = "iid") +
+            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+            f(data[,input$columndateindata], model = "rw1") +
+            f(province_int, model = "iid")
+          
+          # computing part
+          model <- inla(
+            formula_1_bym_rw1,
+            family = "poisson",
+            data = data,
+            E = data[,input$columnpopindata],
+            control.predictor = list(compute = TRUE),
+            control.compute = list(
+              dic = TRUE,
+              waic = TRUE,
+              cpo = TRUE,
+              return.marginals.predictor = TRUE))
+          
+          
+          rv$model <- model
+          
+          
+          model2 <- rv$model
+          
+          association_df <- (data.frame(
+            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x3_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x4_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x5_id`$mean))
+          ) -1 )*100
+          
+          
+          colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                         paste(input$columncov2indata,"_percent_increase", sep=""),
+                                         paste(input$columncov3indata,"_percent_increase", sep=""),
+                                         paste(input$columncov4indata,"_percent_increase", sep=""),
+                                         paste(input$columncov5indata,"_percent_increase", sep=""))
+          
+          association_wsf <- cbind(map, association_df)
+          
+          association_wsf_df <- data.frame(association_wsf)
+          
+          
+          ad <- names(association_df)
+          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+          
+          
+          # ค่า sig
+          # x1
+          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+          
+          
+          # x2
+          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+          
+          # x3
+          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+          
+          # x4
+          association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
+          association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
+          
+          # x5
+          association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
+          association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
+          
+          rv$association_wsf_df <- association_wsf_df
+          
+          
+        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+          
+          print("1,2,3,4,5,6 not null")
+          x1 <- data[,input$columncov1indata]
+          x2 <- data[,input$columncov2indata]
+          x3 <- data[,input$columncov3indata]
+          x4 <- data[,input$columncov4indata]
+          x5 <- data[,input$columncov5indata]
+          x6 <- data[,input$columncov6indata]
+          
+          
+          
+          # id for association each province
+          data$x1_id <- data[,input$columnidareaindata]
+          data$x2_id <- data[,input$columnidareaindata]
+          data$x3_id <- data[,input$columnidareaindata]
+          data$x4_id <- data[,input$columnidareaindata]
+          data$x5_id <- data[,input$columnidareaindata]
+          data$x6_id <- data[,input$columnidareaindata]
+          
+          
+          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+            f(data$x1_id, x1, model = "iid") +
+            f(data$x2_id, x2, model = "iid") +
+            f(data$x3_id, x3, model = "iid") +
+            f(data$x4_id, x4, model = "iid") +
+            f(data$x5_id, x5, model = "iid") +
+            f(data$x6_id, x6, model = "iid") +
+            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+            f(data[,input$columndateindata], model = "rw1") +
+            f(province_int, model = "iid")
+          
+          # computing part
+          model <- inla(
+            formula_1_bym_rw1,
+            family = "poisson",
+            data = data,
+            E = data[,input$columnpopindata],
+            control.predictor = list(compute = TRUE),
+            control.compute = list(
+              dic = TRUE,
+              waic = TRUE,
+              cpo = TRUE,
+              return.marginals.predictor = TRUE))
+          
+          
+          rv$model <- model
+          
+          
+          model2 <- rv$model
+          
+          association_df <- (data.frame(
+            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x3_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x4_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x5_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x6_id`$mean))
+          ) -1 )*100
+          
+          
+          colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                         paste(input$columncov2indata,"_percent_increase", sep=""),
+                                         paste(input$columncov3indata,"_percent_increase", sep=""),
+                                         paste(input$columncov4indata,"_percent_increase", sep=""),
+                                         paste(input$columncov5indata,"_percent_increase", sep=""),
+                                         paste(input$columncov6indata,"_percent_increase", sep=""))
+          
+          association_wsf <- cbind(map, association_df)
+          
+          association_wsf_df <- data.frame(association_wsf)
+          
+          
+          
+          ad <- names(association_df)
+          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+          
+          
+          # ค่า sig
+          # x1
+          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+          
+          
+          # x2
+          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+          
+          # x3
+          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+          
+          # x4
+          association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
+          association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
+          
+          # x5
+          association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
+          association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
+          
+          # x6
+          association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
+          association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
+          
+          rv$association_wsf_df <- association_wsf_df
+          
+          
+          
+        }else {
+          print("all not null")
+          x1 <- data[,input$columncov1indata]
+          x2 <- data[,input$columncov2indata]
+          x3 <- data[,input$columncov3indata]
+          x4 <- data[,input$columncov4indata]
+          x5 <- data[,input$columncov5indata]
+          x6 <- data[,input$columncov6indata]
+          x7 <- data[,input$columncov7indata]
+          
+          
+          
+          # id for association each province
+          data$x1_id <- data[,input$columnidareaindata]
+          data$x2_id <- data[,input$columnidareaindata]
+          data$x3_id <- data[,input$columnidareaindata]
+          data$x4_id <- data[,input$columnidareaindata]
+          data$x5_id <- data[,input$columnidareaindata]
+          data$x6_id <- data[,input$columnidareaindata]
+          data$x7_id <- data[,input$columnidareaindata]
+          
+          
+          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+            f(data$x1_id, x1, model = "iid") +
+            f(data$x2_id, x2, model = "iid") +
+            f(data$x3_id, x3, model = "iid") +
+            f(data$x4_id, x4, model = "iid") +
+            f(data$x5_id, x5, model = "iid") +
+            f(data$x6_id, x6, model = "iid") +
+            f(data$x7_id, x7, model = "iid") +
+            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+            f(data[,input$columndateindata], model = "rw1") +
+            f(province_int, model = "iid")
+          
+          # computing part
+          model <- inla(
+            formula_1_bym_rw1,
+            family = "poisson",
+            data = data,
+            E = data[,input$columnpopindata],
+            control.predictor = list(compute = TRUE),
+            control.compute = list(
+              dic = TRUE,
+              waic = TRUE,
+              cpo = TRUE,
+              return.marginals.predictor = TRUE))
+          
+          
+          
+          rv$model <- model
+          
+          
+          model2 <- rv$model
+          
+          association_df <- (data.frame(
+            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x3_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x4_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x5_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x6_id`$mean)),
+            c(exp(model2$summary.random$`data|S|x7_id`$mean))
+          ) -1 )*100
+          
+          
+          
+          colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
+                                         paste(input$columncov2indata,"_percent_increase", sep=""),
+                                         paste(input$columncov3indata,"_percent_increase", sep=""),
+                                         paste(input$columncov4indata,"_percent_increase", sep=""),
+                                         paste(input$columncov5indata,"_percent_increase", sep=""),
+                                         paste(input$columncov6indata,"_percent_increase", sep=""),
+                                         paste(input$columncov7indata,"_percent_increase", sep=""))
+          
+          
+          
+          association_wsf <- cbind(map, association_df)
+          
+          association_wsf_df <- data.frame(association_wsf)
+          
+          
+          # rv$association_wsf_df <- association_wsf_df
+          
+          ad <- names(association_df)
+          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+          
+          
+          # ค่า sig
+          # x1
+          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+          
+          
+          # x2
+          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+          
+          # x3
+          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+          
+          # x4
+          association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
+          association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
+          
+          # x5
+          association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
+          association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
+          
+          # x6
+          association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
+          association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
+          
+          # x7
+          association_wsf_df[, paste( input$columncov7indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,4]
+          association_wsf_df[, paste( input$columncov7indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,6]
+          
+          association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- model2$summary.random$`data|S|x7_id`[,4] > 0
+          association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x7_id`[,4] > 0 | model2$summary.random$`data|S|x7_id`[,6] < 0, "significant", "not significant")
+          
+          
+          rv$association_wsf_df <- association_wsf_df
+          
+          
+          
+          
+        } # จบ else
+        
+        
+        ####################################################
         
         # computing part
-        model <- inla(
-          formula_1_bym_rw1,
-          family = "poisson",
-          data = data,
-          E = data[,input$columnpopindata],
-          control.predictor = list(compute = TRUE),
-          control.compute = list(
-            dic = TRUE,
-            waic = TRUE,
-            cpo = TRUE,
-            return.marginals.predictor = TRUE))
-        
-        
-        
-        rv$model <- model
-        
-        
-        model2 <- rv$model
-        
-        association_df <- (data.frame(
-          c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x2_id`$mean))
-        ) -1 )*100
-        
-        
-        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
-                                       paste(input$columncov2indata,"_percent_increase", sep=""))
-        
-        association_wsf <- cbind(map, association_df)
-        
-        association_wsf_df <- data.frame(association_wsf)
-        
-        
-        ad <- names(association_df)
-        updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-        
-        
-        # ค่า sig
-        # x1
-        association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-        association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-        
-        
-        # x2
-        association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-        association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-        
-  
-        rv$association_wsf_df <- association_wsf_df
-        
-        
-        
-      }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-        
-        print("1,2,3 not null")
-        x1 <- data[,input$columncov1indata]
-        x2 <- data[,input$columncov2indata]
-        x3 <- data[,input$columncov3indata]
-
-        
-        
-        # id for association each province
-        data$x1_id <- data[,input$columnidareaindata]
-        data$x2_id <- data[,input$columnidareaindata]
-        data$x3_id <- data[,input$columnidareaindata]
-
-        
-        formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-          f(data$x1_id, x1, model = "iid") +
-          f(data$x2_id, x2, model = "iid") +
-          f(data$x3_id, x3, model = "iid") +
-          f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-          f(data[,input$columndateindata], model = "rw1") +
-          f(province_int, model = "iid")
-        
-        # computing part
-        model <- inla(
-          formula_1_bym_rw1,
-          family = "poisson",
-          data = data,
-          E = data[,input$columnpopindata],
-          control.predictor = list(compute = TRUE),
-          control.compute = list(
-            dic = TRUE,
-            waic = TRUE,
-            cpo = TRUE,
-            return.marginals.predictor = TRUE))
-        
-        
-        
-        rv$model <- model
-        
-        
-        model2 <- rv$model
-        
-        association_df <- (data.frame(
-          c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x3_id`$mean))
-        ) -1 )*100
-        
-        
-        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
-                                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                                       paste(input$columncov3indata,"_percent_increase", sep=""))
-        
-        association_wsf <- cbind(map, association_df)
-        
-        association_wsf_df <- data.frame(association_wsf)
-        
-      
-        ad <- names(association_df)
-        updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-        
-        # ค่า sig
-        # x1
-        association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-        association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-        
-        
-        # x2
-        association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-        association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-        
-        # x3
-        association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-        association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-        
-        
-        rv$association_wsf_df <- association_wsf_df
-        
-        
-        
-        
-      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-        
-        print("1,2,3,4 not null")
-        x1 <- data[,input$columncov1indata]
-        x2 <- data[,input$columncov2indata]
-        x3 <- data[,input$columncov3indata]
-        x4 <- data[,input$columncov4indata]
-
-        
-        
-        # id for association each province
-        data$x1_id <- data[,input$columnidareaindata]
-        data$x2_id <- data[,input$columnidareaindata]
-        data$x3_id <- data[,input$columnidareaindata]
-        data$x4_id <- data[,input$columnidareaindata]
-
-        
-        formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-          f(data$x1_id, x1, model = "iid") +
-          f(data$x2_id, x2, model = "iid") +
-          f(data$x3_id, x3, model = "iid") +
-          f(data$x4_id, x4, model = "iid") +
-          f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-          f(data[,input$columndateindata], model = "rw1") +
-          f(province_int, model = "iid")
-        
-        # computing part
-        model <- inla(
-          formula_1_bym_rw1,
-          family = "poisson",
-          data = data,
-          E = data[,input$columnpopindata],
-          control.predictor = list(compute = TRUE),
-          control.compute = list(
-            dic = TRUE,
-            waic = TRUE,
-            cpo = TRUE,
-            return.marginals.predictor = TRUE))
-        
-        
-        
-        rv$model <- model
-        
-        
-        model2 <- rv$model
-        
-        association_df <- (data.frame(
-          c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x4_id`$mean))
-        ) -1 )*100
-        
-        
-        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
-                                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                                       paste(input$columncov4indata,"_percent_increase", sep=""))
-        
-        
-        association_wsf <- cbind(map, association_df)
-        
-        association_wsf_df <- data.frame(association_wsf)
-        
-        ad <- names(association_df)
-        updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-        
-        
-        # ค่า sig
-        # x1
-        association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-        association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-        
-        
-        # x2
-        association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-        association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-        
-        # x3
-        association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-        association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-        
-        # x4
-        association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
-        association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
-      
-        rv$association_wsf_df <- association_wsf_df
-        
-        
-      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-        
-        print("1,2,3,4,5 not null")
-        x1 <- data[,input$columncov1indata]
-        x2 <- data[,input$columncov2indata]
-        x3 <- data[,input$columncov3indata]
-        x4 <- data[,input$columncov4indata]
-        x5 <- data[,input$columncov5indata]
-
-        
-        
-        # id for association each province
-        data$x1_id <- data[,input$columnidareaindata]
-        data$x2_id <- data[,input$columnidareaindata]
-        data$x3_id <- data[,input$columnidareaindata]
-        data$x4_id <- data[,input$columnidareaindata]
-        data$x5_id <- data[,input$columnidareaindata]
-
-        
-        formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-          f(data$x1_id, x1, model = "iid") +
-          f(data$x2_id, x2, model = "iid") +
-          f(data$x3_id, x3, model = "iid") +
-          f(data$x4_id, x4, model = "iid") +
-          f(data$x5_id, x5, model = "iid") +
-          f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-          f(data[,input$columndateindata], model = "rw1") +
-          f(province_int, model = "iid")
-        
-        # computing part
-        model <- inla(
-          formula_1_bym_rw1,
-          family = "poisson",
-          data = data,
-          E = data[,input$columnpopindata],
-          control.predictor = list(compute = TRUE),
-          control.compute = list(
-            dic = TRUE,
-            waic = TRUE,
-            cpo = TRUE,
-            return.marginals.predictor = TRUE))
- 
-        
-        rv$model <- model
-        
-        
-        model2 <- rv$model
-        
-        association_df <- (data.frame(
-          c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x5_id`$mean))
-        ) -1 )*100
-        
-        
-        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
-                                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                                       paste(input$columncov4indata,"_percent_increase", sep=""),
-                                       paste(input$columncov5indata,"_percent_increase", sep=""))
-
-        association_wsf <- cbind(map, association_df)
-        
-        association_wsf_df <- data.frame(association_wsf)
-        
-       
-        ad <- names(association_df)
-        updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-        
-        
-        # ค่า sig
-        # x1
-        association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-        association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-        
-        
-        # x2
-        association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-        association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-        
-        # x3
-        association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-        association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-        
-        # x4
-        association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
-        association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
-        
-        # x5
-        association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
-        association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
-        
-        rv$association_wsf_df <- association_wsf_df
-        
-        
-      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-        
-        print("1,2,3,4,5,6 not null")
-        x1 <- data[,input$columncov1indata]
-        x2 <- data[,input$columncov2indata]
-        x3 <- data[,input$columncov3indata]
-        x4 <- data[,input$columncov4indata]
-        x5 <- data[,input$columncov5indata]
-        x6 <- data[,input$columncov6indata]
-
-        
-        
-        # id for association each province
-        data$x1_id <- data[,input$columnidareaindata]
-        data$x2_id <- data[,input$columnidareaindata]
-        data$x3_id <- data[,input$columnidareaindata]
-        data$x4_id <- data[,input$columnidareaindata]
-        data$x5_id <- data[,input$columnidareaindata]
-        data$x6_id <- data[,input$columnidareaindata]
-
-        
-        formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-          f(data$x1_id, x1, model = "iid") +
-          f(data$x2_id, x2, model = "iid") +
-          f(data$x3_id, x3, model = "iid") +
-          f(data$x4_id, x4, model = "iid") +
-          f(data$x5_id, x5, model = "iid") +
-          f(data$x6_id, x6, model = "iid") +
-          f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-          f(data[,input$columndateindata], model = "rw1") +
-          f(province_int, model = "iid")
-        
-        # computing part
-        model <- inla(
-          formula_1_bym_rw1,
-          family = "poisson",
-          data = data,
-          E = data[,input$columnpopindata],
-          control.predictor = list(compute = TRUE),
-          control.compute = list(
-            dic = TRUE,
-            waic = TRUE,
-            cpo = TRUE,
-            return.marginals.predictor = TRUE))
-        
-        
-        rv$model <- model
-        
-        
-        model2 <- rv$model
-        
-        association_df <- (data.frame(
-          c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x5_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x6_id`$mean))
-        ) -1 )*100
-        
-        
-        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
-                                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                                       paste(input$columncov4indata,"_percent_increase", sep=""),
-                                       paste(input$columncov5indata,"_percent_increase", sep=""),
-                                       paste(input$columncov6indata,"_percent_increase", sep=""))
-        
-        association_wsf <- cbind(map, association_df)
-        
-        association_wsf_df <- data.frame(association_wsf)
-        
-        
-        
-        ad <- names(association_df)
-        updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-        
-        
-        # ค่า sig
-        # x1
-        association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-        association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-        
-        
-        # x2
-        association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-        association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-        
-        # x3
-        association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-        association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-        
-        # x4
-        association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
-        association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
-        
-        # x5
-        association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
-        association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
-        
-        # x6
-        association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
-        association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
-        
-        rv$association_wsf_df <- association_wsf_df
-        
-        
-        
-      }else {
-        print("all not null")
-        x1 <- data[,input$columncov1indata]
-        x2 <- data[,input$columncov2indata]
-        x3 <- data[,input$columncov3indata]
-        x4 <- data[,input$columncov4indata]
-        x5 <- data[,input$columncov5indata]
-        x6 <- data[,input$columncov6indata]
-        x7 <- data[,input$columncov7indata]
-        
-        
-        
-        # id for association each province
-        data$x1_id <- data[,input$columnidareaindata]
-        data$x2_id <- data[,input$columnidareaindata]
-        data$x3_id <- data[,input$columnidareaindata]
-        data$x4_id <- data[,input$columnidareaindata]
-        data$x5_id <- data[,input$columnidareaindata]
-        data$x6_id <- data[,input$columnidareaindata]
-        data$x7_id <- data[,input$columnidareaindata]
-        
-        
-        formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-          f(data$x1_id, x1, model = "iid") +
-          f(data$x2_id, x2, model = "iid") +
-          f(data$x3_id, x3, model = "iid") +
-          f(data$x4_id, x4, model = "iid") +
-          f(data$x5_id, x5, model = "iid") +
-          f(data$x6_id, x6, model = "iid") +
-          f(data$x7_id, x7, model = "iid") +
-          f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-          f(data[,input$columndateindata], model = "rw1") +
-          f(province_int, model = "iid")
-        
-        # computing part
-        model <- inla(
-          formula_1_bym_rw1,
-          family = "poisson",
-          data = data,
-          E = data[,input$columnpopindata],
-          control.predictor = list(compute = TRUE),
-          control.compute = list(
-            dic = TRUE,
-            waic = TRUE,
-            cpo = TRUE,
-            return.marginals.predictor = TRUE))
-        
-        
-        
-        rv$model <- model
-        
-        
-        model2 <- rv$model
-        
-        association_df <- (data.frame(
-          c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x5_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x6_id`$mean)),
-          c(exp(model2$summary.random$`data|S|x7_id`$mean))
-        ) -1 )*100
-        
-        
-        
-        colnames(association_df) <-  c(paste(input$columncov1indata,"_percent_increase", sep=""),
-                                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                                       paste(input$columncov4indata,"_percent_increase", sep=""),
-                                       paste(input$columncov5indata,"_percent_increase", sep=""),
-                                       paste(input$columncov6indata,"_percent_increase", sep=""),
-                                       paste(input$columncov7indata,"_percent_increase", sep=""))
-        
-        
-        
-        association_wsf <- cbind(map, association_df)
-        
-        association_wsf_df <- data.frame(association_wsf)
-        
-        
+        # model <- inla(
+        #   # formula_2_bym_rw1,
+        #   formula_1_bym_rw1,
+        #   family = "poisson",
+        #   data = data,
+        #   E = data[,input$columnexpvalueindata],
+        #   control.predictor = list(compute = TRUE),
+        #   control.compute = list(
+        #     dic = TRUE,
+        #     waic = TRUE,
+        #     cpo = TRUE,
+        #     return.marginals.predictor = TRUE))
+        
+        
+        
+        
+        # exceedance_prob <- sapply(
+        #   model$marginals.fitted.values,
+        #   FUN = function(marg) {
+        #     1 - inla.pmarginal(q = 1, marginal = marg) })
+        # 
+        # data[, "label"] <- exceedance_prob > 0.95
+        # data[, "label"] <- ifelse(exceedance_prob > 0.95,
+        #                           "hotspot", "non-hotspot")
+        # 
+        # rv$data <- data
+        
+        
+        ######################### คำนวณ asso risk fac ###################################
+        
+        # rv$model <- model 
+        # 
+        # 
+        # model2 <- rv$model
+        # 
+        # association_df <- (data.frame(
+        #   c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+        #   c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+        #   c(exp(model2$summary.random$`data|S|x3_id`$mean)),
+        #   c(exp(model2$summary.random$`data|S|x4_id`$mean)),
+        #   c(exp(model2$summary.random$`data|S|x5_id`$mean)),
+        #   c(exp(model2$summary.random$`data|S|x6_id`$mean)),
+        #   c(exp(model2$summary.random$`data|S|x7_id`$mean))
+        # ) -1 )*100
+        # 
+        # colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
+        #                                paste("percent_increase_",input$columncov2indata, sep=""),
+        #                                paste("percent_increase_",input$columncov3indata, sep=""),
+        #                                paste("percent_increase_",input$columncov4indata, sep=""),
+        #                                paste("percent_increase_",input$columncov5indata, sep=""),
+        #                                paste("percent_increase_",input$columncov6indata, sep=""),
+        #                                paste("percent_increase_",input$columncov7indata, sep=""))
+        
+        
+        # ========================= ที่ทำcbind  ======================
+        
+        # association_wsf <- cbind(map, association_df)
+        # 
+        # association_wsf_df <- data.frame(association_wsf)
+        # 
+        # 
         # rv$association_wsf_df <- association_wsf_df
         
-        ad <- names(association_df)
-        updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+        # ==============================================================
         
         
-        # ค่า sig
-        # x1
-        association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-        association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-        
-        
-        # x2
-        association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-        association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-        
-        # x3
-        association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-        association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-        
-        # x4
-        association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
-        association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
-        
-        # x5
-        association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
-        association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
-        
-        # x6
-        association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
-        association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
-        
-        # x7
-        association_wsf_df[, paste( input$columncov7indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,4]
-        association_wsf_df[, paste( input$columncov7indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,6]
-        
-        association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- model2$summary.random$`data|S|x7_id`[,4] > 0
-        association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x7_id`[,4] > 0 | model2$summary.random$`data|S|x7_id`[,6] < 0, "significant", "not significant")
-        
-        
-        rv$association_wsf_df <- association_wsf_df
-        
-        
-        
-        
-      } # จบ else
-      
-      
-      ####################################################
-      
-      # computing part
-      # model <- inla(
-      #   # formula_2_bym_rw1,
-      #   formula_1_bym_rw1,
-      #   family = "poisson",
-      #   data = data,
-      #   E = data[,input$columnexpvalueindata],
-      #   control.predictor = list(compute = TRUE),
-      #   control.compute = list(
-      #     dic = TRUE,
-      #     waic = TRUE,
-      #     cpo = TRUE,
-      #     return.marginals.predictor = TRUE))
-
-
-
-
-      # exceedance_prob <- sapply(
-      #   model$marginals.fitted.values,
-      #   FUN = function(marg) {
-      #     1 - inla.pmarginal(q = 1, marginal = marg) })
-      # 
-      # data[, "label"] <- exceedance_prob > 0.95
-      # data[, "label"] <- ifelse(exceedance_prob > 0.95,
-      #                           "hotspot", "non-hotspot")
-      # 
-      # rv$data <- data
-      
-      
-      ######################### คำนวณ asso risk fac ###################################
-      
-      # rv$model <- model 
-      # 
-      # 
-      # model2 <- rv$model
-      # 
-      # association_df <- (data.frame(
-      #   c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x5_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x6_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x7_id`$mean))
-      # ) -1 )*100
-      # 
-      # colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
-      #                                paste("percent_increase_",input$columncov2indata, sep=""),
-      #                                paste("percent_increase_",input$columncov3indata, sep=""),
-      #                                paste("percent_increase_",input$columncov4indata, sep=""),
-      #                                paste("percent_increase_",input$columncov5indata, sep=""),
-      #                                paste("percent_increase_",input$columncov6indata, sep=""),
-      #                                paste("percent_increase_",input$columncov7indata, sep=""))
-                                   
-      
-      # ========================= ที่ทำcbind  ======================
-      
-      # association_wsf <- cbind(map, association_df)
-      # 
-      # association_wsf_df <- data.frame(association_wsf)
-      # 
-      # 
-      # rv$association_wsf_df <- association_wsf_df
-      
-      # ==============================================================
-      
-
-      # ad <- names(association_df)
-      # updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+        # ad <- names(association_df)
+        # updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
       }
     })
     
     # =====================================================
-
+    
     
     
     
@@ -2358,25 +2256,25 @@ shinyApp(
     output$map_distribution <- renderLeaflet({
       if (is.null(rv$datosOriginal)| is.null(rv$map))
         return(NULL)
-    
+      
       
       map <- rv$map
       data <- rv$datosOriginal
       
-
+      
       data <- data %>%
         filter(
           data[,input$columndateindata] %in% input$time_period_filter
-
+          
         )
       
-  
+      
       
       #datafiltered <- data[which(data[,input$columndateindata] == input$time_period_filter), ]
       datafiltered <- data
       ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
       map@data <- datafiltered[ordercounties, ]
-
+      
       # Create leaflet
       l <- leaflet(map) %>% addTiles()
       pal <- colorNumeric(palette = input$color, domain = map@data[, input$columncasesindata])
@@ -2384,7 +2282,7 @@ shinyApp(
                         map@data[, input$columnidareanamedata] , input$columncasesindata, map@data[, input$columncasesindata]
       ) %>%
         lapply(htmltools::HTML)
-
+      
       l %>%
         addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
         addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
@@ -2392,7 +2290,7 @@ shinyApp(
         addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
         #addProviderTiles(providers$Stamen.Watercolor, group = "Stamen Watercolor") %>%
         #addProviderTiles(providers$Stamen.Toner, group = "Stamen Toner") %>%
-
+        
         addPolygons(
           color = "grey", weight = 1,
           fillColor = ~ pal(map@data[, input$columncasesindata]), fillOpacity = 0.7,
@@ -2412,16 +2310,16 @@ shinyApp(
         ) %>%
         addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
                                         #"Stamen Watercolor", "Stamen Toner"
-                                        ),
-                         position = c("topleft"),
-                         options = layersControlOptions(collapsed =  TRUE)
+        ),
+        position = c("topleft"),
+        options = layersControlOptions(collapsed =  TRUE)
         ) %>%
         addFullscreenControl()
       
       
-
+      
     })
-
+    
     
     # ==================================== cluster_dec ver ลองplot ==================================== 
     
@@ -2487,9 +2385,9 @@ shinyApp(
           )%>%
           addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
                                           #"Stamen Watercolor", "Stamen Toner"
-                                          ),
-                            position = c("topleft"),
-                            options = layersControlOptions(collapsed =  TRUE)
+          ),
+          position = c("topleft"),
+          options = layersControlOptions(collapsed =  TRUE)
           )%>%
           addFullscreenControl()
         
@@ -2503,7 +2401,7 @@ shinyApp(
     # ==================================== risk_fac ==================================== 
     
     output$risk_fac_text <- renderPrint({  
-     #rv$model
+      #rv$model
       model2 <- rv$model
       map <- rv$map
       
@@ -2528,11 +2426,11 @@ shinyApp(
         c(exp(model2$summary.random$`data|S|x5_id`$mean)),
         c(exp(model2$summary.random$`data|S|x6_id`$mean)),
         c(exp(model2$summary.random$`data|S|x7_id`$mean))
-        )
-
-
-
-
+      )
+      
+      
+      
+      
       colnames(association_df) <- c('exp_x1',
                                     'exp_x2',
                                     'exp_x3',
@@ -2540,26 +2438,26 @@ shinyApp(
                                     'exp_x5',
                                     'exp_x6',
                                     'exp_x7'
-                                    )
-
-
-
+      )
+      
+      
+      
       association_wsf <- cbind(map, association_df)
-
+      
       association_wsf_df <- data.frame(association_wsf)
       
       # association_wsf_df[, "exp_x1"] # ออกมาแน้ว
-
+      
       # ad <- names(association_df)
       # updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-
       
-      })
+      
+    })
     
     
     
     output$risk_fac_text2 <- renderPrint({
-
+      
       # association_wsf_df <- rv$association_wsf_df
       # 
       # # association_wsf_df[, "exp_x1"] # ค่าออกนะ
@@ -2577,9 +2475,9 @@ shinyApp(
       map@data <- datafiltered[ordercounties, ]
       
       map@data
-
-
-
+      
+      
+      
     })
     
     
@@ -2596,11 +2494,11 @@ shinyApp(
       datafiltered <- association_wsf_df
       ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareainmap])
       map@data <- datafiltered[ordercounties, ]
-   
+      
       
       if (input$risk_factor_filter == paste(input$columncov1indata,"_percent_increase", sep="")){
         sig_col <- map@data[, paste(input$columncov1indata,"_significance", sep="")]
-                            
+        
       } else if (input$risk_factor_filter == paste(input$columncov2indata,"_percent_increase", sep="")) {
         sig_col <- map@data[, paste(input$columncov2indata,"_significance", sep="")]
         
@@ -2657,9 +2555,9 @@ shinyApp(
         ) %>%
         addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
                                         #"Stamen Watercolor", "Stamen Toner"
-                                        ),
-                                        position = c("topleft"),
-                                        options = layersControlOptions(collapsed =  TRUE)
+        ),
+        position = c("topleft"),
+        options = layersControlOptions(collapsed =  TRUE)
         )%>%
         addFullscreenControl()
       
@@ -2673,12 +2571,12 @@ shinyApp(
       # data <- rv$data
       
       # Remove  Columns in List
-       data <- rv$data[,!names(rv$data) %in% c("province_year", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id")]
-
+      data <- rv$data[,!names(rv$data) %in% c("province_year", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id")]
+      
     })
-
-
-
+    
+    
+    
     output$downloadData_cluster <- downloadHandler(
       filename = function() {
         paste("result-cluster-detection-", Sys.Date(), ".csv", sep="")
@@ -2688,7 +2586,7 @@ shinyApp(
       }
     )
     
-      
+    
     dataresult_asso_risk <- reactive({
       
       x1 <- input$columncov1indata
@@ -2701,264 +2599,1020 @@ shinyApp(
       
       
       asso_select_column <- paste(input$asso_select_column, collapse = ",")
-
-
-
-  if (asso_select_column != ""){
-
-    if (asso_select_column == "lowerbound,upperbound,significance"){
-          
-      if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-        
-        # print("all null")
-        
-      }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-        col_order <- c(input$columnidareainmap,
-                       paste(input$columncov1indata,"_percent_increase", sep=""),
-                       paste(input$columncov1indata,"_lowerbound", sep=""),
-                       paste(input$columncov1indata,"_upperbound", sep=""),
-                       paste(input$columncov1indata,"_significance", sep=""))
-        
-        
-      }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-        col_order <- c(input$columnidareainmap,
-                       paste(input$columncov1indata,"_percent_increase", sep=""),
-                       paste(input$columncov1indata,"_lowerbound", sep=""),
-                       paste(input$columncov1indata,"_upperbound", sep=""),
-                       paste(input$columncov1indata,"_significance", sep=""),
-                       
-                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                       paste(input$columncov2indata,"_lowerbound", sep=""),
-                       paste(input$columncov2indata,"_upperbound", sep=""),
-                       paste(input$columncov2indata,"_significance", sep=""))
-        
-        
-      }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-        col_order <- c(input$columnidareainmap,
-                       paste(input$columncov1indata,"_percent_increase", sep=""),
-                       paste(input$columncov1indata,"_lowerbound", sep=""),
-                       paste(input$columncov1indata,"_upperbound", sep=""),
-                       paste(input$columncov1indata,"_significance", sep=""),
-                       
-                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                       paste(input$columncov2indata,"_lowerbound", sep=""),
-                       paste(input$columncov2indata,"_upperbound", sep=""),
-                       paste(input$columncov2indata,"_significance", sep=""),
-                       
-                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                       paste(input$columncov3indata,"_lowerbound", sep=""),
-                       paste(input$columncov3indata,"_upperbound", sep=""),
-                       paste(input$columncov3indata,"_significance", sep=""))
-        
-        
-      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-        col_order <- c(input$columnidareainmap,
-                       paste(input$columncov1indata,"_percent_increase", sep=""),
-                       paste(input$columncov1indata,"_lowerbound", sep=""),
-                       paste(input$columncov1indata,"_upperbound", sep=""),
-                       paste(input$columncov1indata,"_significance", sep=""),
-                       
-                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                       paste(input$columncov2indata,"_lowerbound", sep=""),
-                       paste(input$columncov2indata,"_upperbound", sep=""),
-                       paste(input$columncov2indata,"_significance", sep=""),
-                       
-                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                       paste(input$columncov3indata,"_lowerbound", sep=""),
-                       paste(input$columncov3indata,"_upperbound", sep=""),
-                       paste(input$columncov3indata,"_significance", sep=""),
-                       
-                       paste(input$columncov4indata,"_percent_increase", sep=""),
-                       paste(input$columncov4indata,"_lowerbound", sep=""),
-                       paste(input$columncov4indata,"_upperbound", sep=""),
-                       paste(input$columncov4indata,"_significance", sep=""))
-        
-        
-      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-        
-        col_order <- c(input$columnidareainmap,
-                       paste(input$columncov1indata,"_percent_increase", sep=""),
-                       paste(input$columncov1indata,"_lowerbound", sep=""),
-                       paste(input$columncov1indata,"_upperbound", sep=""),
-                       paste(input$columncov1indata,"_significance", sep=""),
-                       
-                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                       paste(input$columncov2indata,"_lowerbound", sep=""),
-                       paste(input$columncov2indata,"_upperbound", sep=""),
-                       paste(input$columncov2indata,"_significance", sep=""),
-                       
-                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                       paste(input$columncov3indata,"_lowerbound", sep=""),
-                       paste(input$columncov3indata,"_upperbound", sep=""),
-                       paste(input$columncov3indata,"_significance", sep=""),
-                       
-                       paste(input$columncov4indata,"_percent_increase", sep=""),
-                       paste(input$columncov4indata,"_lowerbound", sep=""),
-                       paste(input$columncov4indata,"_upperbound", sep=""),
-                       paste(input$columncov4indata,"_significance", sep=""),
-                       
-                       paste(input$columncov5indata,"_percent_increase", sep=""),
-                       paste(input$columncov5indata,"_lowerbound", sep=""),
-                       paste(input$columncov5indata,"_upperbound", sep=""),
-                       paste(input$columncov5indata,"_significance", sep=""))
-        
-        
-        
-      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-        
-        col_order <- c(input$columnidareainmap,
-                       paste(input$columncov1indata,"_percent_increase", sep=""),
-                       paste(input$columncov1indata,"_lowerbound", sep=""),
-                       paste(input$columncov1indata,"_upperbound", sep=""),
-                       paste(input$columncov1indata,"_significance", sep=""),
-                       
-                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                       paste(input$columncov2indata,"_lowerbound", sep=""),
-                       paste(input$columncov2indata,"_upperbound", sep=""),
-                       paste(input$columncov2indata,"_significance", sep=""),
-                       
-                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                       paste(input$columncov3indata,"_lowerbound", sep=""),
-                       paste(input$columncov3indata,"_upperbound", sep=""),
-                       paste(input$columncov3indata,"_significance", sep=""),
-                       
-                       paste(input$columncov4indata,"_percent_increase", sep=""),
-                       paste(input$columncov4indata,"_lowerbound", sep=""),
-                       paste(input$columncov4indata,"_upperbound", sep=""),
-                       paste(input$columncov4indata,"_significance", sep=""),
-                       
-                       paste(input$columncov5indata,"_percent_increase", sep=""),
-                       paste(input$columncov5indata,"_lowerbound", sep=""),
-                       paste(input$columncov5indata,"_upperbound", sep=""),
-                       paste(input$columncov5indata,"_significance", sep=""),
-                       
-                       paste(input$columncov6indata,"_percent_increase", sep=""),
-                       paste(input$columncov6indata,"_lowerbound", sep=""),
-                       paste(input$columncov6indata,"_upperbound", sep=""),
-                       paste(input$columncov6indata,"_significance", sep=""))
-        
-        
-        
-      }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-        
-        col_order <- c(input$columnidareainmap,
-                       paste(input$columncov1indata,"_percent_increase", sep=""),
-                       paste(input$columncov1indata,"_lowerbound", sep=""),
-                       paste(input$columncov1indata,"_upperbound", sep=""),
-                       paste(input$columncov1indata,"_significance", sep=""),
-                       
-                       paste(input$columncov2indata,"_percent_increase", sep=""),
-                       paste(input$columncov2indata,"_lowerbound", sep=""),
-                       paste(input$columncov2indata,"_upperbound", sep=""),
-                       paste(input$columncov2indata,"_significance", sep=""),
-                       
-                       paste(input$columncov3indata,"_percent_increase", sep=""),
-                       paste(input$columncov3indata,"_lowerbound", sep=""),
-                       paste(input$columncov3indata,"_upperbound", sep=""),
-                       paste(input$columncov3indata,"_significance", sep=""),
-                       
-                       paste(input$columncov4indata,"_percent_increase", sep=""),
-                       paste(input$columncov4indata,"_lowerbound", sep=""),
-                       paste(input$columncov4indata,"_upperbound", sep=""),
-                       paste(input$columncov4indata,"_significance", sep=""),
-                       
-                       paste(input$columncov5indata,"_percent_increase", sep=""),
-                       paste(input$columncov5indata,"_lowerbound", sep=""),
-                       paste(input$columncov5indata,"_upperbound", sep=""),
-                       paste(input$columncov5indata,"_significance", sep=""),
-                       
-                       paste(input$columncov6indata,"_percent_increase", sep=""),
-                       paste(input$columncov6indata,"_lowerbound", sep=""),
-                       paste(input$columncov6indata,"_upperbound", sep=""),
-                       paste(input$columncov6indata,"_significance", sep=""),
-                       
-                       paste(input$columncov7indata,"_percent_increase", sep=""),
-                       paste(input$columncov7indata,"_lowerbound", sep=""),
-                       paste(input$columncov7indata,"_upperbound", sep=""),
-                       paste(input$columncov7indata,"_significance", sep=""))
-        
-      }
       
-    } # จบ if (asso_select_column == "lowerbound,upperbound,significance"){
-      else if (asso_select_column == "lowerbound,upperbound"){
+      
+      
+      if (asso_select_column != ""){
+        
+        if (asso_select_column == "lowerbound,upperbound,significance"){
+          
+          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+            
+            # print("all null")
+            
+          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_lowerbound", sep=""),
+                           paste(input$columncov6indata,"_upperbound", sep=""),
+                           paste(input$columncov6indata,"_significance", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_lowerbound", sep=""),
+                           paste(input$columncov6indata,"_upperbound", sep=""),
+                           paste(input$columncov6indata,"_significance", sep=""),
+                           
+                           paste(input$columncov7indata,"_percent_increase", sep=""),
+                           paste(input$columncov7indata,"_lowerbound", sep=""),
+                           paste(input$columncov7indata,"_upperbound", sep=""),
+                           paste(input$columncov7indata,"_significance", sep=""))
+            
+          }
+          
+        } # จบ if (asso_select_column == "lowerbound,upperbound,significance"){
+        else if (asso_select_column == "lowerbound,upperbound"){
+          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+            
+            # print("all null")
+            
+          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_lowerbound", sep=""),
+                           paste(input$columncov6indata,"_upperbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_lowerbound", sep=""),
+                           paste(input$columncov6indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov7indata,"_percent_increase", sep=""),
+                           paste(input$columncov7indata,"_lowerbound", sep=""),
+                           paste(input$columncov7indata,"_upperbound", sep=""))
+            
+          }
+          
+          
+        }else if (asso_select_column == "upperbound,significance"){
+          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+            
+            # print("all null")
+            
+          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_upperbound", sep=""),
+                           paste(input$columncov6indata,"_significance", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_upperbound", sep=""),
+                           paste(input$columncov6indata,"_significance", sep=""),
+                           
+                           paste(input$columncov7indata,"_percent_increase", sep=""),
+                           paste(input$columncov7indata,"_upperbound", sep=""),
+                           paste(input$columncov7indata,"_significance", sep=""))
+            
+          }
+          
+        }else if (asso_select_column == "lowerbound,significance"){
+          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+            
+            # print("all null")
+            
+          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_lowerbound", sep=""),
+                           paste(input$columncov6indata,"_significance", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_lowerbound", sep=""),
+                           paste(input$columncov6indata,"_significance", sep=""),
+                           
+                           paste(input$columncov7indata,"_percent_increase", sep=""),
+                           paste(input$columncov7indata,"_lowerbound", sep=""),
+                           paste(input$columncov7indata,"_significance", sep=""))
+            
+          }
+          
+        }else if (asso_select_column == "lowerbound"){
+          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+            
+            # print("all null")
+            
+          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_lowerbound", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_lowerbound", sep=""),
+                           
+                           paste(input$columncov7indata,"_percent_increase", sep=""),
+                           paste(input$columncov7indata,"_lowerbound", sep=""))
+            
+          }
+          
+          
+        }else if (asso_select_column == "upperbound"){
+          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+            
+            # print("all null")
+            
+          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_upperbound", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_upperbound", sep=""),
+                           
+                           paste(input$columncov7indata,"_percent_increase", sep=""),
+                           paste(input$columncov7indata,"_upperbound", sep=""))
+            
+          }
+          
+          
+        }else if (asso_select_column == "significance"){
+          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+            
+            # print("all null")
+            
+          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""))
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_significance", sep=""))
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
+            
+            col_order <- c(input$columnidareainmap,
+                           paste(input$columncov1indata,"_percent_increase", sep=""),
+                           paste(input$columncov1indata,"_significance", sep=""),
+                           
+                           paste(input$columncov2indata,"_percent_increase", sep=""),
+                           paste(input$columncov2indata,"_significance", sep=""),
+                           
+                           paste(input$columncov3indata,"_percent_increase", sep=""),
+                           paste(input$columncov3indata,"_significance", sep=""),
+                           
+                           paste(input$columncov4indata,"_percent_increase", sep=""),
+                           paste(input$columncov4indata,"_significance", sep=""),
+                           
+                           paste(input$columncov5indata,"_percent_increase", sep=""),
+                           paste(input$columncov5indata,"_significance", sep=""),
+                           
+                           paste(input$columncov6indata,"_percent_increase", sep=""),
+                           paste(input$columncov6indata,"_significance", sep=""),
+                           
+                           paste(input$columncov7indata,"_percent_increase", sep=""),
+                           paste(input$columncov7indata,"_significance", sep=""))
+            
+          }
+        }
+        
+        
+        
+      } # จบ  if (asso_select_column != ""){
+      else if (asso_select_column == ""){
         if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
           
           # print("all null")
           
         }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""))
+                         paste(input$columncov1indata,"_percent_increase", sep=""))
           
           
         }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
                          
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""))
+                         paste(input$columncov2indata,"_percent_increase", sep=""))
           
           
         }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
                          
                          paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
                          
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""))
+                         paste(input$columncov3indata,"_percent_increase", sep=""))
           
           
         }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
                          
                          paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
                          
                          paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
                          
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""))
+                         paste(input$columncov4indata,"_percent_increase", sep=""))
           
           
         }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
           
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
                          
                          paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
                          
                          paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
                          
                          paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
                          
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_lowerbound", sep=""),
-                         paste(input$columncov5indata,"_upperbound", sep=""))
+                         paste(input$columncov5indata,"_percent_increase", sep=""))
           
           
           
@@ -2966,172 +3620,16 @@ shinyApp(
           
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
                          
                          paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
                          
                          paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
                          
                          paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
                          
                          paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_lowerbound", sep=""),
-                         paste(input$columncov5indata,"_upperbound", sep=""),
                          
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_lowerbound", sep=""),
-                         paste(input$columncov6indata,"_upperbound", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_lowerbound", sep=""),
-                         paste(input$columncov5indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_lowerbound", sep=""),
-                         paste(input$columncov6indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov7indata,"_percent_increase", sep=""),
-                         paste(input$columncov7indata,"_lowerbound", sep=""),
-                         paste(input$columncov7indata,"_upperbound", sep=""))
-          
-        }
-        
-        
-      }else if (asso_select_column == "upperbound,significance"){
-        if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-          
-          # print("all null")
-          
-        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_upperbound", sep=""),
-                         paste(input$columncov5indata,"_significance", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_upperbound", sep=""),
-                         paste(input$columncov5indata,"_significance", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_upperbound", sep=""),
-                         paste(input$columncov6indata,"_significance", sep=""))
+                         paste(input$columncov6indata,"_percent_increase", sep=""))
           
           
           
@@ -3139,624 +3637,24 @@ shinyApp(
           
           col_order <- c(input$columnidareainmap,
                          paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
                          
                          paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
                          
                          paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
                          
                          paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""),
                          
                          paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_upperbound", sep=""),
-                         paste(input$columncov5indata,"_significance", sep=""),
                          
                          paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_upperbound", sep=""),
-                         paste(input$columncov6indata,"_significance", sep=""),
                          
-                         paste(input$columncov7indata,"_percent_increase", sep=""),
-                         paste(input$columncov7indata,"_upperbound", sep=""),
-                         paste(input$columncov7indata,"_significance", sep=""))
-          
-        }
-        
-      }else if (asso_select_column == "lowerbound,significance"){
-        if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-          
-          # print("all null")
-          
-        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_lowerbound", sep=""),
-                         paste(input$columncov5indata,"_significance", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_lowerbound", sep=""),
-                         paste(input$columncov5indata,"_significance", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_lowerbound", sep=""),
-                         paste(input$columncov6indata,"_significance", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_lowerbound", sep=""),
-                         paste(input$columncov5indata,"_significance", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_lowerbound", sep=""),
-                         paste(input$columncov6indata,"_significance", sep=""),
-                         
-                         paste(input$columncov7indata,"_percent_increase", sep=""),
-                         paste(input$columncov7indata,"_lowerbound", sep=""),
-                         paste(input$columncov7indata,"_significance", sep=""))
-          
-        }
-        
-      }else if (asso_select_column == "lowerbound"){
-        if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-          
-          # print("all null")
-          
-        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_lowerbound", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_lowerbound", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_lowerbound", sep=""),
-                         
-                         paste(input$columncov7indata,"_percent_increase", sep=""),
-                         paste(input$columncov7indata,"_lowerbound", sep=""))
+                         paste(input$columncov7indata,"_percent_increase", sep=""))
           
         }
         
         
-      }else if (asso_select_column == "upperbound"){
-        if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-          
-          # print("all null")
-          
-        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_upperbound", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_upperbound", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_upperbound", sep=""),
-                         
-                         paste(input$columncov7indata,"_percent_increase", sep=""),
-                         paste(input$columncov7indata,"_upperbound", sep=""))
-          
-        }
         
-        
-      }else if (asso_select_column == "significance"){
-        if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-          
-          # print("all null")
-          
-        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_significance", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_significance", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_significance", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_percent_increase", sep=""),
-                         paste(input$columncov1indata,"_significance", sep=""),
-                         
-                         paste(input$columncov2indata,"_percent_increase", sep=""),
-                         paste(input$columncov2indata,"_significance", sep=""),
-                         
-                         paste(input$columncov3indata,"_percent_increase", sep=""),
-                         paste(input$columncov3indata,"_significance", sep=""),
-                         
-                         paste(input$columncov4indata,"_percent_increase", sep=""),
-                         paste(input$columncov4indata,"_significance", sep=""),
-                         
-                         paste(input$columncov5indata,"_percent_increase", sep=""),
-                         paste(input$columncov5indata,"_significance", sep=""),
-                         
-                         paste(input$columncov6indata,"_percent_increase", sep=""),
-                         paste(input$columncov6indata,"_significance", sep=""),
-                         
-                         paste(input$columncov7indata,"_percent_increase", sep=""),
-                         paste(input$columncov7indata,"_significance", sep=""))
-          
-        }
-      }
-
-    
-    
-  } # จบ  if (asso_select_column != ""){
-  else if (asso_select_column == ""){
-    if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-      
-      # print("all null")
-      
-    }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-      col_order <- c(input$columnidareainmap,
-                     paste(input$columncov1indata,"_percent_increase", sep=""))
-      
-      
-    }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-      col_order <- c(input$columnidareainmap,
-                     paste(input$columncov1indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov2indata,"_percent_increase", sep=""))
-      
-      
-    }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-      col_order <- c(input$columnidareainmap,
-                     paste(input$columncov1indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov2indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov3indata,"_percent_increase", sep=""))
-      
-      
-    }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-      col_order <- c(input$columnidareainmap,
-                     paste(input$columncov1indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov2indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov3indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov4indata,"_percent_increase", sep=""))
-      
-      
-    }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-      
-      col_order <- c(input$columnidareainmap,
-                     paste(input$columncov1indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov2indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov3indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov4indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov5indata,"_percent_increase", sep=""))
-      
-      
-      
-    }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-      
-      col_order <- c(input$columnidareainmap,
-                     paste(input$columncov1indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov2indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov3indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov4indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov5indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov6indata,"_percent_increase", sep=""))
-      
-      
-      
-    }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-      
-      col_order <- c(input$columnidareainmap,
-                     paste(input$columncov1indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov2indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov3indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov4indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov5indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov6indata,"_percent_increase", sep=""),
-                     
-                     paste(input$columncov7indata,"_percent_increase", sep=""))
-      
-    }
-        
-        
-  
-  } # จบ else if (is.null(asso_select_column)){
+      } # จบ else if (is.null(asso_select_column)){
       
       
       
@@ -3795,7 +3693,6 @@ shinyApp(
 ##------------------------------Run Shiny App--------------------------------##
 
 shinyApp(ui = ui, server = server)
-
 
 
 
