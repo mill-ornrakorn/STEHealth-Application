@@ -4,12 +4,30 @@
 
 This application is part of ```Spatiotemporal Analysis with Application Development for Epidemiological Study of Suicide Mortality 💀📝``` senior project of the [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/). 
 
+
 ### 💡Feature
 1. Analysis for spatial and spatiotemporal epidemiological studies and ```cluster detection``` and ```association with risk factors```.
 
 2. ```Upload data``` for analysis into the application for analysis.
 
 3. ```Download results``` of analysis from the application.
+
+
+<p align="center">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_gif_Cluster%20detection.gif?raw=true" alt= “STEHealth_Manual” height="400">
+</br>
+Cluster detection
+
+</p>
+
+
+<p align="center">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_gif_Association%20with%20risk%20factors.gif?raw=true" alt= “STEHealth_Manual” height="400" > 
+</br>
+Association with risk factors
+</p>
+
+
 
 ### 📝Developer Team
 1. [Papin Thanutchapat](https://github.com/Jappapin); Space-time pattern detection model and association with risk factors for suicide.
@@ -26,11 +44,11 @@ This application is part of ```Spatiotemporal Analysis with Application Developm
 This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://github.com/mill-ornrakorn/STEHealth-Application/blob/feature-select-download/www/STEHealth_Application_Manual.pdf)
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/STEHealth_Application_Manual_cover.png?raw=true" alt= “STEHealth_Manual” height="600">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_Application_Manual_cover.png?raw=true" alt= “STEHealth_Manual” height="600">
 </p>
 
 ## Style Guide 🎨
-![STEHealth_styleguide](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/STEHealth_styleguide.png?raw=true)
+![STEHealth_styleguide](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_styleguide.png?raw=true)
 
 
 
