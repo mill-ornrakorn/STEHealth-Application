@@ -8,6 +8,7 @@
 - #### version 1.1 
     ##### 1 May 2023
     This version according to **the usability test**:
+    - Added calculate expected value
     - Added 'fullscreen' button in all map.
     - Added select column to download option in 'Association with Risk Factors' tap.
     - Added download map option by pressing 'screenshot map' button.

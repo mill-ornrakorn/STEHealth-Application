@@ -3,6 +3,15 @@
   font-family: 'Poppins', sans-serif; /*!important ใส่ไม่ได้เพราะเหมือน iconบางส่วนหาย*/
 }
 
+/* ไม่แสดง error หน้าเว็บ */
+.shiny-output-error { 
+  visibility: hidden; 
+}
+
+.shiny-output-error:before { 
+  visibility: hidden; 
+}
+
 html{
   font-size: calc(60% + 0.8vmin);
 }
@@ -33,10 +42,21 @@ h5{
 
 }
 
+/* เว้นระยะห่างด้านซ้ายทุกหน้า */
+.tab-content {
+  margin-left:40px;
+}
+
+
 /* Space between the Sidebar Menu Items*/
 .sidebar-menu li { 
   margin-bottom: 15px; 
 }
+
+/* สีกรอบ sidebar */
+.well { 
+  border-color: #FFFFFF;
+  }
 
 
 .heading_container h1 {
@@ -181,6 +201,17 @@ label > input[type='radio'] + *::before {
 label > input[type='radio']:checked + *::before {
   background: radial-gradient(white 0%, white 30%, #735DFB 30%, #735DFB);
   border-color: #735DFB;
+}
+
+/* ทำให้ checkboxGroupInput เรียงเป็นระเบียบ */
+.checkbox-inline { 
+  margin-left: 0px;
+  margin-right: 10px;
+}
+
+.checkbox-inline+.checkbox-inline {
+  margin-left: 0px;
+  margin-right: 10px;
 }
 
 /*

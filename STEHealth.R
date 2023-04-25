@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @20-4-23
+# @25-4-23
 
 # ================================================================
 
@@ -21,8 +21,7 @@ library(INLA)
 inla.setOption(scale.model.default = TRUE)
 library(spdep) # อันนี้ใช้ nb2mat
 
-# remotes::install_github("dreamRs/capture")
-library(capture)
+library(capture) # ลงโดย remotes::install_github("dreamRs/capture")
 library(leaflet.extras)
 
 
@@ -76,27 +75,6 @@ body <- dashboardBody(
   tags$head(
     tags$meta(charset="utf-8"),
     tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),   # import css file
-    tags$style('.tab-content {margin-left:40px;}'), # เว้นระยะห่างด้านซ้ายทุกหน้า
-    tags$style(type="text/css",
-               ".shiny-output-error { visibility: hidden; }",
-               ".shiny-output-error:before { visibility: hidden; }" ), # ไม่แสดง error หน้าเว็บ
-    
-    tags$style(
-      ".checkbox-inline { 
-                    margin-left: 0px;
-                    margin-right: 10px;
-          }
-         .checkbox-inline+.checkbox-inline {
-                    margin-left: 0px;
-                    margin-right: 10px;
-         }
-        
-        " ), # ทำให้ checkboxGroupInput เรียงเป็นระเบียบ
-    
-    tags$style('.well { 
-               border-color: #FFFFFF;
-               }'), # สีกรอบ sidebar
-    
     tags$script(src="js/index.js") # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่น ๆ
     
     
@@ -249,7 +227,7 @@ body <- dashboardBody(
                           bsPopover(id = "question_csvfile", title = "csv file",
                                     content = paste0(strong("The csv file "),br(),
                                                      ".csv file needs to have columns: ",
-                                                     strong("<area id> <area name> <expected value> <cases> <time period> <population>"),
+                                                     strong("<area id> <area name> <cases> <time period> <population>"),
                                                      br(),br(),
                                                      strong("Examples of csv file "),
                                                      #"This examples csv file include column: ....... ",
@@ -268,7 +246,7 @@ body <- dashboardBody(
                   hr(),
                   HTML("<h4>Select Data*</h4>"),
                   #width = 7,
-                  HTML("*.csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time period, expected value, cases, population</font></strong>"),
+                  HTML("*.csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time period, cases, population</font></strong>"),
                   fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
                   
                   helpText("Select columns:"),
@@ -286,8 +264,7 @@ body <- dashboardBody(
                   HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
                                              <ul style = 'text-align: justify;'>
                                               <li><strong>Area id</strong>: a number starting at 1, used to identify provinces.</li> 
-                                              <li><strong>Area name</strong>: name of the area. Area name in the data must be the same as area name in the shapefile.</li> 
-                                              <li><strong>Expected value</strong>: expected value in data.</li> 
+                                              <li><strong>Area name</strong>: name of the area. Area name in the data must be the same as area name in the shapefile.</li>
                                               <li><strong>Cases</strong>: number of cases or outcomes in each area.</li> 
                                               <li><strong>Time period</strong>: time period in data.</li> 
                                               <li><strong>Population</strong>: population in data.</li> 

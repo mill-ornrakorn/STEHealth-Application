@@ -92,7 +92,7 @@ If an error occurs in usage, for example:
 
 * **Thailand shapefile** contains 4 files that cannot be missing any of them due to their references to each other: shp, dbf, shx, and prj. These Shapefiles represent **provincial boundaries (Level 1)**.
 
-* **csv file** contains the following 13 columns: 
+* **csv file** contains the following 12 columns: 
 
     **1. province** is the name of province which has a total of 77 provinces.
 
@@ -102,11 +102,9 @@ If an error occurs in usage, for example:
 
     **4. suicide** is the number of suicides.
 
-    **5. E** is the number of expected value.
+    **5.Population** population in each area.
 
-    **6.Population** population in each area.
-
-    **7-13. 7 covariates:** debt, income, poverty, expenditure, homicide crime, property crime and shocking crime.
+    **6-12. 7 covariates:** debt, income, poverty, expenditure, homicide crime, property crime and shocking crime.
 
 </div>
 
