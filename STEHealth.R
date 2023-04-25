@@ -275,11 +275,12 @@ body <- dashboardBody(
                   fluidRow(column(6, selectInput("columnidareaindata",  label = "area id",  choices = c(""), selected = "")),
                            column(6, selectInput("columnidareanamedata", label = "area name", choices = c(""), selected = ""))
                   ),
-                  fluidRow(column(6, selectInput("columnexpvalueindata", label = "expected value", choices = c(""), selected = "")),
-                           column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = ""))
+                  fluidRow(#column(6, selectInput("columnexpvalueindata", label = "expected value", choices = c(""), selected = "")),
+                            column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = "")),
+                            column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = ""))
                   ),
-                  fluidRow(column(6, selectInput("columndateindata", label = "time period", choices = c(""), selected = "")),
-                           column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = ""))
+                  fluidRow(column(6, selectInput("columndateindata", label = "time period", choices = c(""), selected = ""))
+                           
                   ),
                   
                   HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
@@ -1037,7 +1038,7 @@ shinyApp(
       updateSelectInput(session, "columnidareaindata", choices = xd,  selected = head(xd, 1))
       updateSelectInput(session, "columnidareanamedata", choices = xd,  selected = head(xd, 1))
       updateSelectInput(session, "columndateindata",   choices = xd,  selected = head(xd, 1))
-      updateSelectInput(session, "columnexpvalueindata",    choices = xd,  selected = head(xd, 1))
+      #updateSelectInput(session, "columnexpvalueindata",    choices = xd,  selected = head(xd, 1))
       updateSelectInput(session, "columncasesindata",  choices = xd,  selected = head(xd, 1))
       updateSelectInput(session, "columnpopindata",  choices = xd,  selected = head(xd, 1))
       
@@ -1266,11 +1267,28 @@ shinyApp(
         
         
         
-        # y
+        # y (case)
         data[,input$columncasesindata] <- as.numeric(data[,input$columncasesindata])
         
-        # E
-        data[,input$columnexpvalueindata] <- as.numeric(data[,input$columnexpvalueindata])
+        
+        # -- คำนวน expected value --
+        
+        # # ค่า E แบบเดิมที่ให้ user ใส่มาเอง
+        # data[,input$columnexpvalueindata] <- as.numeric(data[,input$columnexpvalueindata])
+        
+        sum_case <- sum(data[,input$columncasesindata])
+        sum_pop <- sum(data[,input$columnpopindata])
+        
+        divide_case_pop <- sum_case / sum_pop
+        
+        
+        expected_value <- data[,input$columnpopindata] * divide_case_pop
+          
+       
+        # Add a Column to a Data Frame
+        data['expected_value'] <- expected_value
+        
+        # ---------------------------
         
         # area id (data$province)
         data[,input$columnidareaindata] <- as.numeric(data[,input$columnidareaindata]) # id of province 1-77
@@ -1338,7 +1356,8 @@ shinyApp(
           formula_1_bym_rw1_Cluter,
           family = "poisson",
           data = data,
-          E = data[,input$columnexpvalueindata],
+          #E = data[,input$columnexpvalueindata],
+          E = data[, 'expected_value'],
           control.predictor = list(compute = TRUE),
           control.compute = list(
             dic = TRUE,
