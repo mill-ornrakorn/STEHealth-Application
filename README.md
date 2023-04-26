@@ -2,7 +2,7 @@
 
 **STEHealth** (It stands for **S**patiotemporal **E**pidemiological **Health**) is a shiny application for analyzing space-time pattern, **cluster detection**, and **association with risk factors** of health outcomes, which allows users to import their own data, analyze, and visualize.
 
-This application is part of ```Spatiotemporal Analysis with Application Development for Epidemiological Study of Suicide Mortality 💀📝``` senior project of the [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/). 
+This application is part of ```Spatiotemporal analysis with application development for epidemiological study of suicide mortality: From global perspectives to a case study in Thailand 💀📝``` senior project of the [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/). 
 
 
 ### 💡Feature
@@ -40,6 +40,41 @@ Association with risk factors
 2. Asst. Prof. Dr. Chawarat Rotejanaprasert
 3. Asst. Prof. Dr. Peerut Chienwichai
 
+## Sample Data 📁
+The sample data used for case study in this application consists of Thailand shapefile and csv file (Thai suicide mortality and risk factors 2011-2021)
+
+
+
+* **Thailand shapefile** contains 4 files that cannot be missing any of them due to their references to each other: shp, dbf, shx, and prj. These Shapefiles represent **provincial boundaries (Level 1)**.
+
+<p align="center">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/th_shapfile.jpg?raw=true" alt= “Thailand_shapefile” height="400">
+</br>
+Thailand shapefile
+</p> 
+
+
+
+* **csv file (Thailand suicide mortality and risk factors 2011-2021)** contains the following 12 columns: 
+
+    **1. province** is the name of province which has a total of 77 provinces.
+
+    **2. province_id** is the number of province starting at from 1 to 77 .
+
+    **3. year** is the number of year starting at from 1 to 11.
+
+    **4. suicide** is the number of suicides.
+
+    **5.Population** population in each area.
+
+    **6-12. 7 covariates:** debt, income, poverty, expenditure, homicide crime, property crime and shocking crime.
+    
+<p align="center">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/th_csv.jpg?raw=true" alt= “csv_file” height="300">
+</br>
+Thailand suicide mortality and risk factors 2011-2021
+</p> 
+
 ## Manual📗
 This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://github.com/mill-ornrakorn/STEHealth-Application/blob/feature-select-download/www/STEHealth_Application_Manual.pdf)
 
@@ -48,7 +83,10 @@ This manual includes step-by-step instructions on how to use each page of the ap
 </p>
 
 ## Style Guide 🎨
-![STEHealth_styleguide](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_styleguide.png?raw=true)
+<p align="center">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_styleguide.png?raw=true" alt= “STEHealth_styleguide” height="500">
+</p>
+
 
 
 
