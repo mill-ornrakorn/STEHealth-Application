@@ -932,7 +932,7 @@ shinyApp(
     )
     
     
-    observeEvent(input$Preview_Map_Distribution, {
+    observeEvent(input$Preview_Map_Distribution | input$tabs == "Map_Distribution", {
       
       if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
         rv$messageCheckDataText_1<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
@@ -969,7 +969,7 @@ shinyApp(
     )
     
     
-    observeEvent(input$nextpage, {
+    observeEvent(input$nextpage | input$tabs == "Analysis", {
       
       if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
         rv$messageCheckDataText_2<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
@@ -1209,7 +1209,7 @@ shinyApp(
     
     # ==================================== ปุ่ม preview map dis ==================================== 
     
-    observeEvent(input$Preview_Map_Distribution  , {
+    observeEvent(input$Preview_Map_Distribution | input$tabs == "Map_Distribution" , {
       if (is.null(rv$datosOriginal)| is.null(rv$map))
         return(NULL)
       
@@ -1239,7 +1239,7 @@ shinyApp(
     
     # ==================================== ปุ่ม action input$startAnalysisButto ==================================== 
     # observeEvent(input$startAnalysisButton, {
-    observeEvent(input$nextpage, {
+    observeEvent(input$nextpage | input$tabs == "Analysis", {
       
       if (is.null(rv$datosOriginal) | is.null(rv$map))
         return(NULL)
