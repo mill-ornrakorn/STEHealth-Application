@@ -206,19 +206,11 @@ body <- dashboardBody(
                   ),
                   
                   
-                  # HTML("<font color= \"#735DFB\" style = 'text-align: justify;'><strong>Note: </font>Area name</strong> is name of the area. Area name in the data must be the same name and order as area name in the <strong>csv file</strong>.
-                  #     ")                     
                   HTML("</br>"),
                   
                   radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
                   
-                  
-                  # fluidRow(column(12, helpText(div("Optional. Select column name of the regions in the map."),
-                  #                             div("If the number of areas is big, the leaflet map will not render. By specifying regions containing a small number of areas,
-                  #                                 only areas within the selected region will be shown in the interactive results.")))),
-                  # fluidRow(column(6, selectInput("columnnamesuperareainmap", label = "region name", choices = c(""), selected = ""))),
-                  
-                  
+                 
                   
                   # ==================================== Upload data (.csv file) ==================================== 
                   # ปุ่ม ? แต่ติดปัญหาตรงที่มันไม่บรรทัดเดียวกัน แม้จะใส่  inline-block แล้ว
@@ -233,7 +225,7 @@ body <- dashboardBody(
                           bsPopover(id = "question_csvfile", title = "csv file",
                                     content = paste0(strong("The csv file "),br(),
                                                      ".csv file needs to have columns: ",
-                                                     strong("<area id> <area name> <cases> <time period> <population>"),
+                                                     strong("<area id> <area name> <cases> <time point> <population>"),
                                                      br(),br(),
                                                      strong("Examples of csv file "),
                                                      #"This examples csv file include column: ....... ",
@@ -252,7 +244,7 @@ body <- dashboardBody(
                   hr(),
                   # HTML("<h4>Select Data*</h4>"),
                   #width = 7,
-                  HTML("csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time period, cases, population</font></strong>"),
+                  HTML("csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time point, cases, population</font></strong>"),
                   fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
                   
                   helpText("Select columns:"),
@@ -284,26 +276,16 @@ body <- dashboardBody(
                                      )
                                    )
                   ),
-                  fluidRow(column(6, selectInput("columndateindata", label = "time period", choices = c(""), selected = "")%>%
+                  fluidRow(column(6, selectInput("columndateindata", label = "time point", choices = c(""), selected = "")%>%
                                     shinyInput_label_embed(
                                       icon("info") %>%
-                                        bs_embed_tooltip(title = 'period in the data, such as day, month, year.')
+                                        bs_embed_tooltip(title = 'time point in the data, such as day, month, year.')
                                     )
                                   )
                            
                   ),
                   
-                  # HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
-                  #                            <ul style = 'text-align: justify;'>
-                  #                             <li><strong>Area id</strong>: a number starting at 1, used to identify provinces.</li> 
-                  #                             <li><strong>Area name</strong>: name of the area. Area name in the data must be the same as area name in the shapefile.</li>
-                  #                             <li><strong>Cases</strong>: number of cases or outcomes in each area.</li> 
-                  #                             <li><strong>Time period</strong>: time period in data.</li> 
-                  #                             <li><strong>Population</strong>: population in data.</li> 
-                  # 
-                  #                           </ul>
-                  #                               
-                  #                           </br>"),
+            
                   
                   HTML("<h4><strong>Select Covariates*</strong></h4>"),
                   HTML("*Put covariate in order from 1 to 7, with no blanks."),
@@ -417,7 +399,7 @@ body <- dashboardBody(
                                             <p>
                                               The Map Distribution displays an interactive distribution map of the user uploaded shapefile 
                                               and csv file on the Upload data page using <strong>case column</strong> to plot. 
-                                              Users can visualize and select filters including time period and color scheme.
+                                              Users can visualize and select filters including time point and color scheme.
                                             </p>
                                            
                                           </div>
@@ -425,13 +407,13 @@ body <- dashboardBody(
                                
                                div(
                                  class = "box-white",
-                                 HTML("<h4>Fillter</h4>"),
+                                 HTML("<h4>Filter</h4>"),
                                  
                                  # เลือกช่วงเวลา
-                                 selectInput("time_period_filter", label = "Time Period:" ,
+                                 selectInput("time_point_filter", label = "Time Point:" ,
                                              choices = c(""), selected = ""),
                                  
-                                 #selectInput("time_period_filter", label = "Time Period:", choices = c(""), selected = ""),
+                                 #selectInput("time_point_filter", label = "Time Period:", choices = c(""), selected = ""),
                                  
                                  
                                  # เลือกสีแมพ
@@ -522,7 +504,7 @@ body <- dashboardBody(
                                        tags$img(align='left',width='52px',height='52px',src='cluster.png',style='margin-top: 10px; margin-right: 10px'),
                                        tags$h4("Cluster Detection"),
                                        HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
-                                                    Users can visualize and select filters including time period and color scheme. For details of the model, please refer to the"),
+                                                    Users can visualize and select filters including time point and color scheme. For details of the model, please refer to the"),
                                        tags$a("Help page.", onclick="customHref('Help')")
                                        
                                      ),
@@ -530,13 +512,13 @@ body <- dashboardBody(
                                      
                                      div(
                                        class = "box-white",
-                                       HTML("<h4>Fillter</h4>"),
+                                       HTML("<h4>Filter</h4>"),
                                        
                                        # เลือกช่วงเวลา
-                                       # sliderInput("time_period_filter_cluster", label = "Time Period:" , min = 1 ,
+                                       # sliderInput("time_point_filter_cluster", label = "Time Period:" , min = 1 ,
                                        #             max = 10 , value = 1, step = 1),
                                        
-                                       selectInput("time_period_filter_cluster", label = "Time Period:" ,
+                                       selectInput("time_point_filter_cluster", label = "Time Point:" ,
                                                    choices = c(""), selected = ""),
                                        
                                        
@@ -665,7 +647,7 @@ body <- dashboardBody(
                                                 
                                                 div(
                                                   class = "box-white",
-                                                  HTML("<h4>Fillter</h4>"),
+                                                  HTML("<h4>Filter</h4>"),
                                                   selectInput("risk_factor_filter", label = "Risk factor:", choices = c(""), selected = ""),
                                                   
                                                   # เลือกสีแมพ
@@ -1236,13 +1218,13 @@ shinyApp(
         data <- rv$datosOriginal
         
         #updateSelectInput(session, "columnidareainmap",        choices = x,  selected = head(x, 1))
-        updateSelectInput(session, "time_period_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
+        updateSelectInput(session, "time_point_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
         #min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
         # print(min(data[,input$columndateindata]))
         # print(max(data[,input$columndateindata]))
         # print(range(data[,input$columndateindata]))
         
-        updateSelectInput(session, "time_period_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
+        updateSelectInput(session, "time_point_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
         
       }
       
@@ -1266,7 +1248,7 @@ shinyApp(
       if(input$tabs == "Analysis"){
         data <- rv$datosOriginal
         
-        #updateSliderInput(session, "time_period_filter_cluster", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
+        #updateSliderInput(session, "time_point_filter_cluster", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
         
         
         
@@ -2235,13 +2217,13 @@ shinyApp(
       
       data <- data %>%
         filter(
-          data[,input$columndateindata] %in% input$time_period_filter
+          data[,input$columndateindata] %in% input$time_point_filter
           
         )
       
       
       
-      #datafiltered <- data[which(data[,input$columndateindata] == input$time_period_filter), ]
+      #datafiltered <- data[which(data[,input$columndateindata] == input$time_point_filter), ]
       datafiltered <- data
       ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
       map@data <- datafiltered[ordercounties, ]
@@ -2309,7 +2291,7 @@ shinyApp(
         # plot
         data2 <- data2 %>%
           filter(
-            data2[,input$columndateindata] %in% input$time_period_filter_cluster
+            data2[,input$columndateindata] %in% input$time_point_filter_cluster
             
           )
         
