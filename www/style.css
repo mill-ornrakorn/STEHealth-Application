@@ -251,7 +251,25 @@ color: #ffffff;
 }
 */
 
+/* ปุ่ม i (bs_embed_tooltip) */
 
+.fa-info:before {
+  color: #735DFB;
+  font-size: 10px;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  border: 1px solid #735DFB; 
+  border-radius: 100px;
+  content: "\f129";
+  
+}
+
+
+/* กรอบ verbatimTextOutput */
 .error pre {
   display: block;
   padding: 9.5px;

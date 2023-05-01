@@ -23,7 +23,7 @@ library(spdep) # อันนี้ใช้ nb2mat
 
 library(capture) # ลงโดย remotes::install_github("dreamRs/capture")
 library(leaflet.extras)
-
+library(bsplus)
 
 
 # By default the file size limit is 5MB. Here limit is 70MB.
@@ -196,13 +196,19 @@ body <- dashboardBody(
                   fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
                   
                   helpText("Select columns area name in the map."),
-                  fluidRow(column(12, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")),
+                  fluidRow(column(12, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")%>%
+                                    shinyInput_label_embed(
+                                      icon("info") %>%
+                                        bs_embed_tooltip(title = '"area name" in the shapefile must be matched to "area name" in the csv file')
+                                    )
+                                  ),
                            #column(6, selectInput("columnnameareainmap", label = "area name", choices = c(""), selected = ""))
                   ),
                   
-                  HTML("<font color= \"#735DFB\" style = 'text-align: justify;'><strong>Note: </font>Area name</strong> is name of the area. Area name in the data must be the same name and order as area name in the <strong>csv file</strong>.
-                                           
-                                            </br></br>"),
+                  
+                  # HTML("<font color= \"#735DFB\" style = 'text-align: justify;'><strong>Note: </font>Area name</strong> is name of the area. Area name in the data must be the same name and order as area name in the <strong>csv file</strong>.
+                  #     ")                     
+                  HTML("</br>"),
                   
                   radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
                   
@@ -244,34 +250,60 @@ body <- dashboardBody(
                   
                   
                   hr(),
-                  HTML("<h4>Select Data*</h4>"),
+                  # HTML("<h4>Select Data*</h4>"),
                   #width = 7,
-                  HTML("*.csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time period, cases, population</font></strong>"),
+                  HTML("csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time period, cases, population</font></strong>"),
                   fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
                   
                   helpText("Select columns:"),
-                  fluidRow(column(6, selectInput("columnidareaindata",  label = "area id",  choices = c(""), selected = "")),
-                           column(6, selectInput("columnidareanamedata", label = "area name", choices = c(""), selected = ""))
+                  fluidRow(column(6, selectInput("columnidareaindata",  label = "area id",  choices = c(""), selected = "")%>%
+                                    shinyInput_label_embed(
+                                      icon("info") %>%
+                                        bs_embed_tooltip(title = '"area id" is a number starting at 1, used to identify provinces.')
+                                    )
+                                  ),
+                           column(6, selectInput("columnidareanamedata", label = "area name", choices = c(""), selected = "")%>%
+                                    shinyInput_label_embed(
+                                      icon("info") %>%
+                                        bs_embed_tooltip(title = '"area name" in the shapefile must be matched to "area name" in the csv file.')
+                                    )
+                                  )
                   ),
                   fluidRow(#column(6, selectInput("columnexpvalueindata", label = "expected value", choices = c(""), selected = "")),
-                            column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = "")),
-                            column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = ""))
+                            column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = "")%>%
+                                     shinyInput_label_embed(
+                                       icon("info") %>%
+                                         bs_embed_tooltip(title = 'population in each area.')
+                                     )
+                                   
+                                   ),
+                            column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = "")%>%
+                                     shinyInput_label_embed(
+                                       icon("info") %>%
+                                         bs_embed_tooltip(title = 'number of cases or outcomes in each area.')
+                                     )
+                                   )
                   ),
-                  fluidRow(column(6, selectInput("columndateindata", label = "time period", choices = c(""), selected = ""))
+                  fluidRow(column(6, selectInput("columndateindata", label = "time period", choices = c(""), selected = "")%>%
+                                    shinyInput_label_embed(
+                                      icon("info") %>%
+                                        bs_embed_tooltip(title = 'period in the data, such as day, month, year.')
+                                    )
+                                  )
                            
                   ),
                   
-                  HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
-                                             <ul style = 'text-align: justify;'>
-                                              <li><strong>Area id</strong>: a number starting at 1, used to identify provinces.</li> 
-                                              <li><strong>Area name</strong>: name of the area. Area name in the data must be the same as area name in the shapefile.</li>
-                                              <li><strong>Cases</strong>: number of cases or outcomes in each area.</li> 
-                                              <li><strong>Time period</strong>: time period in data.</li> 
-                                              <li><strong>Population</strong>: population in data.</li> 
-
-                                            </ul>
-                                                
-                                            </br>"),
+                  # HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
+                  #                            <ul style = 'text-align: justify;'>
+                  #                             <li><strong>Area id</strong>: a number starting at 1, used to identify provinces.</li> 
+                  #                             <li><strong>Area name</strong>: name of the area. Area name in the data must be the same as area name in the shapefile.</li>
+                  #                             <li><strong>Cases</strong>: number of cases or outcomes in each area.</li> 
+                  #                             <li><strong>Time period</strong>: time period in data.</li> 
+                  #                             <li><strong>Population</strong>: population in data.</li> 
+                  # 
+                  #                           </ul>
+                  #                               
+                  #                           </br>"),
                   
                   HTML("<h4><strong>Select Covariates*</strong></h4>"),
                   HTML("*Put covariate in order from 1 to 7, with no blanks."),
