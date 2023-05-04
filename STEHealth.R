@@ -139,9 +139,20 @@ body <- dashboardBody(
       
       # ==================================== Upload_data ==================================== 
       tabItem(tabName = "Upload_data",
+              
               HTML("<div class = 'heading_container'>
                      <h1>Upload Data</h1>
                    </div>"),
+              # fluidRow(column(3, div(class = 'heading_container', HTML("<h1>Upload Data</h1>") )),
+              #          column(2, offset=6, actionButton("Preview_Map_Distribution",
+              #                                           strong("Preview Map Distribution"),
+              #                                           onclick = "$('li:eq(7) a').tab('show');",
+              #                                           class = 'btn-primary',
+              #                                           style='color: #FFFFFF; margin-top: 30px;'
+              #          ))
+              #          
+              #          ),
+              
               div(style = "margin-bottom: 30px;"),
               
               HTML("<h2>Input Data</h2>"),
@@ -287,8 +298,8 @@ body <- dashboardBody(
                   
             
                   
-                  HTML("<h4><strong>Select Covariates*</strong></h4>"),
-                  HTML("*Put covariate in order from 1 to 7, with no blanks."),
+                  HTML("<h4><strong>Select Covariates</strong> (Optional)</h4>"),
+                  HTML("Put covariate in order from 1 to 7, with no blanks."),
                   
                   helpText("Select columns:"),
                   fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
