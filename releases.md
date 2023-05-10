@@ -6,15 +6,17 @@
 <img width="40px" height="10px" src="Rectangle.svg">
 
 - #### version 1.1 
-    ##### 1 May 2023
-    This version according to **the usability test**:
+    ##### 12 May 2023
+    This version according to **the usability test** from 20 people (Group of people with experience in public health and group of people with experience in non-health (IT related)):
+    - Added tooltip at dropdown in 'Upload Data' page.
+    - Added calculate expected value.
     - Added 'fullscreen' button in all map.
     - Added select column to download option in 'Association with Risk Factors' tap.
     - Added download map option by pressing 'screenshot map' button.
     - Added 'Releases' page.
     - Added details about analysis in 'Upload Data' page.
     - Added details about in 'Manual' page.
-    <!-- - Added details about model and how the significance is measured in 'Help' page. -->
+    - Added details of model in 'Help' page.
     - Added examples of interpretation on 'Spatiotemporal Epidemiological Analysis' page.
     - Added approach link to internal pages.
     - Fixed manual is not displayed.
