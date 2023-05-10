@@ -14,7 +14,7 @@ The application consists of eight pages:
 
 **1.Home page**
 
-&emsp;&emsp;The home page is the first page of the  application, explaining what this  app does. On this page, there are two buttons: "Go to upload data page" and "How to use?" The "Go to upload data page" button can go to the "upload data" page. The "How to use?" button can go to the "Manual" page, which explains how to use the  application in a format that is easier to understand than the "help" page and also have a demonstration of how to use  application.
+&emsp;&emsp;The home page is the first page of the  application, explaining what this  app does. On this page, there are two buttons: "Get Started" and "How to use?". The "Get Started" button can go to the "upload data" page. The "How to use?" button can go to the "Manual" page, which explains how to use the  application in a format that is easier to understand than the "help" page and also have a demonstration of how to use  application.
 
 **2.Upload data page**
 
@@ -113,9 +113,15 @@ If an error occurs in usage, for example:
 
 &emsp;&emsp; The sample data used for case study in this application consists of Thailand shapefile and csv file which can be [downloaded here📑](https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link).
 
-* **Thailand shapefile** contains 4 files that cannot be missing any of them due to their references to each other: shp, dbf, shx, and prj. These Shapefiles represent **provincial boundaries (Level 1)**.
+1. **Thailand shapefile** contains 4 files that cannot be missing any of them due to their references to each other: shp, dbf, shx, and prj. These Shapefiles represent **provincial boundaries (Level 1)**.
+  <p align="center">
+      <img width="60%" src="th_shapfile.jpg" alt= “Thailand_shapefile” >
+      </br>
+      Thailand shapefile
+  </p> 
+  </br>
 
-* **csv file** contains the following 12 columns: 
+2. **csv file** contains the following 12 columns: 
 
     **1. province** is the name of province which has a total of 77 provinces.
 
@@ -129,6 +135,11 @@ If an error occurs in usage, for example:
 
     **6-12. 7 covariates:** debt, income, poverty, expenditure, homicide crime, property crime and shocking crime.
 
+  <p align="center">
+    <img width="60%" src="th_csv.jpg" alt= “csv_file”>
+    </br>
+    Thailand suicide mortality and risk factors 2011-2021
+  </p> 
 </div>
 
 
