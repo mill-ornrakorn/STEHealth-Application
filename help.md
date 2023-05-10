@@ -30,17 +30,40 @@ The application consists of eight pages:
 
 <!--* **Model Setting** -->
 
-* **Cluster Detection Tap**
+**4.1 Cluster Detection Tap**
 
 &emsp;&emsp;Cluster detection is an important tool for identifying areas of high risk and developing hypotheses about health outcomes [[1]](https://doi.org/10.1186/1476-072X-6-13). Cluster detection used to compute probabilities that the risk in an area exceeds certain thresholds can be done using the posterior probability distributions [[2]](http://www.jstor.org/stable/3085830). This probability of exceedance can then be used to decide whether an area should be hot-spot [[3]](https://doi.org/10.1289%2Fehp.6740). The Cluster detection Tab displays a hotspot area map of the data.
 
+  - **Details of the model**
+    
+    This application perform cluster detection in spatiotemporal epidemiological analysis section using Bayesian spatiotemporal model. Let $y_{it}$ be raw death counts for location $i$ and time $t$ which are a more common outcome of Bayesian disease mapping is modeled as an combination of intercept, and random effects.
 
-* **Association with Risk Factors Tap**
+    $$y_{it} \sim Poisson(E_{it}\rho_{it}), \\ log(\rho_{it}) = \alpha + \eta_{it}$$
+
+    The space-time random effects in the model describe variation due to location and time.  The spatial effect is spatially structured effect called BYM. It is spatial effects combined unstructured spatial effect and spatially structured effect which can be expressed as;
+
+    $$u_i |u_{-i}  \sim Normal(\mu_i + \frac{1}{N_i}\sum_{j=1}^{n} a_{ij}(u_j-\mu_j),s_{1}^{2}) + u_i\sim iid \ Normal(0,\ σ^{2})$$
+
+    The temporal effect is structured effect called random walk prior of order 1 which can be written as;
+
+    $$γ_t |γ_{t-1} \sim Normal(γ_{t-1},\ σ^{2}) $$
+
+    The prior distribution of space-time interaction  depends on the spatial and temporal main effects which are assumed to interact. The model is interaction type I which unstructured spatial and temporal effects interact to each other.
+
+
+**4.2 Association with Risk Factors Tap**
 
  &emsp;&emsp;The percentage of a health outcome expected to change as a risk factor increases one unit. When the probability is positive, it means that as the risk factor rises, so will the outcome, whereas when the probability is negative, it means that if the risk factor increases, the outcome decreases. The data are assumed to be unrelated when the probability is zero. The association Tab displays an association between risk factors and case outcomes.
 
 &emsp;&emsp;From this analysis, the coefficient of the risk factors obtained from the fit model, which is in the log scale, must be exponentiated and minus 1 and multiplied by 100. Therefore, the value is obtained as a percent increase.
 
+  - **Details of the model**
+
+    Association with risk factors is performed in spatiotemporal epidemiological analysis section using Bayesian spatiotemporal model. Let  $y_{it}$ be raw death counts for location $i$ and time $t$ which are a more common outcome of Bayesian disease mapping is modeled as an combination of intercept, fixed effects (risk factors), and random effects.
+    
+    $$y_{it} \sim Poisson(E_{it}\rho_{it}), \\ log(\rho_{it}) = \alpha + \sum_{m}^{M} \beta_{m} \ x_{mit} + \eta_{it}$$
+
+    The risk factor association is modeled on the multiplicative scale. Conditioned on the random effect terms and other fixed effects constant. The space-time random effects in the model describe variation due to location and time.  The details of spatial effect, temporal effect and space-time interaction in this model can be found on *"4.1 Cluster Detection Tap in Details of the model"*
 
 **5.About application**
 

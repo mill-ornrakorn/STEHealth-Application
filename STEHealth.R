@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @25-4-23
+# @11-5-23
 
 # ================================================================
 
@@ -783,7 +783,7 @@ body <- dashboardBody(
       ),
       
       tabItem(tabName = "Help",
-              includeMarkdown("help.md")
+              withMathJax(includeMarkdown("help.md")) # withMathJax ช่วยให้แสดงสมการคณิตได้ใน app
       ),
       
       tabItem(tabName = "Releases",
