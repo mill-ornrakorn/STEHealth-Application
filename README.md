@@ -112,6 +112,7 @@ This manual includes step-by-step instructions on how to use each page of the ap
 [R-INLA](https://cran.r-project.org/web/packages/shinyjs/index.html)  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
 [spdep](https://cran.r-project.org/web/packages/spdep/index.html)| Spatial Dependence: Weighting Schemes, Statistics
 [capture](https://github.com/dreamRs/capture) | Add a button in Shiny application or R Markdown document to take a screenshot (PNG or PDF) of a specified element.
+[bsplus](https://cran.rstudio.com/web/packages/bsplus/index.html) | The Bootstrap framework lets you add some JavaScript functionality to your web site by adding attributes to your HTML tags.
 
 ### 🩹Limitations
 - Application can support only English.
