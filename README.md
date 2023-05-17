@@ -36,9 +36,9 @@ Association with risk factors
 
 
 ### 📚Advisor
-1. Dr. Unchalisa Taetragool
-2. Asst. Prof. Dr. Chawarat Rotejanaprasert
-3. Asst. Prof. Dr. Peerut Chienwichai
+1. **Dr. Unchalisa Taetragool**; Department of Computer Engineering, Faculty of Engineering, King Mongkut's University of Technology Thonburi
+2. **Asst. Prof. Dr. Chawarat Rotejanaprasert**; Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University
+3. **Asst. Prof. Dr. Peerut Chienwichai**; Princess Srisavangavadhana College of Medicine, Chulabhorn Royal Academy
 
 ## Sample Data 📁
 The sample data used for case study in this application consists of Thailand shapefile and csv file (Thai suicide mortality and risk factors 2011-2021)
