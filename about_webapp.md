@@ -43,9 +43,9 @@ This application is part of "Spatiotemporal Analysis with Application Developmen
 ###  **Advisor**
 <img width="40px" height="10px" src="Rectangle.svg">
 
-1. Dr. Unchalisa Taetragool
-2. Asst. Prof. Dr. Chawarat Rotejanaprasert
-3. Asst. Prof. Dr. Peerut Chienwichai
+1. **Dr. Unchalisa Taetragool**; Department of Computer Engineering, Faculty of Engineering, King Mongkut's University of Technology Thonburi
+2. **Asst. Prof. Dr. Chawarat Rotejanaprasert**; Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University
+3. **Asst. Prof. Dr. Peerut Chienwichai**; Princess Srisavangavadhana College of Medicine, Chulabhorn Royal Academy
 
 </div>
 

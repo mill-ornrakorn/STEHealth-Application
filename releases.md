@@ -7,7 +7,7 @@
 
 - #### version 1.1 
     ##### 17 May 2023
-    This version according to **the usability test** from 20 people (Group of people with experience in public health and group of people with experience in non-health (IT related)):
+    This version according to **the test task** and **the usability test** from 20 people (Group of people with experience in public health and group of people with experience in non-health (IT related)):
     - Added tooltip at dropdown in 'Upload Data' page.
     - Added calculate expected value.
     - Added 'fullscreen' button in all map.
@@ -18,7 +18,6 @@
     - Added details about in 'Manual' page.
     - Added details of model in 'Help' page.
     - Added examples of interpretation on 'Spatiotemporal Epidemiological Analysis' page.
-    - Added approach link to internal pages.
     - Fixed manual is not displayed.
     - Changed UI style.
     - Changed the 'time period' filter from slider to dropdown.
