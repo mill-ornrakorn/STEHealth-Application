@@ -96,7 +96,7 @@ If an error occurs in usage, for example:
 | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------|
 | > Map display gray color | > It is caused by the user changing pages or changing taps while the application is plotting the map. The solution is to try displaying the map by filters adjusting.
 | > Application crashes or analysis not working                                                                                 | > It may be because the user uploaded data that is not as specified making it unable to analyze the data.
-| > Application crashes display "ERROR: out of memory"                                                                                 | > Depending on the performance of the device used, it may be because the user is using the application too quickly, for example, plotting a map too often without completing the previous plot.
+| > Application crashes display "ERROR: out of memory"                                                                                 | > Depending on the performance of the device used, it may be because the user is using the application too quickly, for example, plotting a map too often without completing the previous plot. Try closing any other programs that not using at the moment.
 
 
 </div>

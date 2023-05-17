@@ -6,7 +6,7 @@
 <img width="40px" height="10px" src="Rectangle.svg">
 
 - #### version 1.1 
-    ##### 12 May 2023
+    ##### 17 May 2023
     This version according to **the usability test** from 20 people (Group of people with experience in public health and group of people with experience in non-health (IT related)):
     - Added tooltip at dropdown in 'Upload Data' page.
     - Added calculate expected value.

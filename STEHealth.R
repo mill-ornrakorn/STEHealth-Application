@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @11-5-23
+# @17-5-23
 
 # ================================================================
 
@@ -21,18 +21,19 @@ library(INLA)
 inla.setOption(scale.model.default = TRUE)
 library(spdep) # อันนี้ใช้ nb2mat
 
-library(capture) # ลงโดย remotes::install_github("dreamRs/capture")
+library(capture) # ลงโดยใช้ remotes::install_github("dreamRs/capture")
 library(leaflet.extras)
 library(bsplus)
+
+# install.packages("sf") 
+# ถ้าลง sf ไม่ได้ให้พิมพ์คำสั่งด้านล่างนี้ก่อน
+# options("install.lock"= FALSE)
 
 
 # By default the file size limit is 5MB. Here limit is 70MB.
 options(shiny.maxRequestSize = 70*1024^2)
 
 # options(scipen=999)
-
-# Increase memory limit
-#memory.size(max = FALSE)
 
 
 # ==================================== header ==========================================
@@ -219,7 +220,7 @@ body <- dashboardBody(
                   
                   HTML("</br>"),
                   
-                  radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
+                  radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand and include all 77 provinces?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
                   
                  
                   
@@ -942,8 +943,8 @@ shinyApp(
       paste(rv$messageCheckDataText_1)
     )
     
-    
-    observeEvent(input$Preview_Map_Distribution | input$tabs == "Map_Distribution", {
+    #observeEvent(input$Preview_Map_Distribution | input$tabs == "Map_Distribution", {
+    observeEvent(input$Preview_Map_Distribution , {
       
       if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
         rv$messageCheckDataText_1<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
@@ -979,8 +980,8 @@ shinyApp(
       paste(rv$messageCheckDataText_3)
     )
     
-    
-    observeEvent(input$nextpage | input$tabs == "Analysis", {
+    #observeEvent(input$nextpage | input$tabs == "Analysis", {
+    observeEvent(input$nextpage , {
       
       if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
         rv$messageCheckDataText_2<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
@@ -1057,15 +1058,7 @@ shinyApp(
       
     })
     
-    
-    
-    ################################################
-    # END populate selectInput columns data
-    ################################################
-    
-    ################################################
-    # INI populate selectInput columns map
-    ################################################
+
     
     observe({
       x <- names(rv$map)
@@ -1082,14 +1075,7 @@ shinyApp(
       
     })
     
-    ################################################
-    # END populate selectInput columns map
-    ################################################
-    
-    ################################################
-    # INI reactiveValues
-    ################################################
-    
+
     rv <- reactiveValues(
       columnidareainmap=NULL,  columnnameareainmap=NULL, #columnnamesuperareainmap=NULL,
       idpolyhighlighted = NULL, posinmapFilteredIdpolyhighlighted=NULL, colores=NULL,
@@ -1105,20 +1091,7 @@ shinyApp(
     
     
     
-    
-    
-    ################################################
-    # END reactiveValues
-    ################################################
-    
-    
-    
-    
-    
-    
-    ############################################
-    # INI input - contents. show map and data that are uploaded
-    ############################################
+
     
     # output$uploadmapmap <- renderPlot({
     #   if (is.null(rv$map))
@@ -1167,18 +1140,6 @@ shinyApp(
     } , options = list(scrollX=TRUE, # แถบเลื่อนแนวแกน x
                        pageLength = 5))
     
-    ############################################
-    # END input - contents. show map and data that are uploaded
-    ############################################
-    
-    
-    
-    
-    
-    ################################################
-    # INI DATA - filter areas in map depending of state and risk
-    ################################################
-    
     
     
     # Upload shapefile
@@ -1220,7 +1181,8 @@ shinyApp(
     
     # ==================================== ปุ่ม preview map dis ==================================== 
     
-    observeEvent(input$Preview_Map_Distribution | input$tabs == "Map_Distribution" , {
+    #observeEvent(input$Preview_Map_Distribution | input$tabs == "Map_Distribution" , {
+    observeEvent(input$Preview_Map_Distribution , {
       if (is.null(rv$datosOriginal)| is.null(rv$map))
         return(NULL)
       
@@ -1248,9 +1210,9 @@ shinyApp(
     
     
     
-    # ==================================== ปุ่ม action input$startAnalysisButto ==================================== 
-    # observeEvent(input$startAnalysisButton, {
-    observeEvent(input$nextpage | input$tabs == "Analysis", {
+    # ==================================== ปุ่ม action input$nextpage ==================================== 
+    #observeEvent(input$nextpage | input$tabs == "Analysis", {
+    observeEvent(input$nextpage , {
       
       if (is.null(rv$datosOriginal) | is.null(rv$map))
         return(NULL)
