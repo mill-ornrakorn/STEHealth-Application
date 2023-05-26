@@ -2,7 +2,11 @@
 
 **STEHealth** (It stands for **S**patiotemporal **E**pidemiological **Health**) is a shiny application for analyzing space-time pattern, **cluster detection**, and **association with risk factors** of health outcomes, which allows users to import their own data, analyze, and visualize.
 
-This application is part of ```Spatiotemporal analysis with application development for epidemiological study of suicide mortality: From global perspectives to a case study in Thailand 💀📝``` senior project of the [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/). 
+This application is part of ```Spatiotemporal analysis with application development for epidemiological study of suicide mortality: From global perspectives to a case study in Thailand 💀📝``` senior project of the Princess Srisavangavadhana College of Medicine, [Chulabhorn Royal Academy](https://www.cra.ac.th/th/home) and the Department of Computer Engineering, [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/).
+
+<p align="center">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/Poster_Project_No74_resize.png?raw=true" alt= "Poster_Project" height="600">
+</p>
 
 
 ### 💡Feature
