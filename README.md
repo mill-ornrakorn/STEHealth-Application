@@ -6,9 +6,9 @@ This application is part of ```Spatiotemporal analysis with application developm
 
 
 ### 💡Feature
-1. Analysis for spatial and spatiotemporal epidemiological studies and ```cluster detection``` and ```association with risk factors```.
+1. ```Upload data``` for analysis into the application for analysis.
 
-2. ```Upload data``` for analysis into the application for analysis.
+2.  ```Analysis``` for spatial and spatiotemporal epidemiological studies and **cluster detection** and **association with risk factors**
 
 3. ```Download results``` of analysis from the application.
 
@@ -116,7 +116,8 @@ This manual includes step-by-step instructions on how to use each page of the ap
 
 ### 🩹Limitations
 - Application can support only English.
-- Application works effectively on desktops only.
+- Application works effectively on desktops only. We recommend using a screen size of at least 1440x900 pixels for the best viewing experience.
+- The operation of the application relies on the system resources of the device it is running on.
 - Installation packages must require because an application can not publish to shiny server on the [shinyapps.io](https://www.shinyapps.io/) website. However, we encountered a problem because shinyapps.io only supports packages that are located in CRAN, which is R’s central software repository supported by the R Foundation [[2]](https://cran.r-project.org/web/packages/policies.html). Unfortunately, the ```R-INLA package``` is not included in CRAN, which prevented us from deploying the app to the cloud.
 
 ## References📖
