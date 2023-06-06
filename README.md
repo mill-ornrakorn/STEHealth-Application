@@ -48,12 +48,12 @@ Association with risk factors
 ## Installation 💻
 There are two installation methods.
 
-**The first method:** Clone this repository 
+**1️⃣ The first method:** Clone this repository 
 
 Clone this repository and install R and R packages. Some R packages, such as [r-inla](https://www.r-inla.org/download-install) and [capture](https://github.com/dreamRs/capture), need to be manually installed by the user as they are not available on CRAN.
  
 
-**The second method:** Portable Application (supported Windows OS only)
+**2️⃣ The second method:** Portable Application (supported Windows OS only)
 
 The STEHealth Portable Application eliminates the need for users to individually install R and its packages, as these components come pre-installed. 
 
@@ -144,12 +144,21 @@ This manual includes step-by-step instructions on how to use each page of the ap
 - Application can support only English.
 - Application works effectively on desktops only. We recommend using a screen size of at least 1440x900 pixels for the best viewing experience.
 - The operation of the application relies on the system resources of the device it is running on.
-- Installation packages must require because an application can not publish to shiny server on the [shinyapps.io](https://www.shinyapps.io/) website. However, we encountered a problem because shinyapps.io only supports packages that are located in CRAN, which is R’s central software repository supported by the R Foundation [[2]](https://cran.r-project.org/web/packages/policies.html). Unfortunately, the ```R-INLA package``` is not included in CRAN, which prevented us from deploying the app to the cloud.
+- Installation packages must require because an application can not publish to shiny server on the [shinyapps.io](https://www.shinyapps.io/) website. However, we encountered a problem because shinyapps.io only supports packages that are located in CRAN, which is R’s central software repository supported by the R Foundation [[2]](https://cran.r-project.org/web/packages/policies.html). Unfortunately, the ```R-INLA package``` is not included in CRAN, which prevented us from deploying the app to the cloud. We explored alternative deployment options, such as deploying the app on Amazon Web Services (AWS) [[3](https://www.charlesbordet.com/en/guide-shiny-aws/) ,[4](https://towardsdatascience.com/how-to-host-a-r-shiny-app-on-aws-cloud-in-7-simple-steps-5595e7885722)] and deploying the app on Google Cloud Platform (GCP) using Docker [[5](https://anderfernandez.com/en/blog/put-shiny-app-into-production/) ,[6](https://towardsdatascience.com/dockerizing-and-deploying-a-shiny-dashboard-on-google-cloud-a990ceb3c33a)]. However, we encountered issues with some other packages. As a result, we made the decision to create a portable application instead.
+
 
 ## References📖
 1. Paula Moraga (2017), SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. Spatial and Spatio-temporal Epidemiology, 23:47-57 DOI: https://doi.org/10.1016/j.sste.2017.08.001
 
-2. CRAN Repository Maintainers. (n.d.). CRAN Repository Policy. Retrieved from R-Packages website: https://cran.r-project.org/web/packages/policies.html
+2. CRAN Repository Maintainers. (n.d.). CRAN Repository Policy. Available from: https://cran.r-project.org/web/packages/policies.html
+
+3. Charles Bordet. The Ultimate Guide to Deploying a Shiny App on AWS. Available from: https://www.charlesbordet.com/en/guide-shiny-aws/
+
+4. Venkat Raman. How to host an R Shiny App on AWS cloud in 7 simple steps. Available from: https://towardsdatascience.com/how-to-host-a-r-shiny-app-on-aws-cloud-in-7-simple-steps-5595e7885722
+
+5. Ander Fernández Jauregui. How to put a Shiny app into production. Available from: https://anderfernandez.com/en/blog/put-shiny-app-into-production/
+
+6. Peer Christensen. Dockerizing and Deploying a Shiny Dashboard on Google Cloud. Available from: https://towardsdatascience.com/dockerizing-and-deploying-a-shiny-dashboard-on-google-cloud-a990ceb3c33a
 
 ## Credits Section📄
 * logo of STEHealth application was modified from <a href="https://www.canva.com/templates/EAE6wliCycg-green-tosca-simple-business-logo/">logo by Ally Hamid</a> on Canva 
