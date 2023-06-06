@@ -2,7 +2,7 @@
 
 **STEHealth** (It stands for **S**patiotemporal **E**pidemiological **Health**) is a shiny application for analyzing space-time pattern, **cluster detection**, and **association with risk factors** of health outcomes, which allows users to import their own data, analyze, and visualize.
 
-This application is part of ```Spatiotemporal analysis with application development for epidemiological study of suicide mortality: From global perspectives to a case study in Thailand 💀📝``` senior project of the Princess Srisavangavadhana College of Medicine, [Chulabhorn Royal Academy](https://www.cra.ac.th/th/home) and the Department of Computer Engineering, [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/).
+This application is part of **```Spatiotemporal analysis with application development for epidemiological study of suicide mortality: From global perspectives to a case study in Thailand 💀📝```** senior project of the Princess Srisavangavadhana College of Medicine, [Chulabhorn Royal Academy](https://www.cra.ac.th/th/home) and the Department of Computer Engineering, [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/).
 
 <p align="center">
 <img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/Poster_Project_No74_resize.png?raw=true" alt= "Poster_Project" height="600">
@@ -10,11 +10,11 @@ This application is part of ```Spatiotemporal analysis with application developm
 
 
 ### 💡Feature
-1. ```Upload data``` for analysis into the application for analysis.
+1. **```Upload data```** for analysis into the application for analysis.
 
-2.  ```Analysis``` for spatial and spatiotemporal epidemiological studies and **cluster detection** and **association with risk factors**
+2. **```Analysis```** for spatial and spatiotemporal epidemiological studies and **cluster detection** and **association with risk factors**
 
-3. ```Download results``` of analysis from the application.
+3. **```Download results```** of analysis from the application.
 
 
 <p align="center">
@@ -43,6 +43,27 @@ Association with risk factors
 1. **Dr. Unchalisa Taetragool**; Department of Computer Engineering, Faculty of Engineering, King Mongkut's University of Technology Thonburi
 2. **Asst. Prof. Dr. Chawarat Rotejanaprasert**; Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University
 3. **Asst. Prof. Dr. Peerut Chienwichai**; Princess Srisavangavadhana College of Medicine, Chulabhorn Royal Academy
+
+
+## Installation 💻
+There are two installation methods.
+
+**The first method:** Clone this repository 
+
+Clone this repository and install R and R packages. Some R packages, such as [r-inla](https://www.r-inla.org/download-install) and [capture](https://github.com/dreamRs/capture), need to be manually installed by the user as they are not available on CRAN.
+ 
+
+**The second method:** Portable Application (supported Windows OS only)
+
+The STEHealth Portable Application eliminates the need for users to individually install R and its packages, as these components come pre-installed. 
+
+1. Go to this [link](https://drive.google.com/drive/folders/1gKW8w891qTPaKvu2-IGe38mEXaXtG39W?usp=share_link) to download the portable application.
+2. Extract the downloaded file.
+3. To launch the portable application, simply execute the ```\STEHealth_Portable\dist\run.vbs``` file without the necessity to view or modify any underlying code. (Note that: If you open "run.vbs" and the application doesn't open or the web application is blank, please press "run.vbs" several times.) 
+4. Now you can use the application.
+
+
+
 
 ## Sample Data 📁
 The sample data used for case study in this application consists of Thailand shapefile and csv file (Thai suicide mortality and risk factors 2011-2021)
@@ -86,12 +107,13 @@ This manual includes step-by-step instructions on how to use each page of the ap
 <img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_Application_Manual_cover.png?raw=true" alt= “STEHealth_Manual” height="600">
 </p>
 
+<!--
 ## Style Guide 🎨
 <p align="center">
 <img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_styleguide.png?raw=true" alt= “STEHealth_styleguide” height="500">
 </p>
 
-
+-->
 
 
 ## Tools ⚙
