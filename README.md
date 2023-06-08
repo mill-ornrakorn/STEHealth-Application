@@ -48,9 +48,9 @@ Association with risk factors
 ## Installation 💻
 There are two installation methods.
 
-**1️⃣ The first method:** Clone this repository 
+**1️⃣ The first method:** Clone this repository or download this repository in [releases](https://github.com/mill-ornrakorn/STEHealth-Application/releases)
 
-Clone this repository and install R and R packages. Some R packages, such as [r-inla](https://www.r-inla.org/download-install) and [capture](https://github.com/dreamRs/capture), need to be manually installed by the user as they are not available on CRAN.
+Clone this repository or download this repository in [releases](https://github.com/mill-ornrakorn/STEHealth-Application/releases) and install R and R packages. Some R packages, such as [r-inla](https://www.r-inla.org/download-install) and [capture](https://github.com/dreamRs/capture), need to be manually installed by the user as they are not available on CRAN.
  
 
 **2️⃣ The second method:** Portable Application (supported Windows OS only)
@@ -59,14 +59,14 @@ The STEHealth Portable Application eliminates the need for users to individually
 
 1. Go to this [link](https://drive.google.com/drive/folders/1gKW8w891qTPaKvu2-IGe38mEXaXtG39W?usp=share_link) to download the portable application.
 2. Extract the downloaded file.
-3. To launch the portable application, simply execute the ```\STEHealth_Portable\dist\run.vbs``` file without the necessity to view or modify any underlying code. (Note that: If you open "run.vbs" and the application doesn't open or the web application is blank, please press "run.vbs" several times.) 
+3. To launch the portable application, simply execute the ```\STEHealth_Portable\dist\run.vbs``` file without the necessity to view or modify any underlying code. (Note that: If you open ```run.vbs``` and the application doesn't open or the web application is blank, please press ```run.vbs``` several times.) 
 4. Now you can use the application.
 
 
 
 
 ## Sample Data 📁
-The sample data used for case study in this application consists of Thailand shapefile and csv file (Thai suicide mortality and risk factors 2011-2021)
+The [sample data](https://github.com/mill-ornrakorn/STEHealth-Application/tree/main/sample%20data) used for case study in this application consists of Thailand shapefile and csv file (Suicide Mortality and Risk Factors in Thailand from 2011 to 2021)
 
 
 
@@ -80,13 +80,13 @@ Thailand shapefile
 
 
 
-* **csv file (Thailand suicide mortality and risk factors 2011-2021)** contains the following 12 columns: 
+* **csv file (Suicide Mortality and Risk Factors in Thailand from 2011 to 2021)** contains the following 12 columns: 
 
-    **1. province** is the name of province which has a total of 77 provinces.
+    **1. province** refers to the administrative divisions in Thailand, of which there are a total of 77 provinces.
 
     **2. province_id** is the number of province starting at from 1 to 77 .
 
-    **3. year** is the number of year starting at from 1 to 11.
+    **3. year** is the number of year from 2011 to 2021.
 
     **4. suicide** is the number of suicides.
 
@@ -97,7 +97,7 @@ Thailand shapefile
 <p align="center">
 <img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/th_csv.jpg?raw=true" alt= “csv_file” height="300">
 </br>
-Thailand suicide mortality and risk factors 2011-2021
+Suicide Mortality and Risk Factors in Thailand from 2011 to 2021
 </p> 
 
 ## Manual📗
