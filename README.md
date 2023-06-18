@@ -32,6 +32,10 @@ Association with risk factors
 </p>
 
 
+### 🔎Target users
+1. **Primary:** Epidemiologists and Public health researchers
+2. **Secondary:** Public health professional and Policy makers
+
 
 ### 📝Developer Team
 1. [Papin Thanutchapat](https://github.com/Jappapin); Space-time pattern detection model and association with risk factors for suicide.
