@@ -220,7 +220,7 @@ body <- dashboardBody(
                   
                   HTML("</br>"),
                   
-                  radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand and include all 77 provinces?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
+                  radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand and do they include all 77 provinces, representing provincial boundaries (Level 1)? ", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
                   
                  
                   

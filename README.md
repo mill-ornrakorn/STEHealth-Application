@@ -117,6 +117,7 @@ This manual includes step-by-step instructions on how to use each page of the ap
 <img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_styleguide.png?raw=true" alt= “STEHealth_styleguide” height="500">
 </p>
 
+[Google Chrome Portable](https://portableapps.com/apps/internet/google_chrome_portable) | Google Chrome Portable can run from a cloud folder, external drive, or local folder without installing into Windows.
 -->
 
 
@@ -126,20 +127,19 @@ This manual includes step-by-step instructions on how to use each page of the ap
 **Software**   | 
 [R](https://cran.r-project.org/)  | Language and environment for statistical computing and graphics
 [R-Portable](https://sourceforge.net/projects/rportable/) | R portable configures R to work with the PortableApps framework, so that R can be ran from a thumb drive or portable hard drive without leaving artifacts on the computer.
-[Google Chrome Portable](https://portableapps.com/apps/internet/google_chrome_portable) | Google Chrome Portable can run from a cloud folder, external drive, or local folder without installing into Windows.
 **R packages** |
 [shiny](https://cran.r-project.org/web/packages/shiny/index.html)  | Makes to build interactive web apps from R
 [shinydashboard](https://cran.r-project.org/web/packages/shinydashboard/index.html)| Use with shiny to create dashboards
 [shinyjs](https://cran.r-project.org/web/packages/shinyjs/index.html)| Perform common useful JavaScript operations in Shiny apps that will greatly improve the apps without having to know any JavaScript
-[shinyBS](https://cran.r-project.org/web/packages/shinyjs/index.html)| Adds additional Twitter Bootstrap components to Shiny
+[shinyBS](https://cran.r-project.org/web/packages/shinyBS/index.html)| Adds additional Twitter Bootstrap components to Shiny
 [shinyWidgets](https://cran.r-project.org/web/packages/shinyWidgets/index.html) | Collection of custom input controls and user interface components for 'Shiny' applications. Give your applications a unique and colorful style! 
 [shinydashboardPlus](https://cran.r-project.org/web/packages/shinydashboardPlus/index.html) | Extend 'shinydashboard' with 'AdminLTE2' components. 'AdminLTE2' is a free 'Bootstrap 3' dashboard template                                                                
-[dplyr](https://cran.r-project.org/web/packages/shinyjs/index.html)  | A fast, consistent tool for working with data frame like objects, both in memory and out of memory
-[ggplot2](https://cran.r-project.org/web/packages/shinyjs/index.html)   | Creates elegant data visualisations using the grammar of graphics
-[leaflet](https://cran.r-project.org/web/packages/shinyjs/index.html) | Create Interactive Web Maps with the JavaScript 'Leaflet' Library
-[RColorBrewer](https://cran.r-project.org/web/packages/shinyjs/index.html)  | Provides color schemes for maps and other graphics
-[rgdal](https://cran.r-project.org/web/packages/shinyjs/index.html) | Provides bindings to Frank Warmerdam's Geospatial Data Abstraction Library (GDAL)
-[R-INLA](https://cran.r-project.org/web/packages/shinyjs/index.html)  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
+[dplyr](https://cran.r-project.org/web/packages/dplyr/index.html)  | A fast, consistent tool for working with data frame like objects, both in memory and out of memory
+[ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html)   | Creates elegant data visualisations using the grammar of graphics
+[leaflet](https://cran.r-project.org/web/packages/leaflet/index.html) | Create Interactive Web Maps with the JavaScript 'Leaflet' Library
+[RColorBrewer](https://cran.r-project.org/web/packages/RColorBrewer/index.html)  | Provides color schemes for maps and other graphics
+[rgdal](https://cran.r-project.org/web/packages/rgdal/index.html) | Provides bindings to Frank Warmerdam's Geospatial Data Abstraction Library (GDAL)
+[R-INLA](https://www.r-inla.org/download-install)  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
 [spdep](https://cran.r-project.org/web/packages/spdep/index.html)| Spatial Dependence: Weighting Schemes, Statistics
 [capture](https://github.com/dreamRs/capture) | Add a button in Shiny application or R Markdown document to take a screenshot (PNG or PDF) of a specified element.
 [bsplus](https://cran.rstudio.com/web/packages/bsplus/index.html) | The Bootstrap framework lets you add some JavaScript functionality to your web site by adding attributes to your HTML tags.
