@@ -1,9 +1,33 @@
 
 # ================================================================
 
-# @17-5-23
+# @19-7-23
 
 # ================================================================
+
+# ==================================== Check packages  ==================================== 
+
+list.of.packages <- c("shiny", "shinydashboard", "shinyjs", "shinyBS" , "leaflet" ,
+                      "dplyr", "ggplot2" ,"RColorBrewer" , "rgdal" ,"shinyWidgets",
+                      "shinydashboardPlus","spdep", "leaflet.extras", "bsplus" ,"remotes")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+
+if(!require(INLA)){
+  # ต้องใช้ R 4.2.2 ถึงจะลงได้ ลองใช้ 4.3.1 แล้วลงไม่ได้
+  install.packages("INLA",repos=c(getOption("repos"),INLA="https://inla.r-inla-download.org/R/stable"), dep=TRUE)
+  library(INLA)
+}
+
+
+if(!require(capture)){
+  remotes::install_github("dreamRs/capture")
+  library(capture)
+}
+
+
+# ==================================== import packages  ==================================== 
 
 library(shiny)
 library(shinydashboard)
@@ -297,9 +321,26 @@ body <- dashboardBody(
                            
                   ),
                   
+                  
+                  HTML("<h4><strong>2.1 Select Expected Value</strong> (Optional)</h4>"),
+                  
+                  radioButtons("Expected_Value_from_csv", "Does this CSV file have an expected value column?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
+                  
+                  conditionalPanel(condition = "input.Expected_Value_from_csv == 'yes'",
+                                   helpText("Select column:"),
+                                   fluidRow(column(12, selectInput("columnexpvalueindata",   label = "expected value",   choices = c(""), selected = "")%>%
+                                                     shinyInput_label_embed(
+                                                       icon("info") %>%
+                                                         bs_embed_tooltip(title = '"expected value" in the csv file ...........')
+                                                     )
+                                   )
+                                   )
+                                  
+                                   ),
             
                   
-                  HTML("<h4><strong>Select Covariates</strong> (Optional)</h4>"),
+                  HTML("</br>
+                       <h4><strong>2.2 Select Covariates</strong> (Optional)</h4>"),
                   HTML("Put covariate in order from 1 to 7, with no blanks."),
                   
                   helpText("Select columns:"),
@@ -813,7 +854,7 @@ shinyApp(
   
   server <- function(input, output, session) { 
     
-    #observe(print(input$shapefile_from_thailand))
+    #observe(print(input$columnexpvalueindata))
     
     # message menu
     
@@ -1041,7 +1082,7 @@ shinyApp(
       updateSelectInput(session, "columnidareaindata", choices = xd,  selected = head(xd, 1))
       updateSelectInput(session, "columnidareanamedata", choices = xd,  selected = head(xd, 1))
       updateSelectInput(session, "columndateindata",   choices = xd,  selected = head(xd, 1))
-      #updateSelectInput(session, "columnexpvalueindata",    choices = xd,  selected = head(xd, 1))
+      updateSelectInput(session, "columnexpvalueindata",    choices = xd,  selected = head(xd, 1))
       updateSelectInput(session, "columncasesindata",  choices = xd,  selected = head(xd, 1))
       updateSelectInput(session, "columnpopindata",  choices = xd,  selected = head(xd, 1))
       
@@ -1235,22 +1276,38 @@ shinyApp(
         data[,input$columncasesindata] <- as.numeric(data[,input$columncasesindata])
         
         
-        # -- คำนวน expected value --
+        ########################## --- คำนวน expected value ---- ######################### 
         
-        # # ค่า E แบบเดิมที่ให้ user ใส่มาเอง
+        # # ของเก่า: ค่า E ที่ให้ user ใส่มาเอง
         # data[,input$columnexpvalueindata] <- as.numeric(data[,input$columnexpvalueindata])
         
-        sum_case <- sum(data[,input$columncasesindata])
-        sum_pop <- sum(data[,input$columnpopindata])
-        
-        divide_case_pop <- sum_case / sum_pop
         
         
-        expected_value <- data[,input$columnpopindata] * divide_case_pop
+        # แก้ตรงนี้ต่อ
+        if(input$Expected_Value_from_csv == "yes" ){
+          if(input$columnexpvalueindata != "" ){
           
-       
-        # Add a Column to a Data Frame
-        data['expected_value'] <- expected_value
+            data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
+          
+          }
+          
+        }else if (input$Expected_Value_from_csv == "no" ){
+          
+          sum_case <- sum(data[,input$columncasesindata])
+          sum_pop <- sum(data[,input$columnpopindata])
+          
+          divide_case_pop <- sum_case / sum_pop
+          
+          
+          expected_value <- data[,input$columnpopindata] * divide_case_pop
+          
+          
+          # Add a Column to a Data Frame
+          data['expected_value'] <- expected_value
+          
+        }
+        
+        
         
         # ---------------------------
         
