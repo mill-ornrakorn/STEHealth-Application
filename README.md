@@ -52,10 +52,13 @@ Association with risk factors
 ## Installation 💻
 There are two installation methods.
 
-**1️⃣ The first method:** Clone this repository or download this repository in [releases](https://github.com/mill-ornrakorn/STEHealth-Application/releases)
+**1️⃣ The first method:** Clone this repository or download this repository in [releases page](https://github.com/mill-ornrakorn/STEHealth-Application/releases)
 
+Clone this repository or download this repository in [releases page](https://github.com/mill-ornrakorn/STEHealth-Application/releases). This method users must already have R and Rstudio. For R packages installation, it will be done automatically as soon as the user clicks 'Run App' in Rstudio.
+
+<!--
 Clone this repository or download this repository in [releases](https://github.com/mill-ornrakorn/STEHealth-Application/releases) and install R and R packages. Some R packages, such as [r-inla](https://www.r-inla.org/download-install) and [capture](https://github.com/dreamRs/capture), need to be manually installed by the user as they are not available on CRAN.
- 
+-->
 
 **2️⃣ The second method:** Portable Application (supported Windows OS only)
 
@@ -126,7 +129,9 @@ This manual includes step-by-step instructions on how to use each page of the ap
 --- | ----
 **Software**   | 
 [R](https://cran.r-project.org/)  | Language and environment for statistical computing and graphics
-[R-Portable](https://sourceforge.net/projects/rportable/) | R portable configures R to work with the PortableApps framework, so that R can be ran from a thumb drive or portable hard drive without leaving artifacts on the computer.
+[RStudio](https://posit.co/download/rstudio-desktop/)  | Integrated development environment (IDE) for R
+[R-Portable](https://sourceforge.net/projects/rportable/) | R portable configures R to work with the PortableApps framework, so that R can be ran from a thumb drive or portable hard drive without leaving artifacts on the computer
+[Responsively App](https://responsively.app/) | A dev-tool that aids faster and precise responsive web development
 **R packages** |
 [shiny](https://cran.r-project.org/web/packages/shiny/index.html)  | Makes to build interactive web apps from R
 [shinydashboard](https://cran.r-project.org/web/packages/shinydashboard/index.html)| Use with shiny to create dashboards
@@ -148,7 +153,7 @@ This manual includes step-by-step instructions on how to use each page of the ap
 - Application can support only English.
 - Application works effectively on desktops only. We recommend using a screen size of at least 1440x900 pixels for the best viewing experience.
 - The operation of the application relies on the system resources of the device it is running on.
-- Installation packages must require because an application can not publish to shiny server on the [shinyapps.io](https://www.shinyapps.io/) website. However, we encountered a problem because shinyapps.io only supports packages that are located in CRAN, which is R’s central software repository supported by the R Foundation [[2]](https://cran.r-project.org/web/packages/policies.html). Unfortunately, the ```R-INLA package``` is not included in CRAN, which prevented us from deploying the app to the cloud. We explored alternative deployment options, such as deploying the app on Amazon Web Services (AWS) [[3](https://www.charlesbordet.com/en/guide-shiny-aws/) ,[4](https://towardsdatascience.com/how-to-host-a-r-shiny-app-on-aws-cloud-in-7-simple-steps-5595e7885722)] and deploying the app on Google Cloud Platform (GCP) using Docker [[5](https://anderfernandez.com/en/blog/put-shiny-app-into-production/) ,[6](https://towardsdatascience.com/dockerizing-and-deploying-a-shiny-dashboard-on-google-cloud-a990ceb3c33a)]. However, we encountered issues with some other packages. As a result, we made the decision to create a portable application instead.
+- Installation packages must require because an application can not publish to shiny server on the [shinyapps.io](https://www.shinyapps.io/) website. However, we encountered a problem because shinyapps.io only supports packages that are located in CRAN, which is R’s central software repository supported by the R Foundation [[2]](https://cran.r-project.org/web/packages/policies.html). Unfortunately, the ```R-INLA package``` is not included in CRAN, which prevented us from deploying the app to the cloud. We explored alternative deployment options, such as deploying the app on Amazon Web Services (AWS) [[3](https://www.charlesbordet.com/en/guide-shiny-aws/) ,[4](https://towardsdatascience.com/how-to-host-a-r-shiny-app-on-aws-cloud-in-7-simple-steps-5595e7885722)] and deploying the app on Google Cloud Platform (GCP) using Docker [[5](https://anderfernandez.com/en/blog/put-shiny-app-into-production/) ,[6](https://towardsdatascience.com/dockerizing-and-deploying-a-shiny-dashboard-on-google-cloud-a990ceb3c33a)]. However, we encountered issues with some other packages. As a result, we made the decision to create a **portable application** instead.
 
 
 ## References📖

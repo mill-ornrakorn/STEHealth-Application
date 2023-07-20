@@ -59,7 +59,6 @@ Code and data used for case study are available on
 [Github](https://github.com/mill-ornrakorn/STEHealth-Application).
 
 
-
 ###  **Dependencies**
 <img width="40px" height="10px" src="Rectangle.svg">
 
@@ -67,8 +66,10 @@ Code and data used for case study are available on
 --- | ----
 **Software**   |  **Detail**                                                                           	
 [R](https://cran.r-project.org/)  | Language and environment for statistical computing and graphics
-[R-Portable](https://sourceforge.net/projects/rportable/) | R portable configures R to work with the PortableApps framework, so that R can be ran from a thumb drive or portable hard drive without leaving artifacts on the computer.
-[Google Chrome Portable](https://portableapps.com/apps/internet/google_chrome_portable) | Google Chrome Portable can run from a cloud folder, external drive, or local folder without installing into Windows.
+[RStudio](https://posit.co/download/rstudio-desktop/)  | Integrated development environment (IDE) for R
+[R-Portable](https://sourceforge.net/projects/rportable/) | R portable configures R to work with the PortableApps framework, so that R can be ran from a thumb drive or portable hard drive without leaving artifacts on the computer
+[Responsively App](https://responsively.app/) | A dev-tool that aids faster and precise responsive web development
+------ | ------
 **R packages** | **Detail**
 [shiny](https://cran.r-project.org/web/packages/shiny/index.html)  | Makes to build interactive web apps from R
 [shinydashboard](https://cran.r-project.org/web/packages/shinydashboard/index.html)| Use with shiny to create dashboards
@@ -79,13 +80,13 @@ Code and data used for case study are available on
 [dplyr](https://cran.r-project.org/web/packages/shinyjs/index.html)  | A fast, consistent tool for working with data frame like objects, both in memory and out of memory
 [ggplot2](https://cran.r-project.org/web/packages/shinyjs/index.html)   | Creates elegant data visualisations using the grammar of graphics
 [leaflet](https://cran.r-project.org/web/packages/shinyjs/index.html) | Create Interactive Web Maps with the JavaScript 'Leaflet' Library
-[leaflet.extras](https://cran.r-project.org/web/packages/leaflet.extras/index.html) | The 'leaflet' JavaScript library provides many plugins some of which are available in the core 'leaflet' package, but there are many more. It is not possible to support them all in the core 'leaflet' package. This package serves as an add-on to the 'leaflet' package by providing extra functionality via 'leaflet' plugins.
+[leaflet.extras](https://cran.r-project.org/web/packages/leaflet.extras/index.html) | The 'leaflet' JavaScript library provides many plugins some of which are available in the core 'leaflet' package, but there are many more. It is not possible to support them all in the core 'leaflet' package. This package serves as an add-on to the 'leaflet' package by providing extra functionality via 'leaflet' plugins
 [RColorBrewer](https://cran.r-project.org/web/packages/shinyjs/index.html)  | Provides color schemes for maps and other graphics
 [rgdal](https://cran.r-project.org/web/packages/shinyjs/index.html) | Provides bindings to Frank Warmerdam's Geospatial Data Abstraction Library (GDAL)
 [R-INLA](https://www.r-inla.org/)  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
 [spdep](https://cran.r-project.org/web/packages/spdep/index.html)| Spatial Dependence: Weighting Schemes, Statistics
-[capture](https://github.com/dreamRs/capture) | Add a button in Shiny application or R Markdown document to take a screenshot (PNG or PDF) of a specified element.
-[bsplus](https://cran.rstudio.com/web/packages/bsplus/index.html) | The Bootstrap framework lets you add some JavaScript functionality to your web site by adding attributes to your HTML tags.
+[capture](https://github.com/dreamRs/capture) | Add a button in Shiny application or R Markdown document to take a screenshot (PNG or PDF) of a specified element
+[bsplus](https://cran.rstudio.com/web/packages/bsplus/index.html) | The Bootstrap framework lets you add some JavaScript functionality to your web site by adding attributes to your HTML tags
 
 
 <!-- [R-Portable](https://sourceforge.net/projects/rportable/) | R portable configures R to work with the PortableApps framework, so that R can be ran from a thumb drive or portable hard drive without leaving artifacts on the computer.

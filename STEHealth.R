@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @19-7-23
+# @20-7-23
 
 # ================================================================
 
@@ -231,7 +231,7 @@ body <- dashboardBody(
                   HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile at once:</font></strong> shp, dbf, shx and prj."),
                   fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
                   
-                  helpText("Select columns area name in the map."),
+                  helpText("Select column area name in the map."),
                   fluidRow(column(12, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")%>%
                                     shinyInput_label_embed(
                                       icon("info") %>%
@@ -322,7 +322,7 @@ body <- dashboardBody(
                   ),
                   
                   
-                  HTML("<h4><strong>2.1 Select Expected Value</strong> (Optional)</h4>"),
+                  HTML("<h4><strong>2.1 Select Expected Value</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
                   
                   radioButtons("Expected_Value_from_csv", "Does this CSV file have an expected value column?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
                   
@@ -340,10 +340,10 @@ body <- dashboardBody(
             
                   
                   HTML("</br>
-                       <h4><strong>2.2 Select Covariates</strong> (Optional)</h4>"),
+                       <h4><strong>2.2 Select Covariates</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
                   HTML("Put covariate in order from 1 to 7, with no blanks."),
                   
-                  helpText("Select columns:"),
+                  helpText("Select column(s):"),
                   fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
                            column(6, selectInput("columncov2indata", label = "covariate 2", choices = c(""), selected = ""))
                   ),
@@ -1283,15 +1283,16 @@ shinyApp(
         
         
         
-        # แก้ตรงนี้ต่อ
+        
         if(input$Expected_Value_from_csv == "yes" ){
           if(input$columnexpvalueindata != "" ){
-          
+            print("Check: ...this csv have expected value...")
             data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
           
           }
           
         }else if (input$Expected_Value_from_csv == "no" ){
+          print("Check: ...this csv doesn't have expected value...")
           
           sum_case <- sum(data[,input$columncasesindata])
           sum_pop <- sum(data[,input$columnpopindata])
@@ -1422,7 +1423,7 @@ shinyApp(
         
         if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
           
-          print("all null")
+          print("Check: ...all null...")
           
           
           
@@ -1430,7 +1431,7 @@ shinyApp(
           
         }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           
-          print("1 not null")
+          print("Check: ...1 not null...")
           x1 <- data[,input$columncov1indata]
           
           
@@ -1502,7 +1503,7 @@ shinyApp(
           
         }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           
-          print("1,2 not null")
+          print("Check: ...1,2 not null...")
           x1 <- data[,input$columncov1indata]
           x2 <- data[,input$columncov2indata]
           
@@ -1581,7 +1582,7 @@ shinyApp(
           
         }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
           
-          print("1,2,3 not null")
+          print("Check: ...1,2,3 not null...")
           x1 <- data[,input$columncov1indata]
           x2 <- data[,input$columncov2indata]
           x3 <- data[,input$columncov3indata]
@@ -1672,7 +1673,7 @@ shinyApp(
           
         }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
           
-          print("1,2,3,4 not null")
+          print("Check: ...1,2,3,4 not null...")
           x1 <- data[,input$columncov1indata]
           x2 <- data[,input$columncov2indata]
           x3 <- data[,input$columncov3indata]
@@ -1773,7 +1774,7 @@ shinyApp(
           
         }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
           
-          print("1,2,3,4,5 not null")
+          print("Check: ...1,2,3,4,5 not null...")
           x1 <- data[,input$columncov1indata]
           x2 <- data[,input$columncov2indata]
           x3 <- data[,input$columncov3indata]
@@ -1885,7 +1886,7 @@ shinyApp(
           
         }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
           
-          print("1,2,3,4,5,6 not null")
+          print("Check: ...1,2,3,4,5,6 not null...")
           x1 <- data[,input$columncov1indata]
           x2 <- data[,input$columncov2indata]
           x3 <- data[,input$columncov3indata]
@@ -2010,7 +2011,7 @@ shinyApp(
           
           
         }else {
-          print("all not null")
+          print("Check: ...all not null...")
           x1 <- data[,input$columncov1indata]
           x2 <- data[,input$columncov2indata]
           x3 <- data[,input$columncov3indata]
@@ -2237,9 +2238,11 @@ shinyApp(
     
     # ==================================== map_distribution ==================================== 
     output$map_distribution <- renderLeaflet({
+      
       if (is.null(rv$datosOriginal)| is.null(rv$map))
         return(NULL)
       
+      print("Plot: ...map distribution...")
       
       map <- rv$map
       data <- rv$datosOriginal
@@ -2312,7 +2315,7 @@ shinyApp(
         if (is.null(rv$datosOriginal) | is.null(rv$map))
           return(NULL)
         
-        
+        print("Plot: ...map cluster...")
         #print(rv$data) # ได้แน้วออกเป็นlabelเรย
         
         data2 <- rv$data
@@ -2469,6 +2472,7 @@ shinyApp(
       if (is.null(rv$datosOriginal) | is.null(rv$map))
         return(NULL)
       
+      print("Plot: ...map risk factor...")
       
       map <- rv$map
       
@@ -2553,8 +2557,24 @@ shinyApp(
     dataresult_cluster <- reactive({
       # data <- rv$data
       
-      # Remove  Columns in List
-      data <- rv$data[,!names(rv$data) %in% c("province_year", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id")]
+      if(input$Expected_Value_from_csv == "yes" ){
+        if(input$columnexpvalueindata != "" ){
+          print("download data: ...this csv have expected value...")
+          
+          # Remove  Columns in List
+          data <- rv$data[,!names(rv$data) %in% c("province_year", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id","expected_value")]
+          
+          
+        }
+        
+      }else if (input$Expected_Value_from_csv == "no" ){
+        print("download data: ...this csv doesn't have expected value...")
+        
+        # Remove  Columns in List
+        data <- rv$data[,!names(rv$data) %in% c("province_year", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id")]
+        
+        
+      }
       
     })
     
