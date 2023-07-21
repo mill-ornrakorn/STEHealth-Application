@@ -185,7 +185,7 @@ body <- dashboardBody(
               sidebarLayout(
                 
                 sidebarPanel(
-                  style = "height: 80vh; overflow-y: auto;",
+                  #style = "height: 80vh; overflow-y: auto;",
                   
                   
                   #width = 8,
