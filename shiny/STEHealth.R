@@ -185,7 +185,7 @@ body <- dashboardBody(
               sidebarLayout(
                 
                 sidebarPanel(
-                  #style = "height: 80vh; overflow-y: auto;",
+                  style = "height: 80vh; overflow-y: auto;",
                   
                   
                   #width = 8,
@@ -331,12 +331,20 @@ body <- dashboardBody(
                                    fluidRow(column(12, selectInput("columnexpvalueindata",   label = "expected value",   choices = c(""), selected = "")%>%
                                                      shinyInput_label_embed(
                                                        icon("info") %>%
-                                                         bs_embed_tooltip(title = '"expected value" in the csv file ...........')
+                                                         bs_embed_tooltip(title = 'The expected value is number of outcomes in the provided area and period which may vary due to the types of diseases.')
                                                      )
                                    )
                                    )
                                   
                                    ),
+                  
+                  
+                  conditionalPanel(condition = "input.Expected_Value_from_csv == 'no'",
+                                   HTML("<font color= \"#735DFB\"><strong>Note that: </strong></font>
+                                        If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value."),
+                                  
+                                   
+                  ),
             
                   
                   HTML("</br>
@@ -360,7 +368,7 @@ body <- dashboardBody(
                            #column(6, selectInput("columncov8indata", label = "covariate 8", choices = c(""), selected = ""))
                   ),
                   
-                  HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
+                  HTML("<font color= \"#735DFB\"><strong>Note that: </strong></font>
                                              <ul style = 'text-align: justify;'>
                                               <li>If the user select 1 covariate, the analysis is <strong>univariate</strong>.</li> 
                                               <li>If the user selects covariates more than 1, all covariates will be calculated at the same time, which is a 

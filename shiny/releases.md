@@ -8,7 +8,7 @@
 - #### version 1.2 
     ##### 26 July 2023
     - Added dropdown to select an expected value for data that contains this value.
-    - Added installation methods.
+    - Added new installation methods.
     - Edited application manual.
     
 
