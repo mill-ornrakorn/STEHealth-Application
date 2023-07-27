@@ -52,9 +52,20 @@ Association with risk factors
 ## Installation 💻
 There are two installation methods.
 
-**1️⃣ The first method:** Clone this repository or download this repository in [releases page](https://github.com/mill-ornrakorn/STEHealth-Application/releases)
+**1️⃣ The first method:** Application (.R)
 
-Clone this repository or download this repository in [releases page](https://github.com/mill-ornrakorn/STEHealth-Application/releases). This method users must already have R and Rstudio. For R packages installation, it will be done automatically as soon as the user clicks 'Run App' in Rstudio.
+`👨‍💻❗ This method is suitable for users who already have R and RStudio` and may use RStudio for some time.
+
+1. Clone this repository or download this repository in [releases page](https://github.com/mill-ornrakorn/STEHealth-Application/releases) or this [link](https://drive.google.com/drive/folders/1HDIO4duSiyy8OZblIBx4-6V3PdM6kfom?usp=sharing) to download the .zip file. 
+
+2. Extract the downloaded file.
+
+3. Open ```runShinyApp.R``` via RStudio
+
+4. Press ```Run App``` and wait for a moment. The program will automatically install the libraries required* by the application. (*For a list of libraries, please refer to [tools section](https://github.com/mill-ornrakorn/STEHealth-Application/tree/optional-expected-value#tools-).)
+
+
+5. Now you can use the application.
 
 <!--
 Clone this repository or download this repository in [releases](https://github.com/mill-ornrakorn/STEHealth-Application/releases) and install R and R packages. Some R packages, such as [r-inla](https://www.r-inla.org/download-install) and [capture](https://github.com/dreamRs/capture), need to be manually installed by the user as they are not available on CRAN.
@@ -62,11 +73,17 @@ Clone this repository or download this repository in [releases](https://github.c
 
 **2️⃣ The second method:** Portable Application (supported Windows OS only)
 
-The STEHealth Portable Application eliminates the need for users to individually install R and its packages, as these components come pre-installed. 
+`👨‍💻❗ This method is suitable for users who do not have R and RStudio at all `because in this method we have already installed them all (including R packages) in portable application.
+
+<!-- The STEHealth Portable Application eliminates the need for users to individually install R and its packages, as these components come pre-installed. 
+-->
 
 1. Go to this [link](https://drive.google.com/drive/folders/1gKW8w891qTPaKvu2-IGe38mEXaXtG39W?usp=share_link) to download the portable application.
+
 2. Extract the downloaded file.
+
 3. To launch the portable application, simply execute the ```\STEHealth_Portable\dist\run.vbs``` file without the necessity to view or modify any underlying code. (Note that: If you open ```run.vbs``` and the application doesn't open or the web application is blank, please press ```run.vbs``` several times.) 
+
 4. Now you can use the application.
 
 

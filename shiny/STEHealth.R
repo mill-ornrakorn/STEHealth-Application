@@ -597,7 +597,7 @@ body <- dashboardBody(
                                      
                                      div(
                                        class = "box-white",
-                                       HTML('<h4>Download Result</h4>
+                                       HTML('<h4>Export Result</h4>
                                                   <p>
                                                      The data obtained from the cluster detection consists of the original data and the <strong>label column</strong>, 
                                                      which in the label column will consist of hotspot and non-hotspot. 
@@ -721,7 +721,7 @@ body <- dashboardBody(
                                                 
                                                 div(
                                                   class = "box-white",
-                                                  HTML("<h4>Download Result</h4>
+                                                  HTML("<h4>Export Result</h4>
                                             <p>
                                             The data obtained from the association with risk factors consists of area name, each risk factor calculated as a percentage increase, lower bound, upper bound, and significance                                              </p>
                                                   
