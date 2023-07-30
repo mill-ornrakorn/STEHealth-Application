@@ -126,7 +126,7 @@ body <- dashboardBody(
                             Spatiotemporal Epidemiological Analysis
                         </h1>
                         <p style = "text-align: justify;">
-                            This is a application for analyzing space-time pattern and 
+                            This is an application for analyzing space-time pattern and 
                              association with risk factors of suicide and other health outcomes, 
                              which allows users to import their own data, analyze, and visualize.</p>
                       
@@ -1302,6 +1302,8 @@ shinyApp(
         }else if (input$Expected_Value_from_csv == "no" ){
           print("Check: ...this csv doesn't have expected value...")
           
+          # คิด (sum(case) / (pop))*population
+          # sum case กับ pop ทั้งหมด เอามาหารกัน แล้วคูณด้วย pop ของจังหวัด,ปี นั้นๆ
           sum_case <- sum(data[,input$columncasesindata])
           sum_pop <- sum(data[,input$columnpopindata])
           

@@ -6,9 +6,10 @@
 <img width="40px" height="10px" src="Rectangle.svg">
 
 - #### version 1.2 
-    ##### 26 July 2023
+    ##### 29 July 2023
     - Added dropdown to select an expected value for data that contains this value.
     - Added new installation methods.
+    - Edited details in application.
     - Edited application manual.
     
 

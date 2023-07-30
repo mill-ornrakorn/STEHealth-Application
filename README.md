@@ -54,7 +54,7 @@ There are two installation methods.
 
 **1️⃣ The first method:** Application (.R)
 
-`👨‍💻❗ This method is suitable for users who already have R and RStudio` and may use RStudio for some time.
+👨‍💻❗ This method is suitable for **`users who already have R and RStudio`** and may use RStudio for some time.
 
 1. Clone this repository or download this repository in [releases page](https://github.com/mill-ornrakorn/STEHealth-Application/releases) or this [link](https://drive.google.com/drive/folders/1HDIO4duSiyy8OZblIBx4-6V3PdM6kfom?usp=sharing) to download the .zip file. 
 
@@ -73,7 +73,7 @@ Clone this repository or download this repository in [releases](https://github.c
 
 **2️⃣ The second method:** Portable Application (supported Windows OS only)
 
-`👨‍💻❗ This method is suitable for users who do not have R and RStudio at all `because in this method we have already installed them all (including R packages) in portable application.
+👨‍💻❗ This method is suitable for **`users who do not have R and RStudio at all`** because in this method we have already installed them all (including R packages) in portable application.
 
 <!-- The STEHealth Portable Application eliminates the need for users to individually install R and its packages, as these components come pre-installed. 
 -->
