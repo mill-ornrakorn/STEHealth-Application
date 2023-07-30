@@ -1,1 +1,1 @@
-shiny::runApp('R/STEHealth.R')
+shiny::runApp('shiny/STEHealth.R')
