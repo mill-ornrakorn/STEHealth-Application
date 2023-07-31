@@ -1,0 +1,31 @@
+Package: STEHealthApp
+Type: Package
+Title: An application for analyzing space-time pattern and association with risk factors of suicide and other health outcomes
+Version: 1.2
+Author: Ornrakorn Mekchaiporn, Papin Thanutchapat, Chiraphat Phoncharoenwirote
+Maintainer: Ornrakorn Mekchaiporn <ornrakorn.mek@outlook.com>
+Description: Allows users to import their own data, analyze, visualize, and export result.
+Imports: 
+  shiny, 
+  shinydashboard, 
+  shinyjs, 
+  shinyBS,
+  leaflet,
+  dplyr, 
+  ggplot2,
+  RColorBrewer,
+  rgdal,
+  shinyWidgets,
+  shinydashboardPlus,
+  spdep,
+  leaflet.extras,
+  bsplus,
+  remotes
+Suggests:
+  INLA, 
+  capture
+Additional_repositories: https://inla.r-inla-download.org/R/stable
+URL: https://github.com/mill-ornrakorn/STEHealth-Application
+License: ?
+Encoding: UTF-8
+LazyData: true
