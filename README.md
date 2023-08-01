@@ -57,20 +57,20 @@ There are three installation methods.
 This method is suitable for **users who already have [R](https://www.r-project.org/) and [RStudio](https://posit.co/)** and prefer not to load the .zip file, especially those who have been using RStudio for a while.
 
 1. Install **STEHealthApp package** by running the following line of code in RStudio:
-```
+```r
 devtools::install_github("mill-ornrakorn/STEHealth-Application", ref="STEHealthApp")
 ```
 
 2. Install **[R-INLA](https://www.r-inla.org/home) and [capture](https://github.com/dreamRs/capture) packages** by running the following line of code in RStudio:
-```
+```r
 install.packages("INLA",repos=c(getOption("repos"),INLA="https://inla.r-inla-download.org/R/stable"), dep=TRUE)
 ```
-```
+```r
 remotes::install_github("dreamRs/capture")
 ```
 
 3. After the packages have been installed, type the following in RStudio, and the application window will appear.
-```
+```r
 library(STEHealthApp)
 run_app()
 ```
