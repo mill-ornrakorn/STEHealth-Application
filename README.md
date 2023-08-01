@@ -50,11 +50,35 @@ Association with risk factors
 
 
 ## Installation 💻
-There are two installation methods.
+There are three installation methods.
 
-**1️⃣ The first method:** Application (.R)
+### **1️⃣ The first method:** STEHealthApp package 
 
-👨‍💻❗ This method is suitable for **`users who already have R and RStudio`** and may use RStudio for some time.
+This method is suitable for **users who already have [R](https://www.r-project.org/) and [RStudio](https://posit.co/)** and prefer not to load the .zip file, especially those who have been using RStudio for a while.
+
+1. Install **STEHealthApp package** by running the following line of code in RStudio:
+```
+devtools::install_github("mill-ornrakorn/STEHealth-Application", ref="STEHealthApp")
+```
+
+2. Install **[R-INLA](https://www.r-inla.org/home) and [capture](https://github.com/dreamRs/capture) packages** by running the following line of code in RStudio:
+```
+install.packages("INLA",repos=c(getOption("repos"),INLA="https://inla.r-inla-download.org/R/stable"), dep=TRUE)
+```
+```
+remotes::install_github("dreamRs/capture")
+```
+
+3. After the packages have been installed, type the following in RStudio, and the application window will appear.
+```
+library(STEHealthApp)
+run_app()
+```
+
+
+### **2️⃣ The second method:** .R file Application 
+
+This method is suitable for **users who already have [R](https://www.r-project.org/) and [RStudio](https://posit.co/)** and may use RStudio for some time.
 
 1. Clone this repository or download this repository in [releases page](https://github.com/mill-ornrakorn/STEHealth-Application/releases) or this [link](https://drive.google.com/drive/folders/1HDIO4duSiyy8OZblIBx4-6V3PdM6kfom?usp=sharing) to download the .zip file. 
 
@@ -71,9 +95,9 @@ There are two installation methods.
 Clone this repository or download this repository in [releases](https://github.com/mill-ornrakorn/STEHealth-Application/releases) and install R and R packages. Some R packages, such as [r-inla](https://www.r-inla.org/download-install) and [capture](https://github.com/dreamRs/capture), need to be manually installed by the user as they are not available on CRAN.
 -->
 
-**2️⃣ The second method:** Portable Application (supported Windows OS only)
+### **3️⃣ The third method:** Portable Application (supported Windows OS only)
 
-👨‍💻❗ This method is suitable for **`users who do not have R and RStudio at all`** because in this method we have already installed them all (including R packages) in portable application.
+This method is suitable for **`users who do not have R and RStudio at all`** because in this method we have already installed them all (including R packages) in portable application.
 
 <!-- The STEHealth Portable Application eliminates the need for users to individually install R and its packages, as these components come pre-installed. 
 -->
@@ -97,7 +121,7 @@ The [sample data](https://github.com/mill-ornrakorn/STEHealth-Application/tree/m
 * **Thailand shapefile** contains 4 files that cannot be missing any of them due to their references to each other: shp, dbf, shx, and prj. These Shapefiles represent **provincial boundaries (Level 1)**.
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/th_shapfile.jpg?raw=true" alt= “Thailand_shapefile” height="400">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/th_shapfile.jpg?raw=true" alt= “Thailand_shapefile” height="400">
 </br>
 Thailand shapefile
 </p> 
@@ -119,7 +143,7 @@ Thailand shapefile
     **6-12. 7 covariates:** debt, income, poverty, expenditure, homicide crime, property crime and shocking crime.
     
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/www/th_csv.jpg?raw=true" alt= “csv_file” height="300">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/th_csv.jpg?raw=true" alt= “csv_file” height="300">
 </br>
 Suicide Mortality and Risk Factors in Thailand from 2011 to 2021
 </p> 
