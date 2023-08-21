@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @20-7-23
+# @21-8-23
 
 # ================================================================
 
@@ -99,6 +99,7 @@ body <- dashboardBody(
   
   tags$head(
     tags$meta(charset="utf-8"),
+    tags$link(rel="stylesheet" ,href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"), # UNICONS
     tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),   # import css file
     tags$script(src="js/index.js") # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่น ๆ
     
@@ -118,14 +119,14 @@ body <- dashboardBody(
       tabItem(tabName = "Home",
               
               HTML('
-              <div class="header" id="home">
+              <div class="header" id="home" >
                    <div class="container">
                      <div class="infos">
-                        <img src="STEHealth_logo1.png", alt="STEHealth_logo" , height  = "37px", width = "174px">
+                        <img src="STEHealth_logo1.png", class = "home__logo", alt="STEHealth_logo" , height  = "37px", width = "174px">
                         <h1 class="title">
                             Spatiotemporal Epidemiological Analysis
                         </h1>
-                        <p style = "text-align: justify;">
+                        <p class="home__caption"  style = "text-align: justify;">
                             This is an application for analyzing space-time pattern and 
                              association with risk factors of suicide and other health outcomes, 
                              which allows users to import their own data, analyze, and visualize.</p>
@@ -135,7 +136,7 @@ body <- dashboardBody(
                                  onclick="$(\'li:eq(6) a\').tab(\'show\');" 
                                  role="button"
                                  style = "border-color: #735DFB;" >
-                           <strong>← Get Started</strong>
+                           <strong>Get Started <i class="uil uil-angle-right-b"></i></strong> 
                         </a>
                         
                         
@@ -168,15 +169,7 @@ body <- dashboardBody(
               HTML("<div class = 'heading_container'>
                      <h1>Upload Data</h1>
                    </div>"),
-              # fluidRow(column(3, div(class = 'heading_container', HTML("<h1>Upload Data</h1>") )),
-              #          column(2, offset=6, actionButton("Preview_Map_Distribution",
-              #                                           strong("Preview Map Distribution"),
-              #                                           onclick = "$('li:eq(7) a').tab('show');",
-              #                                           class = 'btn-primary',
-              #                                           style='color: #FFFFFF; margin-top: 30px;'
-              #          ))
-              #          
-              #          ),
+              
               
               div(style = "margin-bottom: 30px;"),
               
@@ -187,22 +180,15 @@ body <- dashboardBody(
                 sidebarPanel(
                   style = "height: 80vh; overflow-y: auto;",
                   
-                  
-                  #width = 8,
                   tags$style(".well {background-color:#FFFFFF;}"),
-                  #div(style = "background-color: #FFFFFF;" ),
-                  #HTML("<h2>Input Data</h2>"),
-                  #HTML("<h3><strong>Upload map (shapefile)</strong></h3>"),
                   
                   
                   # ==================================== Upload map (shapefile) ==================================== 
-                  # ปุ่ม ? แต่ติดปัญหาตรงที่มันไม่บรรทัดเดียวกัน แม้จะใส่  inline-block แล้ว
                   div(style="display: inline-block;",
                       HTML('<h3><span class="purple">1.</span>
                                    Upload shapefile</h3>
                                    '),
                       
-                      # เลยต้องแก้แบบนี้แทน 
                       div(style = "margin-left: 280px; margin-top: -45px;",
                           bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
                           
@@ -227,7 +213,6 @@ body <- dashboardBody(
                   ),
                   
                   hr(),
-                  #width = 7,
                   HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile at once:</font></strong> shp, dbf, shx and prj."),
                   fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
                   
@@ -249,12 +234,10 @@ body <- dashboardBody(
                  
                   
                   # ==================================== Upload data (.csv file) ==================================== 
-                  # ปุ่ม ? แต่ติดปัญหาตรงที่มันไม่บรรทัดเดียวกัน แม้จะใส่  inline-block แล้ว
                   div(style="display: inline-block;",
                       HTML('<h3><span class="purple">2.</span>
                                    Upload csv file</h3>'),
                       
-                      # เลยต้องแก้แบบนี้แทน 
                       div(style = "margin-left: 240px; margin-top: -45px;",
                           bsButton("question_csvfile", label = "", icon = icon("question"), style = "Question"),
                           
@@ -278,8 +261,6 @@ body <- dashboardBody(
                   
                   
                   hr(),
-                  # HTML("<h4>Select Data*</h4>"),
-                  #width = 7,
                   HTML("csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time point, cases, population</font></strong>"),
                   fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
                   
@@ -386,10 +367,7 @@ body <- dashboardBody(
                                                             style='color: #FFFFFF;'
                   ))),
                   
-                  
-                  # fluidRow(textOutput('error_msg'),
-                  #          textOutput("success_msg"))
-                  
+                
                   
                   
                   
@@ -443,13 +421,8 @@ body <- dashboardBody(
               div(class = "box-white", 
                   sidebarLayout(
                     sidebarPanel(
-                      #fluidRow(
-                      #column(12,
-                      
-                      #class = "box",
                       
                       style = "height: 80vh; overflow-y: auto;",
-                      #style = "padding: 5%;",
                       fluidRow(
                         column(12,
                                HTML("<div class='box-white'>
@@ -482,8 +455,7 @@ body <- dashboardBody(
                                              choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
                                                             "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
                                ),
-                               #HTML("</br>"),
-                               #verbatimTextOutput("status_map_dis")
+                               
                                
                                div(
                                  class = "box-white",
@@ -2167,77 +2139,7 @@ shinyApp(
         } # จบ else
         
         
-        ####################################################
         
-        # computing part
-        # model <- inla(
-        #   # formula_2_bym_rw1,
-        #   formula_1_bym_rw1,
-        #   family = "poisson",
-        #   data = data,
-        #   E = data[,input$columnexpvalueindata],
-        #   control.predictor = list(compute = TRUE),
-        #   control.compute = list(
-        #     dic = TRUE,
-        #     waic = TRUE,
-        #     cpo = TRUE,
-        #     return.marginals.predictor = TRUE))
-        
-        
-        
-        
-        # exceedance_prob <- sapply(
-        #   model$marginals.fitted.values,
-        #   FUN = function(marg) {
-        #     1 - inla.pmarginal(q = 1, marginal = marg) })
-        # 
-        # data[, "label"] <- exceedance_prob > 0.95
-        # data[, "label"] <- ifelse(exceedance_prob > 0.95,
-        #                           "hotspot", "non-hotspot")
-        # 
-        # rv$data <- data
-        
-        
-        ######################### คำนวณ asso risk fac ###################################
-        
-        # rv$model <- model 
-        # 
-        # 
-        # model2 <- rv$model
-        # 
-        # association_df <- (data.frame(
-        #   c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-        #   c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-        #   c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-        #   c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-        #   c(exp(model2$summary.random$`data|S|x5_id`$mean)),
-        #   c(exp(model2$summary.random$`data|S|x6_id`$mean)),
-        #   c(exp(model2$summary.random$`data|S|x7_id`$mean))
-        # ) -1 )*100
-        # 
-        # colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
-        #                                paste("percent_increase_",input$columncov2indata, sep=""),
-        #                                paste("percent_increase_",input$columncov3indata, sep=""),
-        #                                paste("percent_increase_",input$columncov4indata, sep=""),
-        #                                paste("percent_increase_",input$columncov5indata, sep=""),
-        #                                paste("percent_increase_",input$columncov6indata, sep=""),
-        #                                paste("percent_increase_",input$columncov7indata, sep=""))
-        
-        
-        # ========================= ที่ทำcbind  ======================
-        
-        # association_wsf <- cbind(map, association_df)
-        # 
-        # association_wsf_df <- data.frame(association_wsf)
-        # 
-        # 
-        # rv$association_wsf_df <- association_wsf_df
-        
-        # ==============================================================
-        
-        
-        # ad <- names(association_df)
-        # updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
       }
     })
     
@@ -2395,86 +2297,6 @@ shinyApp(
     
     
     # ==================================== risk_fac ==================================== 
-    
-    output$risk_fac_text <- renderPrint({  
-      #rv$model
-      model2 <- rv$model
-      map <- rv$map
-      
-      # model2 # ออกมาเยอะ
-      # model2$summary.random # ออกมาเยอะจัด ๆ 
-      # model2$summary.random[, data$x1_id$mean] # Error in $: object of type 'closure' is not subsettable
-      
-      # model2$summary.random[, data2$x1_id$mean]
-      
-      # model2$summary.random$x1_id$mean # ขึ้น NULL
-      # model2$summary.random$x1_id # ขึ้น NULL
-      
-      # model2$summary.random$`data|S|x1_id` # ขึ้นแล้วจ้า
-      
-      # model2$summary.random$`data|S|x1_id`$mean # ได้สักที
-      
-      association_df <- data.frame(
-        c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-        c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-        c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-        c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-        c(exp(model2$summary.random$`data|S|x5_id`$mean)),
-        c(exp(model2$summary.random$`data|S|x6_id`$mean)),
-        c(exp(model2$summary.random$`data|S|x7_id`$mean))
-      )
-      
-      
-      
-      
-      colnames(association_df) <- c('exp_x1',
-                                    'exp_x2',
-                                    'exp_x3',
-                                    'exp_x4',
-                                    'exp_x5',
-                                    'exp_x6',
-                                    'exp_x7'
-      )
-      
-      
-      
-      association_wsf <- cbind(map, association_df)
-      
-      association_wsf_df <- data.frame(association_wsf)
-      
-      # association_wsf_df[, "exp_x1"] # ออกมาแน้ว
-      
-      # ad <- names(association_df)
-      # updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-      
-      
-    })
-    
-    
-    
-    output$risk_fac_text2 <- renderPrint({
-      
-      # association_wsf_df <- rv$association_wsf_df
-      # 
-      # # association_wsf_df[, "exp_x1"] # ค่าออกนะ
-      # 
-      # # association_wsf_df[, input$columnidareanamedata] # error จ้า
-      # 
-      # association_wsf_df[, input$columnidareainmap] # ค่าออกนะ
-      
-      map <- rv$map
-      
-      association_wsf_df <- rv$association_wsf_df 
-      
-      datafiltered <- association_wsf_df
-      ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareainmap])
-      map@data <- datafiltered[ordercounties, ]
-      
-      map@data
-      
-      
-      
-    })
     
     
     output$map_risk_fac <- renderLeaflet({
