@@ -54,40 +54,6 @@ options(shiny.maxRequestSize = 70*1024^2)
 
 
 
-# server = function(input, output, session) {
-#
-#   # IMPORTANT!
-#   # this is needed to terminate the R process when the
-#   # shiny app session ends. Otherwise, you end up with a zombie process
-#   session$onSessionEnded(function() {
-#     stopApp()
-#   })
-#
-#   dataset = reactive({
-#     switch(
-#       input$dataset,
-#       "rock" = rock,
-#       "pressure" = pressure,
-#       "cars" = cars,
-#       "iris" = iris)
-#   })
-#
-#   output$commandArgs = renderPrint({
-#     commandArgs()
-#   })
-#
-#   output$dataSummary = renderPrint({
-#     summary(dataset())
-#   })
-#
-#   output$dataView = renderTable({
-#     head(dataset(), n = input$obs)
-#   })
-# }
-
-
-
-
 ###############################################################
 #
 #                             server
@@ -1401,77 +1367,6 @@ server <- function(input, output, session) {
       } # จบ else
 
 
-      ####################################################
-
-      # computing part
-      # model <- inla(
-      #   # formula_2_bym_rw1,
-      #   formula_1_bym_rw1,
-      #   family = "poisson",
-      #   data = data,
-      #   E = data[,input$columnexpvalueindata],
-      #   control.predictor = list(compute = TRUE),
-      #   control.compute = list(
-      #     dic = TRUE,
-      #     waic = TRUE,
-      #     cpo = TRUE,
-      #     return.marginals.predictor = TRUE))
-
-
-
-
-      # exceedance_prob <- sapply(
-      #   model$marginals.fitted.values,
-      #   FUN = function(marg) {
-      #     1 - inla.pmarginal(q = 1, marginal = marg) })
-      #
-      # data[, "label"] <- exceedance_prob > 0.95
-      # data[, "label"] <- ifelse(exceedance_prob > 0.95,
-      #                           "hotspot", "non-hotspot")
-      #
-      # rv$data <- data
-
-
-      ######################### คำนวณ asso risk fac ###################################
-
-      # rv$model <- model
-      #
-      #
-      # model2 <- rv$model
-      #
-      # association_df <- (data.frame(
-      #   c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x5_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x6_id`$mean)),
-      #   c(exp(model2$summary.random$`data|S|x7_id`$mean))
-      # ) -1 )*100
-      #
-      # colnames(association_df) <-  c(paste("percent_increase_",input$columncov1indata, sep=""),
-      #                                paste("percent_increase_",input$columncov2indata, sep=""),
-      #                                paste("percent_increase_",input$columncov3indata, sep=""),
-      #                                paste("percent_increase_",input$columncov4indata, sep=""),
-      #                                paste("percent_increase_",input$columncov5indata, sep=""),
-      #                                paste("percent_increase_",input$columncov6indata, sep=""),
-      #                                paste("percent_increase_",input$columncov7indata, sep=""))
-
-
-      # ========================= ที่ทำcbind  ======================
-
-      # association_wsf <- cbind(map, association_df)
-      #
-      # association_wsf_df <- data.frame(association_wsf)
-      #
-      #
-      # rv$association_wsf_df <- association_wsf_df
-
-      # ==============================================================
-
-
-      # ad <- names(association_df)
-      # updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
     }
   })
 
@@ -1630,85 +1525,8 @@ server <- function(input, output, session) {
 
   # ==================================== risk_fac ====================================
 
-  output$risk_fac_text <- renderPrint({
-    #rv$model
-    model2 <- rv$model
-    map <- rv$map
+  
 
-    # model2 # ออกมาเยอะ
-    # model2$summary.random # ออกมาเยอะจัด ๆ
-    # model2$summary.random[, data$x1_id$mean] # Error in $: object of type 'closure' is not subsettable
-
-    # model2$summary.random[, data2$x1_id$mean]
-
-    # model2$summary.random$x1_id$mean # ขึ้น NULL
-    # model2$summary.random$x1_id # ขึ้น NULL
-
-    # model2$summary.random$`data|S|x1_id` # ขึ้นแล้วจ้า
-
-    # model2$summary.random$`data|S|x1_id`$mean # ได้สักที
-
-    association_df <- data.frame(
-      c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-      c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-      c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-      c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-      c(exp(model2$summary.random$`data|S|x5_id`$mean)),
-      c(exp(model2$summary.random$`data|S|x6_id`$mean)),
-      c(exp(model2$summary.random$`data|S|x7_id`$mean))
-    )
-
-
-
-
-    colnames(association_df) <- c('exp_x1',
-                                  'exp_x2',
-                                  'exp_x3',
-                                  'exp_x4',
-                                  'exp_x5',
-                                  'exp_x6',
-                                  'exp_x7'
-    )
-
-
-
-    association_wsf <- cbind(map, association_df)
-
-    association_wsf_df <- data.frame(association_wsf)
-
-    # association_wsf_df[, "exp_x1"] # ออกมาแน้ว
-
-    # ad <- names(association_df)
-    # updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-
-
-  })
-
-
-
-  output$risk_fac_text2 <- renderPrint({
-
-    # association_wsf_df <- rv$association_wsf_df
-    #
-    # # association_wsf_df[, "exp_x1"] # ค่าออกนะ
-    #
-    # # association_wsf_df[, input$columnidareanamedata] # error จ้า
-    #
-    # association_wsf_df[, input$columnidareainmap] # ค่าออกนะ
-
-    map <- rv$map
-
-    association_wsf_df <- rv$association_wsf_df
-
-    datafiltered <- association_wsf_df
-    ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareainmap])
-    map@data <- datafiltered[ordercounties, ]
-
-    map@data
-
-
-
-  })
 
 
   output$map_risk_fac <- renderLeaflet({

@@ -15,7 +15,7 @@ users. Moreover, the previously developed user interfaces do not provide specifi
 
 </br>
 
-&emsp;&emsp; **STEHealth** (It stands for **S**patiotemporal **E**pidemiological **Health**) is a application for analyzing space-time pattern, cluster detection, and association with risk factors of health outcomes, which allows users to import their own data, analyze, and visualize.
+&emsp;&emsp; **STEHealth** (It stands for **S**patiotemporal **E**pidemiological **Health**) is an application for analyzing space-time pattern, cluster detection, and association with risk factors of health outcomes, which allows users to import their own data, analyze, and visualize.
 This application is part of "Spatiotemporal Analysis with Application Development for Epidemiological Study of Suicide Mortality" project of the [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/). 
 
 

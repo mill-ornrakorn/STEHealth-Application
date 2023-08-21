@@ -1,4 +1,36 @@
 
+/*==================== VARIABLES CSS ====================*/
+:root {
+
+    /*========== Colors ==========*/
+    /* Change favorite color #6e57e0 */
+    --hue-color: 250; /*Purple 250 - Green 142 - Blue 230 - Pink 340*/
+    
+    --scroll-bar-color: hsl(var(--hue-color), 12%, 90%);
+    --scroll-thumb-color: hsl(var(--hue-color), 12%, 80%);
+    
+    /*========== Font and typography ==========*/
+
+    /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
+
+}
+
+
+/*========== SCROLL BAR ==========*/
+::-webkit-scrollbar {
+  width: .60rem;
+  height: .60rem;
+  background-color: var(--scroll-bar-color);
+  border-radius: .5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb-color);
+  border-radius: .5rem;
+}
+
+
+
 * {
   font-family: 'Poppins', sans-serif; /*!important ใส่ไม่ได้เพราะเหมือน iconบางส่วนหาย*/
 }
@@ -13,7 +45,7 @@
 }
 
 html{
-  font-size: calc(60% + 0.8vmin);
+  scroll-behavior: smooth;
 }
 
 a {
@@ -42,6 +74,7 @@ h5{
 
 }
 
+/*==================== custom shinytheme ====================*/
 /* เว้นระยะห่างด้านซ้ายทุกหน้า */
 .tab-content {
   margin-left:40px;
@@ -223,42 +256,7 @@ label > input[type='radio']:checked + *::before {
   margin-right: 10px;
 }
 
-/*
 
-input:checked + span {
-  color: #735DFB;
-}
-
-
-label > input[type='checkbox'] {
-  opacity: 0;
-  position: absolute;
-}
-
-label > input[type='checkbox'] + *::before {
-content: '✔';
-position: absolute;
-margin: 4px 0 0;
-margin-left: -20px;
-align: center;
-width: 13px;
-height: 13px;
-margin-right: 1rem;
-border-radius: 0%;
-border-style: solid;
-border-width: 0.1rem;
-border-color: #735DFB;
-color: #ffffff;
-}
-
-label > input[type='checkbox']:checked + *::before {
-content: '✔';
-width: 13px;
-height: 13px;
-background-color: #735DFB;
-color: #ffffff;
-}
-*/
 
 /* ปุ่ม i (bs_embed_tooltip) */
 
@@ -309,6 +307,8 @@ color: #ffffff;
 }
 
 
+/*==================== HOME ====================*/
+
 
 .header .container {
   height: 100%;
@@ -332,6 +332,7 @@ color: #ffffff;
 .header .container .infos .title {
   font-family: 'Poppins';
   margin-bottom: 0px;
+  font-size: 3.5rem;
   font-weight: bold;
   color: #1F2059;
   
@@ -379,11 +380,12 @@ color: #ffffff;
   margin-top: 200px;
 }
 
+/*==================== btn ====================*/
 
-/* ปุ่ม */
 .btn-primary {
   background-color: #8673fb !important; 
   border-radius: 100px;
+  border-color: #8673fb;
   
   box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
 
@@ -395,6 +397,7 @@ color: #ffffff;
 
 .btn-primary:hover {
   background-color: #735DFB !important;
+  border-color: #735DFB;
   
 }
 
@@ -419,6 +422,7 @@ color: #ffffff;
 .btn-outline-primary:hover{
   color: #FFF;
   background-color: #8673fb !important;
+  border-color: #8673fb;
   
 }
 
@@ -460,7 +464,7 @@ color: #ffffff;
   
 }
 
-
+/*==================== box ====================*/
 .box-white {
   background: #FFFFFF; 
   /* background: #EFEFEF; > */
@@ -573,4 +577,78 @@ span.purple {
   
 
 
+}
+
+
+/*==================== MEDIA QUERIES ====================*/
+
+
+@media screen and (max-width: 767px){
+  .header .container .infos .title {
+  font-size: 2rem;
+  
+  }
+  
+  
+  .home__caption{
+    font-size:1.3rem
+  }
+  
+  
+}
+
+/* For small devices */
+@media screen and (max-width:350px) {
+  .header .container .infos .title {
+  font-size: 2rem;
+  
+  }
+  
+  .home__caption{
+    font-size: 1.3rem
+  }
+  
+  
+}
+
+
+/* For medium devices */
+@media screen and (min-width: 568px) {
+  .header .container .infos .title {
+  font-size: 2rem;
+  
+  }
+  
+  .home__caption{
+    font-size: 1.3rem
+  }
+  
+  
+}
+
+@media screen and (min-width: 768px) {
+  .header .container .infos .title {
+  font-size: 2.3rem;
+  
+  }
+  
+  .home__caption{
+    font-size: 1.3rem
+  }
+  
+  
+  
+}
+
+/* For large devices */
+@media screen and (min-width: 1024px) {
+  .header .container .infos .title {
+  font-size: 3.5rem;
+  
+  }
+  
+  .home__caption{
+    font-size: 1.5rem
+  }
+  
 }
