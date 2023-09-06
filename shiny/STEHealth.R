@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @21-8-23
+# @6-9-23
 
 # ================================================================
 
@@ -538,7 +538,9 @@ body <- dashboardBody(
                                        tags$h4("Cluster Detection"),
                                        HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
                                                     Users can visualize and select filters including time point and color scheme. For details of the model, please refer to the"),
-                                       tags$a("Help page.", onclick="customHref('Help')")
+                                       tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point"),
+                                       br(),br(),
+                                       actionButton("interpret_cluster", class="btn btn-outline-primary2", "Examples of Interpretation")
                                        
                                      ),
                                      
@@ -608,18 +610,18 @@ body <- dashboardBody(
                                      ),
                                      
                                      
-                                     div(
-                                       class = "box-purple",
-                                       HTML("<h4>Examples of interpretation (from sample data)</h4>
-                                            • If the area has a <strong>hotspot</strong>: </br>
-                                              &emsp;In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides). 
-                                              
-                                              </br></br>
-                                              For other examples of interpretation, please refer to the
-                                            "
-                                       ),
-                                       tags$a("Manual page.", onclick="customHref('Manual')")
-                                     )
+                                     # div(
+                                     #   class = "box-purple",
+                                     #   HTML("<h4></h4>
+                                     #        • If the area has a <strong>hotspot</strong>: </br>
+                                     #          &emsp;In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides). 
+                                     #          
+                                     #          </br></br>
+                                     #          For other examples of interpretation, please refer to the
+                                     #        "
+                                     #   ),
+                                     #   tags$a("Manual page.", onclick="customHref('Manual')")
+                                     # )
                                      
                                      
                                      
@@ -675,7 +677,9 @@ body <- dashboardBody(
                                              For details of the model and value, please refer to the
                                                   "),
                                                   
-                                                  tags$a("Help page.", onclick="customHref('Help')")
+                                                  tags$a("Help page.", onclick="customHref('Help')",  class = "cursor_point"),
+                                                  br(),br(),
+                                                  actionButton("interpret_asso_risk", class="btn btn-outline-primary2", "Examples of Interpretation")
                                                 ),
                                                 
                                                 div(
@@ -732,28 +736,28 @@ body <- dashboardBody(
                                                   
                                                 ),
                                                 
-                                                div(
-                                                  class = "box-purple",
-                                                  HTML("<h4>Examples of interpretation (from sample data)</h4>
-                                            • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
-                                              &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
-                                              the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
-                                            
-                                            </br></br> 
-                                            • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
-                                              &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
-                                              the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
-                                            
-                                            </br></br>     
-                                            •If the significance is <strong>not significant</strong>: </br>  
-                                              &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
-                                            
-                                            </br></br>   
-                                              For other examples of interpretation, please refer to the
-                                             "),
-                                                  tags$a("Manual page.", onclick="customHref('Manual')")
-                                                  
-                                                )
+                                            #     div(
+                                            #       class = "box-purple",
+                                            #       HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                            # • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
+                                            #   &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
+                                            #   the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
+                                            # 
+                                            # </br></br> 
+                                            # • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
+                                            #   &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
+                                            #   the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
+                                            # 
+                                            # </br></br>     
+                                            # •If the significance is <strong>not significant</strong>: </br>  
+                                            #   &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
+                                            # 
+                                            # </br></br>   
+                                            #   For other examples of interpretation, please refer to the
+                                            #  "),
+                                            #       tags$a("Manual page.", onclick="customHref('Manual')")
+                                            #       
+                                            #     )
                                                 
                                                 
                                          )
@@ -1038,9 +1042,110 @@ shinyApp(
     })
     
     
+    # ========================= Modal สำหรับตัวอย่างแปลผล ================================ 
+    observeEvent(input$interpret_cluster, {
+      showModal(
+        modalDialog(
+          title = HTML('<div class = "modal__header">
+                          <i class="uil uil-clipboard-notes modalicon"></i>
+                          <div>
+                            <h4 class = "modaltitle">Examples of interpretation</h4>
+                            <span class = "modalsubtitle">From sample data, Thailand suicide mortality and risk factors 2011-2021.</span>
+
+                          </div>
+                        </div>
+                        
+                       '),
+          tags$img(src="example_cluster_result.png",
+                   class = "modal__img"),
+          
+          HTML("
+              <div class = 'modal__body'>
+                <span class = 'modal__bodytitle'>If the area has a <strong>hotspot</strong>: </br></span>
+                &emsp;In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides). 
+              </div>"),
+          
+          easyClose = TRUE,
+          footer = NULL,
+          size = "l"
+        )
+      )
+    })
     
     
+    observeEvent(input$interpret_asso_risk, {
+      showModal(
+        modalDialog(
+          title = HTML('<div class = "modal__header">
+                          <i class="uil uil-clipboard-notes modalicon"></i>
+                          <div>
+                            <h4 class = "modaltitle">Examples of interpretation</h4>
+                            <span class = "modalsubtitle">From sample data, Thailand suicide mortality and risk factors 2011-2021.</span>
+
+                          </div>
+                        </div>
+                        
+                       '),
+          
+          # แบบที่ 1
+          tags$img(src="example_asso-risk_result_1.png",
+                   class = "modal__img"),
+          
+          HTML("
+              <div class = 'modal__body'>
+                <span class = 'modal__boldbodytitle'>Type 1 </span>
+                <span class = 'modal__bodytitle'>If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br></span>
+                &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
+     the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
+              </div>
+              <hr>"),
+          
+          # แบบที่ 2
+          tags$img(src="example_asso-risk_result_2.png",
+                   class = "modal__img"),
+          
+          HTML("
+              <div class = 'modal__body'>
+                <span class = 'modal__boldbodytitle'>Type 2 </span>
+                <span class = 'modal__bodytitle'>If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br></span>
+                &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
+     the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
+              </div>
+              <hr>"),
+          
+          # แบบที่ 3
+          tags$img(src="example_asso-risk_result_3.png",
+                   class = "modal__img"),
+          
+          HTML("
+              <div class = 'modal__body'>
+                <span class = 'modal__boldbodytitle'>Type 3 </span>
+                <span class = 'modal__bodytitle'>If the significance is <strong>not significant</strong>: </br>  </span>
+                &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
+              </div>
+              "),
+          
+          
+          easyClose = TRUE,
+          footer = NULL,
+          size = "l"
+        )
+      )
+    })
     
+    # If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
+    #   &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
+    # the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
+    # 
+    # </br></br> 
+    #   • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
+    #   &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
+    # the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
+    # 
+    # </br></br>     
+    #   •If the significance is <strong>not significant</strong>: </br>  
+    #   &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
+    # 
     
     
     # ======================================================================== 
