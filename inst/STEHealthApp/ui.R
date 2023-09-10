@@ -20,7 +20,7 @@ if(!require(capture)){
 }
 
 
-# ==================================== import packages  ====================================
+# ==================================== import packages  ==================================== 
 
 library(shiny)
 library(shinydashboard)
@@ -42,7 +42,7 @@ library(capture) # ลงโดยใช้ remotes::install_github("dreamRs/cap
 library(leaflet.extras)
 library(bsplus)
 
-# install.packages("sf")
+# install.packages("sf") 
 # ถ้าลง sf ไม่ได้ให้พิมพ์คำสั่งด้านล่างนี้ก่อน
 # options("install.lock"= FALSE)
 
@@ -531,7 +531,9 @@ body <- dashboardBody(
                                        tags$h4("Cluster Detection"),
                                        HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
                                                     Users can visualize and select filters including time point and color scheme. For details of the model, please refer to the"),
-                                       tags$a("Help page.", onclick="customHref('Help')")
+                                       tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point"),
+                                       br(),br(),
+                                       actionButton("interpret_cluster", class="btn btn-outline-primary2", "Examples of Interpretation")
                                        
                                      ),
                                      
@@ -578,9 +580,9 @@ body <- dashboardBody(
                                        
                                        HTML('</br>
                                                   </br>
-                                                  <h5>
+                                                  <h4>
                                                      Capture screenshot
-                                                  </h5>
+                                                  </h4>
                                                   <p>
                                                   Take a screenshot of map. The captured image is downloaded as a PNG image.
                                                   </p>
@@ -601,18 +603,18 @@ body <- dashboardBody(
                                      ),
                                      
                                      
-                                     div(
-                                       class = "box-purple",
-                                       HTML("<h4>Examples of interpretation (from sample data)</h4>
-                                            • If the area has a <strong>hotspot</strong>: </br>
-                                              &emsp;In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides). 
-                                              
-                                              </br></br>
-                                              For other examples of interpretation, please refer to the
-                                            "
-                                       ),
-                                       tags$a("Manual page.", onclick="customHref('Manual')")
-                                     )
+                                     # div(
+                                     #   class = "box-purple",
+                                     #   HTML("<h4></h4>
+                                     #        • If the area has a <strong>hotspot</strong>: </br>
+                                     #          &emsp;In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides). 
+                                     #          
+                                     #          </br></br>
+                                     #          For other examples of interpretation, please refer to the
+                                     #        "
+                                     #   ),
+                                     #   tags$a("Manual page.", onclick="customHref('Manual')")
+                                     # )
                                      
                                      
                                      
@@ -668,7 +670,9 @@ body <- dashboardBody(
                                              For details of the model and value, please refer to the
                                                   "),
                                                   
-                                                  tags$a("Help page.", onclick="customHref('Help')")
+                                                  tags$a("Help page.", onclick="customHref('Help')",  class = "cursor_point"),
+                                                  br(),br(),
+                                                  actionButton("interpret_asso_risk", class="btn btn-outline-primary2", "Examples of Interpretation")
                                                 ),
                                                 
                                                 div(
@@ -704,9 +708,9 @@ body <- dashboardBody(
                                                   
                                                   HTML('</br>
                                             </br>
-                                            <h5>
+                                            <h4>
                                               Capture screenshot
-                                            </h5>
+                                            </h4>
                                             <p>
                                             Take a screenshot of map. The captured image is downloaded as a PNG image.
                                             </p>
@@ -725,28 +729,28 @@ body <- dashboardBody(
                                                   
                                                 ),
                                                 
-                                                div(
-                                                  class = "box-purple",
-                                                  HTML("<h4>Examples of interpretation (from sample data)</h4>
-                                            • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
-                                              &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
-                                              the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
-                                            
-                                            </br></br> 
-                                            • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
-                                              &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
-                                              the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
-                                            
-                                            </br></br>     
-                                            •If the significance is <strong>not significant</strong>: </br>  
-                                              &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
-                                            
-                                            </br></br>   
-                                              For other examples of interpretation, please refer to the
-                                             "),
-                                                  tags$a("Manual page.", onclick="customHref('Manual')")
-                                                  
-                                                )
+                                                #     div(
+                                                #       class = "box-purple",
+                                                #       HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                                # • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
+                                                #   &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
+                                                #   the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
+                                                # 
+                                                # </br></br> 
+                                                # • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
+                                                #   &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
+                                                #   the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
+                                                # 
+                                                # </br></br>     
+                                                # •If the significance is <strong>not significant</strong>: </br>  
+                                                #   &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
+                                                # 
+                                                # </br></br>   
+                                                #   For other examples of interpretation, please refer to the
+                                                #  "),
+                                                #       tags$a("Manual page.", onclick="customHref('Manual')")
+                                                #       
+                                                #     )
                                                 
                                                 
                                          )
@@ -805,7 +809,9 @@ body <- dashboardBody(
               includeMarkdown("Releases.md")
       ) 
     )
-  )) 
+  ))     
+
+
 
 
 

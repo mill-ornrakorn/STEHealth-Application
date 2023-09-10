@@ -1,4 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&family=Prompt:wght@200;400&family=Sarabun:wght@300&display=swap');
+
 /*==================== VARIABLES CSS ====================*/
 :root {
 
@@ -12,6 +14,11 @@
     /*========== Font and typography ==========*/
 
     /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
+    
+    
+    /*========== Font weight ==========*/
+    --font-medium: 550;
+    --font-semi-bold: 600;
 
 }
 
@@ -32,7 +39,7 @@
 
 
 * {
-  font-family: 'Poppins', sans-serif; /*!important ใส่ไม่ได้เพราะเหมือน iconบางส่วนหาย*/
+  font-family: 'Poppins', 'Prompt', sans-serif; /*!important ใส่ไม่ได้เพราะเหมือน iconบางส่วนหาย*/
 }
 
 /* ไม่แสดง error หน้าเว็บ */
@@ -56,12 +63,16 @@ a:hover{
   color: #9389e4;
 }
 
+a:active, a:focus, a:hover {
+  outline: 0;
+  text-decoration: none;
+  color: #9389e4;
+}
 
 
 h2, h3, h4, h5 {
-  font-family: 'Poppins';
-  font-weight: bold;
-
+  font-family: 'Poppins', 'Prompt', sans-serif;
+  font-weight: var(--font-medium);
 }
 
 
@@ -77,13 +88,13 @@ h5{
 /*==================== custom shinytheme ====================*/
 /* เว้นระยะห่างด้านซ้ายทุกหน้า */
 .tab-content {
-  margin-left:40px;
+  margin-left: 4rem;
 }
 
 
 /* Space between the Sidebar Menu Items*/
 .sidebar-menu li { 
-  margin-bottom: 15px; 
+  margin-bottom: 1.5rem; 
 }
 
 /* สีกรอบ sidebar */
@@ -93,11 +104,21 @@ h5{
 
 
 .heading_container h1 {
-  font-family: 'Poppins';
+  font-family: 'Prompt';
+  font-weight: var(--font-semi-bold);
+  font-size: 3.5rem;
   color: #735DFB;
-  font-weight: bold;
 
 }
+
+
+.subheading_container {
+  font-family: 'Prompt';
+  font-weight: var(--font-semi-bold);
+
+}
+
+
 
 .nav-tabs-custom .nav-tabs li.active {
     border-top-color: #735DFB;
@@ -278,6 +299,7 @@ label > input[type='radio']:checked + *::before {
 
 /* กรอบ verbatimTextOutput */
 .error pre {
+  font-family: 'Prompt';
   display: block;
   padding: 9.5px;
   margin: 0 0 10px;
@@ -293,6 +315,7 @@ label > input[type='radio']:checked + *::before {
 
 
 .warning pre {
+  font-family: 'Prompt';
   display: block;
   padding: 9.5px;
   margin: 0 0 10px;
@@ -306,6 +329,9 @@ label > input[type='radio']:checked + *::before {
   border-radius: 4px;
 }
 
+.cursor_point{
+  cursor: pointer;
+}
 
 /*==================== HOME ====================*/
 
@@ -316,6 +342,7 @@ label > input[type='radio']:checked + *::before {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  column-gap: 5rem;
   -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
@@ -330,23 +357,37 @@ label > input[type='radio']:checked + *::before {
 
 
 .header .container .infos .title {
-  font-family: 'Poppins';
-  margin-bottom: 0px;
+  font-family: 'Prompt';
+  font-weight: var(--font-semi-bold);
   font-size: 3.5rem;
-  font-weight: bold;
+  color: #1F2059;
+  
+}
+
+.header .container .infos .subtitle {
+  font-family: 'Prompt';
+  font-weight: var(--font-semi-bold);
+  margin-top: -0.5rem;
+  font-size: 2rem;
   color: #1F2059;
   
 }
 
 .header .container .infos p {
-  margin-top: 30px;
+  /* text-align: justify; */
+  font-size: 1.6rem;
+  margin-top: 3rem;
   color: #1F2059;
   
 }
 
 .header .container .infos .button {
-  margin-top: 30px;
+  margin-top: 3rem;
   
+}
+
+.home__button{
+  font-size: 1.5rem;
 }
 
 
@@ -400,6 +441,7 @@ label > input[type='radio']:checked + *::before {
   border-color: #735DFB;
   
 }
+
 
 
 
@@ -490,6 +532,7 @@ label > input[type='radio']:checked + *::before {
 
 
 .box-white h4, .box-white h5{
+  font-weight: var(--font-semi-bold);
   text-align: left; 
   color: #735DFB;
 }
@@ -517,6 +560,7 @@ label > input[type='radio']:checked + *::before {
 
 
 .box-purple h4, .box-purple h5{
+  font-weight: var(--font-semi-bold);
   text-align: left; 
   color: #5549b2;
    /* 
@@ -579,7 +623,66 @@ span.purple {
 
 }
 
+/*==================== modal ====================*/
 
+
+.modal-content {
+    border-radius: 1.5rem;
+    padding: 1rem;
+}
+
+.modal__header{
+  display: flex;
+}
+
+
+
+.modalicon{
+  font-size: 2.5rem;
+  margin-right: 0.75rem;
+  
+}
+
+.modaltitle{
+  font-weight: var(--font-semi-bold);
+  margin-bottom: -0.1rem;
+  
+}
+
+.modalsubtitle{
+ font-size: 1.6rem; 
+}
+
+.modal__img{
+  border-radius: 0.5rem;
+  max-width: 100%; 
+  height: auto;
+  margin-bottom: 2rem;
+  
+}
+
+.modal__body{
+  margin-bottom: 0.1rem;
+  
+}
+
+.modal__boldbodytitle{
+  color: #735DFB;
+  font-size: 1.6rem;
+  font-weight: var(--font-semi-bold);
+}
+
+.modal__bodytitle{
+  font-size: 1.6rem;
+}
+
+.sameline{
+  white-space: nowrap;
+}
+
+.sameline *{
+  display: inline-block;
+}
 /*==================== MEDIA QUERIES ====================*/
 
 
