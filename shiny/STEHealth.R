@@ -587,9 +587,9 @@ body <- dashboardBody(
                                        
                                        HTML('</br>
                                                   </br>
-                                                  <h5>
+                                                  <h4>
                                                      Capture screenshot
-                                                  </h5>
+                                                  </h4>
                                                   <p>
                                                   Take a screenshot of map. The captured image is downloaded as a PNG image.
                                                   </p>
@@ -715,9 +715,9 @@ body <- dashboardBody(
                                                   
                                                   HTML('</br>
                                             </br>
-                                            <h5>
+                                            <h4>
                                               Capture screenshot
-                                            </h5>
+                                            </h4>
                                             <p>
                                             Take a screenshot of map. The captured image is downloaded as a PNG image.
                                             </p>
@@ -957,7 +957,7 @@ shinyApp(
       x7 <- input$columncov7indata
       
       if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-        return(HTML('📌 There are no covariates have been selected ❗'))
+        return(HTML('📌 There are no covariates have been selected on the Upload Data page ❗'))
       }
       
       
@@ -972,19 +972,19 @@ shinyApp(
     observeEvent(input$Preview_Map_Distribution , {
       
       if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
-        rv$messageCheckDataText_1<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
+        rv$messageCheckDataText_1<-"📌 Error: There are no data (shapefile and csv file) have been uploaded on the Upload Data page ❗"
         return(NULL)
       }
       
       
       else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        rv$messageCheckDataText_1<-"📌 Error: There are no shapefile have been uploaded ❗"
+        rv$messageCheckDataText_1<-"📌 Error: There are no shapefile have been uploaded on the Upload Data page ❗"
         return(NULL)
       }
       
       
       else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-        rv$messageCheckDataText_1<-"📌 Error: There is no csv file have been uploaded ❗"
+        rv$messageCheckDataText_1<-"📌 Error: There is no csv file have been uploaded on the Upload Data page ❗"
         return(NULL)
       }
       
@@ -1009,24 +1009,24 @@ shinyApp(
     observeEvent(input$nextpage , {
       
       if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
-        rv$messageCheckDataText_2<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
-        rv$messageCheckDataText_3<-"📌 Error: There are no data (shapefile and csv file) have been uploaded ❗"
+        rv$messageCheckDataText_2<-"📌 Error: There are no data (shapefile and csv file) have been uploaded on the Upload Data page ❗"
+        rv$messageCheckDataText_3<-"📌 Error: There are no data (shapefile and csv file) have been uploaded on the Upload Data page ❗"
         
         return(NULL)
       }
       
       
       else if (is.null(rv$map) &  (!is.null(rv$datosOriginal))){
-        rv$messageCheckDataText_2<-"📌 Error: There are no shapefile have been uploaded ❗"
-        rv$messageCheckDataText_3<-"📌 Error: There are no shapefile have been uploaded ❗"
+        rv$messageCheckDataText_2<-"📌 Error: There are no shapefile have been uploaded on the Upload Data page ❗"
+        rv$messageCheckDataText_3<-"📌 Error: There are no shapefile have been uploaded on the Upload Data page ❗"
         
         return(NULL)
       }
       
       
       else if (!is.null(rv$map) &  is.null(rv$datosOriginal)){
-        rv$messageCheckDataText_2<-"📌 Error: There is no csv file have been uploaded ❗"
-        rv$messageCheckDataText_3<-"📌 Error: There is no csv file have been uploaded ❗"
+        rv$messageCheckDataText_2<-"📌 Error: There is no csv file have been uploaded on the Upload Data page ❗"
+        rv$messageCheckDataText_3<-"📌 Error: There is no csv file have been uploaded on the Upload Data page ❗"
         
         return(NULL)
       }
