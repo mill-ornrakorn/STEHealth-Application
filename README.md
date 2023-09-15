@@ -18,7 +18,7 @@ This application is part of **```Spatiotemporal analysis with application develo
 
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_gif_Cluster%20detection.gif?raw=true" alt= “STEHealth_Manual” height="400">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_gif_Cluster%20detection1-2.gif?raw=true" alt= “STEHealth_Manual” height="400">
 </br>
 Cluster detection
 
@@ -26,7 +26,7 @@ Cluster detection
 
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_gif_Association%20with%20risk%20factors.gif?raw=true" alt= “STEHealth_Manual” height="400" > 
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_gif_Association%20with%20risk%20factors1-2.gif?raw=true" alt= “STEHealth_Manual” height="400" > 
 </br>
 Association with risk factors
 </p>
