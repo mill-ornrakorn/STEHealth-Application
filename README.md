@@ -149,7 +149,7 @@ Suicide Mortality and Risk Factors in Thailand from 2011 to 2021
 </p> 
 
 ## Manual📗
-This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://github.com/mill-ornrakorn/STEHealth-Application/blob/feature-select-download/www/STEHealth_Application_Manual.pdf)
+This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/shiny/www/STEHealth_Application_Manual.pdf)
 
 <p align="center">
 <img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_Application_Manual_cover.png?raw=true" alt= “STEHealth_Manual” height="600">
