@@ -330,7 +330,7 @@ body <- dashboardBody(
                   
                   HTML("</br>
                        <h4><strong>2.2 Select Covariates</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
-                  HTML("Put covariate in order from 1 to 7, with no blanks."),
+                  HTML("Put covariates in order from 1 to 7, with no blanks."),
                   
                   helpText("Select column(s):"),
                   fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
@@ -351,9 +351,9 @@ body <- dashboardBody(
                   
                   HTML("<font color= \"#735DFB\"><strong>Note that: </strong></font>
                                              <ul style = 'text-align: justify;'>
-                                              <li>If the user select 1 covariate, the analysis is <strong>univariate</strong>.</li> 
+                                              <li>If the user select 1 covariate, the analysis is <strong>univariable</strong>.</li> 
                                               <li>If the user selects covariates more than 1, all covariates will be calculated at the same time, which is a 
-                                                <strong>multivariate</strong> analysis. However, the results will be displayed one by one on the 'Spatiotemporal Epidemiological Analysis' page ('Association with Risk Factors' tap).</li>  
+                                                <strong>multivariable</strong> analysis. However, the results will be displayed one by one on the 'Spatiotemporal Epidemiological Analysis' page ('Association with Risk Factors' tap).</li>  
                                               
                                              </ul>
                                                 
@@ -536,7 +536,7 @@ body <- dashboardBody(
                                        class = "box-white",
                                        tags$img(align='left',width='52px',height='52px',src='cluster.png',style='margin-top: 10px; margin-right: 10px'),
                                        tags$h4("Cluster Detection"),
-                                       HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong>. 
+                                       HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong> areas. 
                                                     Users can visualize and select filters including time point and color scheme. For details of the model, please refer to the"),
                                        tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point"),
                                        br(),br(),
@@ -573,8 +573,8 @@ body <- dashboardBody(
                                        class = "box-white",
                                        HTML('<h4>Export Result</h4>
                                                   <p>
-                                                     The data obtained from the cluster detection consists of the original data and the <strong>label column</strong>, 
-                                                     which in the label column will consist of hotspot and non-hotspot. 
+                                                     The data obtained from the cluster detection consists of the original data and the <strong>hotspot label column</strong>, 
+                                                     which in the hotspot label column will consist of hotspot and non-hotspot. 
                                                   </p>
                                                   
                                                   '),
@@ -704,7 +704,7 @@ body <- dashboardBody(
                                                   "),
                                                   
                                                   checkboxGroupInput('asso_select_column', 'Column', inline=TRUE, 
-                                                                     c("lower bound" = "lowerbound", 'upper bound' = 'upperbound', 'significance' = 'significance'),
+                                                                     c("lower bound %95" = "lowerbound", 'upper bound' = 'upperbound', 'significance' = 'significance'),
                                                                      selected = c("lowerbound", 'upperbound', 'significance' )),
                                                   
                                                   
@@ -1479,8 +1479,8 @@ shinyApp(
           FUN = function(marg) {
             1 - inla.pmarginal(q = 1, marginal = marg) })
         
-        data[, "label"] <- exceedance_prob > 0.95
-        data[, "label"] <- ifelse(exceedance_prob > 0.95,
+        data[, "hotspot label"] <- exceedance_prob > 0.95
+        data[, "hotspot label"] <- ifelse(exceedance_prob > 0.95,
                                   "hotspot", "non-hotspot")
         
         rv$data <- data
@@ -2254,6 +2254,111 @@ shinyApp(
     
     
     # ==================================== map_distribution ==================================== 
+    
+    # ทำไม legend และค่าสีในแมพ เรียงจากมากไปน้อย
+    # จาก https://stackoverflow.com/questions/40276569/reverse-order-in-r-leaflet-continuous-legend
+    addLegend_decreasing <- function (map, position = c("topright", "bottomright", "bottomleft","topleft"),
+                                      pal, values, na.label = "NA", bins = 7, colors, 
+                                      opacity = 0.5, labels = NULL, labFormat = labelFormat(), 
+                                      title = NULL, className = "info legend", layerId = NULL, 
+                                      group = NULL, data = getMapData(map), decreasing = FALSE) {
+      
+      position <- match.arg(position)
+      type <- "unknown"
+      na.color <- NULL
+      extra <- NULL
+      if (!missing(pal)) {
+        if (!missing(colors)) 
+          stop("You must provide either 'pal' or 'colors' (not both)")
+        if (missing(title) && inherits(values, "formula")) 
+          title <- deparse(values[[2]])
+        values <- evalFormula(values, data)
+        type <- attr(pal, "colorType", exact = TRUE)
+        args <- attr(pal, "colorArgs", exact = TRUE)
+        na.color <- args$na.color
+        if (!is.null(na.color) && col2rgb(na.color, alpha = TRUE)[[4]] == 
+            0) {
+          na.color <- NULL
+        }
+        if (type != "numeric" && !missing(bins)) 
+          warning("'bins' is ignored because the palette type is not numeric")
+        if (type == "numeric") {
+          cuts <- if (length(bins) == 1) 
+            pretty(values, bins)
+          else bins   
+          if (length(bins) > 2) 
+            if (!all(abs(diff(bins, differences = 2)) <= 
+                     sqrt(.Machine$double.eps))) 
+              stop("The vector of breaks 'bins' must be equally spaced")
+          n <- length(cuts)
+          r <- range(values, na.rm = TRUE)
+          cuts <- cuts[cuts >= r[1] & cuts <= r[2]]
+          n <- length(cuts)
+          p <- (cuts - r[1])/(r[2] - r[1])
+          extra <- list(p_1 = p[1], p_n = p[n])
+          p <- c("", paste0(100 * p, "%"), "")
+          if (decreasing == TRUE){
+            colors <- pal(rev(c(r[1], cuts, r[2])))
+            labels <- rev(labFormat(type = "numeric", cuts))
+          }else{
+            colors <- pal(c(r[1], cuts, r[2]))
+            labels <- rev(labFormat(type = "numeric", cuts))
+          }
+          colors <- paste(colors, p, sep = " ", collapse = ", ")
+        }
+        else if (type == "bin") {
+          cuts <- args$bins
+          n <- length(cuts)
+          mids <- (cuts[-1] + cuts[-n])/2
+          if (decreasing == TRUE){
+            colors <- pal(rev(mids))
+            labels <- rev(labFormat(type = "bin", cuts))
+          }else{
+            colors <- pal(mids)
+            labels <- labFormat(type = "bin", cuts)
+          }
+        }
+        else if (type == "quantile") {
+          p <- args$probs
+          n <- length(p)
+          cuts <- quantile(values, probs = p, na.rm = TRUE)
+          mids <- quantile(values, probs = (p[-1] + p[-n])/2, na.rm = TRUE)
+          if (decreasing == TRUE){
+            colors <- pal(rev(mids))
+            labels <- rev(labFormat(type = "quantile", cuts, p))
+          }else{
+            colors <- pal(mids)
+            labels <- labFormat(type = "quantile", cuts, p)
+          }
+        }
+        else if (type == "factor") {
+          v <- sort(unique(na.omit(values)))
+          colors <- pal(v)
+          labels <- labFormat(type = "factor", v)
+          if (decreasing == TRUE){
+            colors <- pal(rev(v))
+            labels <- rev(labFormat(type = "factor", v))
+          }else{
+            colors <- pal(v)
+            labels <- labFormat(type = "factor", v)
+          }
+        }
+        else stop("Palette function not supported")
+        if (!any(is.na(values))) 
+          na.color <- NULL
+      }
+      else {
+        if (length(colors) != length(labels)) 
+          stop("'colors' and 'labels' must be of the same length")
+      }
+      legend <- list(colors = I(unname(colors)), labels = I(unname(labels)), 
+                     na_color = na.color, na_label = na.label, opacity = opacity, 
+                     position = position, type = type, title = title, extra = extra, 
+                     layerId = layerId, className = className, group = group)
+      invokeMethod(map, data, "addLegend", legend)
+    }
+    
+    
     output$map_distribution <- renderLeaflet({
       
       if (is.null(rv$datosOriginal)| is.null(rv$map))
@@ -2307,9 +2412,10 @@ shinyApp(
             textsize = "15px", direction = "auto"
           )
         ) %>%
-        addLegend(
+        addLegend_decreasing(
           pal = pal, values = ~map@data[, input$columncasesindata], opacity = 0.7,
-          title = input$columncasesindata, position = "bottomright"
+          title = input$columncasesindata, position = "bottomright", 
+          decreasing = TRUE
         ) %>%
         addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
                                         #"Stamen Watercolor", "Stamen Toner"
@@ -2354,10 +2460,10 @@ shinyApp(
         
         # Create leaflet c("red", "blue")
         l <- leaflet(map) %>% addTiles()
-        pal <- colorFactor(palette = input$color_cluster, domain = map@data[, "label"],
+        pal <- colorFactor(palette = input$color_cluster, domain = map@data[, "hotspot label"],
                            levels = c("hotspot", "non-hotspot"))
-        labels <- sprintf("<strong> %s </strong> <br/>  label : %s ",
-                          map@data[, input$columnidareanamedata] ,  map@data[, "label"]
+        labels <- sprintf("<strong> %s </strong> <br/> hotspot label : %s ",
+                          map@data[, input$columnidareanamedata] ,  map@data[, "hotspot label"]
         ) %>%
           lapply(htmltools::HTML)
         
@@ -2371,7 +2477,7 @@ shinyApp(
           
           addPolygons(
             color = "grey", weight = 1,
-            fillColor = ~ pal(map@data[, "label"]), fillOpacity = 0.7,
+            fillColor = ~ pal(map@data[, "hotspot label"]), fillOpacity = 0.7,
             highlightOptions = highlightOptions(weight = 4),
             label = labels,
             labelOptions = labelOptions(
@@ -2383,8 +2489,8 @@ shinyApp(
             )
           ) %>%
           addLegend(
-            pal = pal, values = ~map@data[, "label"] , opacity = 0.7,
-            title = "label", position = "bottomright"
+            pal = pal, values = ~map@data[, "hotspot label"] , opacity = 0.7,
+            title = "hotspot label", position = "bottomright"
           )%>%
           addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
                                           #"Stamen Watercolor", "Stamen Toner"
@@ -2473,9 +2579,10 @@ shinyApp(
             textsize = "15px", direction = "auto"
           )
         ) %>%
-        addLegend(
+        addLegend_decreasing(
           pal = pal, values = ~map@data[, input$risk_factor_filter], opacity = 0.7,
-          title = input$risk_factor_filter, position = "bottomright"
+          title = input$risk_factor_filter, position = "bottomright",
+          decreasing = TRUE
         ) %>%
         addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
                                         #"Stamen Watercolor", "Stamen Toner"
