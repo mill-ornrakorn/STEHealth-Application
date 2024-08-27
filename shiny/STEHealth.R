@@ -2446,7 +2446,7 @@ shinyApp(
               "font-weight" = "normal",
               padding = "3px 8px"
             ),
-            textsize = "15px", direction = "auto"
+            textsize = "16px", direction = "auto"
           )
         ) %>%
         addLegend_decreasing(
@@ -2567,7 +2567,7 @@ shinyApp(
               "font-weight" = "normal",
               padding = "3px 8px"
             ),
-            textsize = "15px", direction = "auto"
+            textsize = "16px", direction = "auto"
           )
         ) %>%
         addLegend_decreasing(
@@ -2639,7 +2639,7 @@ shinyApp(
                 "font-weight" = "normal",
                 padding = "3px 8px"
               ),
-              textsize = "15px", direction = "auto"
+              textsize = "16px", direction = "auto"
             )
           ) %>%
           addLegend(
@@ -2664,6 +2664,93 @@ shinyApp(
     # ==================================== risk_fac ==================================== 
     
     
+    # output$map_risk_fac <- renderLeaflet({
+    #   
+    #   if (is.null(rv$datosOriginal) | is.null(rv$map))
+    #     return(NULL)
+    #   
+    #   print("Plot: ...map risk factor...")
+    #   
+    #   map <- rv$map
+    #   
+    #   association_wsf_df <- rv$association_wsf_df 
+    #   
+    #   datafiltered <- association_wsf_df
+    #   ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareainmap])
+    #   map@data <- datafiltered[ordercounties, ]
+    #   
+    #   
+    #   if (input$risk_factor_filter == paste(input$columncov1indata,"_RR", sep="")){
+    #     sig_col <- map@data[, paste(input$columncov1indata,"_significance", sep="")]
+    #     
+    #   } else if (input$risk_factor_filter == paste(input$columncov2indata,"_RR", sep="")) {
+    #     sig_col <- map@data[, paste(input$columncov2indata,"_significance", sep="")]
+    #     
+    #   } else if (input$risk_factor_filter == paste(input$columncov3indata,"_RR", sep="")) {
+    #     sig_col <- map@data[, paste(input$columncov3indata,"_significance", sep="")]
+    #     
+    #   } else if (input$risk_factor_filter == paste(input$columncov4indata,"_RR", sep="")) {
+    #     sig_col <- map@data[, paste(input$columncov4indata,"_significance", sep="")]
+    #     
+    #   } else if (input$risk_factor_filter == paste(input$columncov5indata,"_RR", sep="")) {
+    #     sig_col <- map@data[, paste(input$columncov5indata,"_significance", sep="")]
+    #     
+    #   } else if (input$risk_factor_filter == paste(input$columncov6indata,"_RR", sep="")) {
+    #     sig_col <- map@data[, paste(input$columncov6indata,"_significance", sep="")]
+    #     
+    #   } else if (input$risk_factor_filter == paste(input$columncov7indata,"_RR",sep="")) {
+    #     sig_col <- map@data[, paste(input$columncov7indata,"_significance", sep="")]
+    #     
+    #   } 
+    #   
+    #   
+    #   # Create leaflet
+    #   l <- leaflet(map) %>% addTiles()
+    #   pal <- colorNumeric(palette = input$color_asso, domain = map@data[, input$risk_factor_filter])
+    #   labels <- sprintf("<strong> %s </strong> <br/>  %s : %s <br/> Significance: %s",
+    #                     map@data[, input$columnidareainmap] , input$risk_factor_filter, map@data[, input$risk_factor_filter] , sig_col #paste(input$columncov1indata,"_significance", sep="")
+    #   ) %>%
+    #     lapply(htmltools::HTML)
+    #   
+    #   l %>%
+    #     addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
+    #     addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
+    #     addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
+    #     addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
+    #     #addProviderTiles(providers$Stamen.Watercolor, group = "Stamen Watercolor") %>%
+    #     #addProviderTiles(providers$Stamen.Toner, group = "Stamen Toner") %>%
+    #     
+    #     addPolygons(
+    #       color = "grey", weight = 1,
+    #       fillColor = ~ pal(map@data[, input$risk_factor_filter]), fillOpacity = 0.7,
+    #       highlightOptions = highlightOptions(weight = 4),
+    #       label = labels,
+    #       labelOptions = labelOptions(
+    #         style = list(
+    #           "font-weight" = "normal",
+    #           padding = "3px 8px"
+    #         ),
+    #         textsize = "15px", direction = "auto"
+    #       )
+    #     ) %>%
+    #     addLegend_decreasing(
+    #       pal = pal, values = ~map@data[, input$risk_factor_filter], opacity = 0.7,
+    #       title = input$risk_factor_filter, position = "bottomright",
+    #       decreasing = TRUE
+    #     ) %>%
+    #     addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
+    #                                     #"Stamen Watercolor", "Stamen Toner"
+    #     ),
+    #     position = c("topleft"),
+    #     options = layersControlOptions(collapsed =  TRUE)
+    #     )%>%
+    #     addFullscreenControl()
+    #   
+    #   
+    # })
+    # 
+    
+    
     output$map_risk_fac <- renderLeaflet({
       
       if (is.null(rv$datosOriginal) | is.null(rv$map))
@@ -2672,13 +2759,12 @@ shinyApp(
       print("Plot: ...map risk factor...")
       
       map <- rv$map
-      
       association_wsf_df <- rv$association_wsf_df 
-      
       datafiltered <- association_wsf_df
       ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareainmap])
       map@data <- datafiltered[ordercounties, ]
       
+      sig_col <- NULL
       
       if (input$risk_factor_filter == paste(input$columncov1indata,"_RR", sep="")){
         sig_col <- map@data[, paste(input$columncov1indata,"_significance", sep="")]
@@ -2700,15 +2786,13 @@ shinyApp(
         
       } else if (input$risk_factor_filter == paste(input$columncov7indata,"_RR",sep="")) {
         sig_col <- map@data[, paste(input$columncov7indata,"_significance", sep="")]
-        
       } 
-      
       
       # Create leaflet
       l <- leaflet(map) %>% addTiles()
       pal <- colorNumeric(palette = input$color_asso, domain = map@data[, input$risk_factor_filter])
       labels <- sprintf("<strong> %s </strong> <br/>  %s : %s <br/> Significance: %s",
-                        map@data[, input$columnidareainmap] , input$risk_factor_filter, map@data[, input$risk_factor_filter] , sig_col #paste(input$columncov1indata,"_significance", sep="")
+                        map@data[, input$columnidareainmap] , input$risk_factor_filter, map@data[, input$risk_factor_filter] , sig_col
       ) %>%
         lapply(htmltools::HTML)
       
@@ -2717,20 +2801,20 @@ shinyApp(
         addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
         addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
         addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
-        #addProviderTiles(providers$Stamen.Watercolor, group = "Stamen Watercolor") %>%
-        #addProviderTiles(providers$Stamen.Toner, group = "Stamen Toner") %>%
         
         addPolygons(
-          color = "grey", weight = 1,
-          fillColor = ~ pal(map@data[, input$risk_factor_filter]), fillOpacity = 0.7,
-          highlightOptions = highlightOptions(weight = 4),
+          color = ifelse(sig_col == "significant", "black", "grey"), 
+          weight = ifelse(sig_col == "significant", 5, 1), 
+          fillColor = ~ pal(map@data[, input$risk_factor_filter]), 
+          fillOpacity = 0.7,
           label = labels,
           labelOptions = labelOptions(
             style = list(
-              "font-weight" = "normal",
-              padding = "3px 8px"
+              "font-weight" = "normal", # ข้อความจะเป็นตัวหนา
+              padding = "5px 10px" # ขนาด padding ใหญ่ขึ้น
             ),
-            textsize = "15px", direction = "auto"
+            textsize = "16px", # ขนาดตัวอักษรใหญ่ขึ้น
+            direction = "auto"
           )
         ) %>%
         addLegend_decreasing(
@@ -2738,16 +2822,13 @@ shinyApp(
           title = input$risk_factor_filter, position = "bottomright",
           decreasing = TRUE
         ) %>%
-        addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
-                                        #"Stamen Watercolor", "Stamen Toner"
-        ),
-        position = c("topleft"),
-        options = layersControlOptions(collapsed =  TRUE)
+        addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"),
+                         position = c("topleft"),
+                         options = layersControlOptions(collapsed =  TRUE)
         )%>%
         addFullscreenControl()
-      
-      
     })
+    
     
     
     # ==================================== ปุุ่ม  downloadData ==================================== 
