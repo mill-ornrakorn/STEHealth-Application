@@ -499,16 +499,45 @@ body <- dashboardBody(
                     
                     
                     ,
-                    mainPanel(uiOutput("status_map_dis"),
-                              #leafletOutput("map_distribution", height = "70vh")
-                              div(class = 'error',
-                              verbatimTextOutput("messageCheckData_1")
-                                ),
-                              addSpinner(
-                                leafletOutput("map_distribution", height = "75vh"),
-                                spin = "bounce", color = "#735DFB")
-                              
+                    # mainPanel(uiOutput("status_map_dis"),
+                    #           #leafletOutput("map_distribution", height = "70vh")
+                    #           div(class = 'error',
+                    #           verbatimTextOutput("messageCheckData_1")
+                    #             ),
+                    #           addSpinner(
+                    #             leafletOutput("map_distribution", height = "75vh"),
+                    #             spin = "bounce", color = "#735DFB")
+                    #           
+                    # )
+                    
+                    mainPanel(
+                      uiOutput("status_map_dis"),
+                      div(class = 'error',
+                          verbatimTextOutput("messageCheckData_1")
+                      ),
+                      fluidRow(
+                        column(
+                          6,  # 50% of the width
+                          addSpinner(
+                            leafletOutput("map_distribution", height = "37vh"),  # แผนที่แรก
+                            spin = "bounce", color = "#735DFB"
+                          )
+                        ),
+                        column(
+                          6,  # 50% of the width
+                          selectInput("divide_by", "Divide by:", 
+                                      choices = list("Population" = "columnpopindata", 
+                                                     "Expected Value" = "expected_value"), 
+                                      selected = "columnpopindata"),
+                          addSpinner(
+                            leafletOutput("map_distribution_2", height = "37vh"),  # แผนที่ที่สอง
+                            spin = "bounce", color = "#735DFB"
+                          )
+                        )
+                      )
                     )
+                    
+                    
                   ))
               
       ),
@@ -1325,7 +1354,12 @@ shinyApp(
         
         updateSelectInput(session, "time_point_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
         
+        
       }
+      
+      
+      
+      
       
     })
     
@@ -1373,26 +1407,26 @@ shinyApp(
           if(input$columnexpvalueindata != "" ){
             print("Check: ...this csv have expected value...")
             data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
-          
+
           }
-          
+
         }else if (input$Expected_Value_from_csv == "no" ){
           print("Check: ...this csv doesn't have expected value...")
-          
+
           # คิด (sum(case) / (pop))*population
           # sum case กับ pop ทั้งหมด เอามาหารกัน แล้วคูณด้วย pop ของจังหวัด,ปี นั้นๆ
           sum_case <- sum(data[,input$columncasesindata])
           sum_pop <- sum(data[,input$columnpopindata])
-          
+
           divide_case_pop <- sum_case / sum_pop
-          
-          
+
+
           expected_value <- data[,input$columnpopindata] * divide_case_pop
-          
-          
+
+
           # Add a Column to a Data Frame
           data['expected_value'] <- expected_value
-          
+
         }
         
         
@@ -2255,6 +2289,9 @@ shinyApp(
     
     # ==================================== map_distribution ==================================== 
     
+    
+    
+    
     # ทำไม legend และค่าสีในแมพ เรียงจากมากไปน้อย
     # จาก https://stackoverflow.com/questions/40276569/reverse-order-in-r-leaflet-continuous-legend
     addLegend_decreasing <- function (map, position = c("topright", "bottomright", "bottomleft","topleft"),
@@ -2364,7 +2401,7 @@ shinyApp(
       if (is.null(rv$datosOriginal)| is.null(rv$map))
         return(NULL)
       
-      print("Plot: ...map distribution...")
+      print("Plot: ...map distribution.1..")
       
       map <- rv$map
       data <- rv$datosOriginal
@@ -2428,6 +2465,123 @@ shinyApp(
       
       
     })
+    
+    
+    
+    output$map_distribution_2 <- renderLeaflet({
+      
+      if (is.null(rv$datosOriginal) | is.null(rv$map))
+        return(NULL)
+      
+      print("Plot: ...map distribution.2..")
+    
+      
+      map <- rv$map
+      data <- rv$datosOriginal
+      
+      
+      if(input$Expected_Value_from_csv == "yes" ){
+        if(input$columnexpvalueindata != "" ){
+          print("Check: ...this csv have expected value...")
+          data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
+          
+        }
+        
+      }else if (input$Expected_Value_from_csv == "no" ){
+        print("Check: ...this csv doesn't have expected value...")
+        
+        # คิด (sum(case) / (pop))*population
+        # sum case กับ pop ทั้งหมด เอามาหารกัน แล้วคูณด้วย pop ของจังหวัด,ปี นั้นๆ
+        sum_case <- sum(data[,input$columncasesindata])
+        sum_pop <- sum(data[,input$columnpopindata])
+        
+        divide_case_pop <- sum_case / sum_pop
+        
+        
+        expected_value <- data[,input$columnpopindata] * divide_case_pop
+        
+        
+        # Add a Column to a Data Frame
+        data['expected_value'] <- expected_value
+        
+      }
+      
+      
+      data <- data %>%
+        filter(
+          data[,input$columndateindata] %in% input$time_point_filter
+        )
+      
+      # คำนวณค่า divisor ตามตัวเลือกของผู้ใช้และสำหรับแต่ละแถว
+      if (input$divide_by == "columnpopindata") {
+        data$adjusted_cases <- data[, input$columncasesindata] / data[, input$columnpopindata]
+        
+        print("===================== ตัวหาร columnpopindata =====================")
+        print(data[, input$columnpopindata])
+        
+        
+      } else if (input$divide_by == "expected_value") {
+        data$adjusted_cases <- data[, input$columncasesindata] / data[, 'expected_value']
+        
+        print("===================== ตัวหาร expected_value =====================")
+        print(data[, 'expected_value'])
+      }
+      
+      datafiltered <- data
+      ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
+      map@data <- datafiltered[ordercounties, ]
+      
+    
+      
+      
+      print("================ datafiltered$adjusted_cases ==========================")
+      print(datafiltered$adjusted_cases)
+      
+      
+      
+      print("================ datafiltered$adjusted_cases ==========================")
+      print(datafiltered$adjusted_cases)
+      
+      
+      # สร้างแผนที่ leaflet
+      l <- leaflet(map) %>% addTiles()
+      pal <- colorNumeric(palette = input$color, domain = map@data$adjusted_cases)
+      labels <- sprintf("<strong> %s </strong> <br/>  Adjusted Cases : %s ",
+                        map@data[, input$columnidareanamedata], 
+                        format(round(map@data$adjusted_cases, 5), scientific = FALSE)
+      ) %>%
+        lapply(htmltools::HTML)
+      
+      l %>%
+        addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
+        addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
+        addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
+        addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
+        addPolygons(
+          color = "grey", weight = 1,
+          fillColor = ~ pal(map@data$adjusted_cases), fillOpacity = 0.7,
+          highlightOptions = highlightOptions(weight = 4),
+          label = labels,
+          labelOptions = labelOptions(
+            style = list(
+              "font-weight" = "normal",
+              padding = "3px 8px"
+            ),
+            textsize = "15px", direction = "auto"
+          )
+        ) %>%
+        addLegend_decreasing(
+          pal = pal, values = ~map@data$adjusted_cases, opacity = 0.7,
+          title = "Adjusted Cases", position = "bottomright", 
+          decreasing = TRUE
+        ) %>%
+        addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"),
+                         position = c("topleft"),
+                         options = layersControlOptions(collapsed =  TRUE)
+        ) %>%
+        addFullscreenControl()
+    })
+    
     
     
     # ==================================== cluster_dec ver ลองplot ==================================== 
