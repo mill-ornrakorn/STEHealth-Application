@@ -76,7 +76,8 @@ header$children[[2]]$children <- tags$img(src='STEHealth_logo1.png',width='180',
 
 # ==================================== menuItem ==================================== 
 
-sidebar <- dashboardSidebar( 
+sidebar <- dashboardSidebar(
+  collapsed = TRUE,
   sidebarMenu(id="tabs", 
               menuItem(HTML("&ensp;Home"), tabName = "Home", icon = icon("house")),
               menuItem(HTML("&ensp;Upload Data"), tabName = "Upload_data", icon = icon("folder-open")),
@@ -519,7 +520,7 @@ body <- dashboardBody(
                         column(
                           6,  # 50% of the width
                           addSpinner(
-                            leafletOutput("map_distribution", height = "37vh"),  # แผนที่แรก
+                            leafletOutput("map_distribution", height = "75vh"),  # แผนที่แรก
                             spin = "bounce", color = "#735DFB"
                           )
                         ),
@@ -530,7 +531,7 @@ body <- dashboardBody(
                                                      "Expected Value" = "expected_value"), 
                                       selected = "columnpopindata"),
                           addSpinner(
-                            leafletOutput("map_distribution_2", height = "37vh"),  # แผนที่ที่สอง
+                            leafletOutput("map_distribution_2", height = "75vh"),  # แผนที่ที่สอง
                             spin = "bounce", color = "#735DFB"
                           )
                         )
