@@ -18,7 +18,44 @@ The application consists of eight pages:
 
 **2.Upload data page**
 
-&emsp;&emsp;The "upload data" page allows users to upload data to be analyzed. This page consists of two sections: Input Data and Preview Input Data. The input data section includes sections to upload a shapefile and a csv file (health outcome) then the user has to select the columns from the dropdown menus for further analysis. The preview input data section can preview input data where users uploaded all data. Once the data has been successfully uploaded, users can view the analysis results on the "spatiotemporal epidemiological analysis" page.
+&emsp;&emsp;The "upload data" page allows users to upload data to be analyzed. This page consists of two sections: 
+
+**2.1 Input Data**  
+&emsp;&emsp; The input data section includes sections to upload a shapefile and a csv file (health outcome) then the user has to select the columns from the dropdown menus for further analysis. 
+
+ &emsp;&emsp; **> Shapefile**
+  
+  &emsp;&emsp; Thai geographic coordinates, Thai provincial boundaries data (shapefile) will be obtained from the GEO package file in the Global Administrative Region Database (GADM). Shapefile upload allows users to upload all 4 files at the same time only: 1. shp 2. dbf 3. shx and 4. prj. Then, the user has to select the area id in the dropdown which must match the area name in the csv file. 
+
+&emsp;&emsp;**> CSV file**
+
+&emsp;&emsp;The user can only upload one csv file, which must contain: 
+
+&emsp;&emsp;1. area id (a number starting at 1, used to identify provinces). 
+
+&emsp;&emsp;2. area name (name of province) 
+
+&emsp;&emsp;3. cases (outcomes) 
+
+&emsp;&emsp;4. time point
+
+&emsp;&emsp;5. population
+
+
+&emsp;&emsp;&emsp;&emsp; **- Select Expected Value (Optional)**
+
+&emsp;&emsp;&emsp;&emsp; The expected value is number of outcomes in the provided area and period which may vary due to the types of diseases.
+
+&emsp;&emsp;&emsp;&emsp; If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value. The expected value will be calculated using the following formula.
+      
+  $$\text{Expected Value} = \frac{\sum(\text{cases})}{\sum(\text{population})} \times \text{population}$$
+      
+&emsp;&emsp;&emsp;&emsp; If the CSV file has an expected value column, the user can choose the expected value column using a dropdown, and this value will be used in the calculation.
+
+
+**2.2 Preview Input Data**
+
+&emsp;&emsp; The preview input data section can preview input data where users uploaded all data. Once the data has been successfully uploaded, users can view the analysis results on the "spatiotemporal epidemiological analysis" page.
 
 **3.Map Distribution**
 

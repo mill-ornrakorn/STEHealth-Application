@@ -323,7 +323,8 @@ body <- dashboardBody(
                   
                   conditionalPanel(condition = "input.Expected_Value_from_csv == 'no'",
                                    HTML("<font color= \"#735DFB\"><strong>Note that: </strong></font>
-                                        If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value."),
+                                        If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value. For details on how the expected value is calculated, please refer to the"),
+                                   tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point"),
                                   
                                    
                   ),
