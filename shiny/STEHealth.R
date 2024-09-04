@@ -102,8 +102,15 @@ body <- dashboardBody(
     tags$meta(charset="utf-8"),
     tags$link(rel="stylesheet" ,href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"), # UNICONS
     tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),   # import css file
-    tags$script(src="js/index.js") # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่น ๆ
-    
+    tags$script(src="js/index.js"), # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่นม ๆ
+    tags$style(HTML("
+      #divide_by {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 9999;
+      }
+    "))
     
   ),
   
@@ -513,28 +520,40 @@ body <- dashboardBody(
                     # )
                     
                     mainPanel(
-                      uiOutput("status_map_dis"),
+                      # uiOutput("status_map_dis"),
                       div(class = 'error',
                           verbatimTextOutput("messageCheckData_1")
                       ),
                       fluidRow(
                         column(
                           6,  # 50% of the width
-                          addSpinner(
-                            leafletOutput("map_distribution", height = "75vh"),  # แผนที่แรก
-                            spin = "bounce", color = "#735DFB"
+                          HTML("<h4 style = 'text-align: center;'>Y Value Distribution Map</h4>"),
+                          div(
+                            class = "box-white",
+                            addSpinner(
+                              leafletOutput("map_distribution", height = "70vh"),  # แผนที่แรก
+                              spin = "bounce", color = "#735DFB"
+                            )
                           )
                         ),
                         column(
-                          6,  # 50% of the width
-                          selectInput("divide_by", "Divide by:", 
-                                      choices = list("Population" = "columnpopindata", 
-                                                     "Expected Value" = "expected_value"), 
-                                      selected = "columnpopindata"),
-                          addSpinner(
-                            leafletOutput("map_distribution_2", height = "75vh"),  # แผนที่ที่สอง
-                            spin = "bounce", color = "#735DFB"
-                          )
+                          6,  
+                          HTML("<h4 style = 'text-align: center;'>Normalized Y Value Distribution Map</h4>"),
+                          div(
+                            class = "box-white",
+                            absolutePanel(
+                              top = 10, right = 10, width = 200, draggable = TRUE,
+                              class = "bg-white",
+                              selectInput("divide_by", "Divide by:",
+                                          choices = list("Population" = "columnpopindata",
+                                                         "Expected Value" = "expected_value"), 
+                                          selected = "columnpopindata")
+                            ),
+                            addSpinner(
+                              leafletOutput("map_distribution_2", height = "70vh"),  # แผนที่ที่สอง
+                              spin = "bounce", color = "#735DFB"
+                            )
+                        )
                         )
                       )
                     )

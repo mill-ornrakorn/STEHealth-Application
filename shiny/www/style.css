@@ -506,6 +506,21 @@ label > input[type='radio']:checked + *::before {
   
 }
 
+.bg-white{
+  background-color: #FFFFFF; /* ตั้งค่าสีพื้นหลังเป็นสีขาว */
+  border: 1px solid #FFFFFF; /* ขอบกล่อง */
+  box-shadow: 1px 3px 18px -2px rgba(115, 93, 251, 0.2);
+  border-radius: 10px; /* ขอบกลม */
+  padding-left: 10px; 
+  padding-right: 10px; 
+  padding-top: 10px; 
+  padding-bottom: -8px;
+  z-index: 9999; /* ทำให้อยู่ด้านหน้าสุด */
+  position: relative; /* จำเป็นสำหรับ z-index ให้ทำงาน */
+  
+}
+
+
 /*==================== box ====================*/
 .box-white {
   background: #FFFFFF; 
@@ -527,6 +542,8 @@ label > input[type='radio']:checked + *::before {
   max-width: 400px;
   height: 25vh;
    */
+
+   position: relative; /* สำคัญในการใช้ตำแหน่งแบบสัมบูรณ์ภายใน */
   
 }
 
