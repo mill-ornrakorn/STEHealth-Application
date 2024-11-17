@@ -339,7 +339,10 @@ body <- dashboardBody(
                   
                   HTML("</br>
                        <h4><strong>2.2 Select Covariates</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
-                  HTML("Put covariates in order from 1 to 7, with no blanks."),
+                  HTML("Please arrange the covariates in order from 1 to 7, 
+                       ensuring that all positions are filled consecutively without any skipped numbers. 
+                       This sequential ordering is essential for the model to correctly interpret each covariate’s priority 
+                       or influence in the analysis."),
                   
                   helpText("Select column(s):"),
                   fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
@@ -358,15 +361,19 @@ body <- dashboardBody(
                            #column(6, selectInput("columncov8indata", label = "covariate 8", choices = c(""), selected = ""))
                   ),
                   
-                  HTML("<font color= \"#735DFB\"><strong>Note that: </strong></font>
-                                             <ul style = 'text-align: justify;'>
-                                              <li>If the user select 1 covariate, the analysis is <strong>univariable</strong>.</li> 
-                                              <li>If the user selects covariates more than 1, all covariates will be calculated at the same time, which is a 
-                                                <strong>multivariable</strong> analysis. However, the results will be displayed one by one on the 'Spatiotemporal Epidemiological Analysis' page ('Association with Risk Factors' tap).</li>  
-                                              
-                                             </ul>
-                                                
-                                            </br>"),
+                  # HTML("<font color= \"#735DFB\"><strong>Note that: </strong></font>
+                  #                            <ul style = 'text-align: justify;'>
+                  #                             <li>If the user select 1 covariate, the analysis is <strong>univariable</strong>.</li> 
+                  #                             <li>If the user selects covariates more than 1, all covariates will be calculated at the same time, which is a 
+                  #                               <strong>multivariable</strong> analysis. However, the results will be displayed one by one on the 'Spatiotemporal Epidemiological Analysis' page ('Association with Risk Factors' tap).</li>  
+                  #                             
+                  #                            </ul>
+                  #                               
+                  #                           </br>"),
+                  
+                  
+                  HTML("</br>"),
+                  HTML("</br>"),
                   
                   
                   fluidRow(column(4, offset=3, actionButton("Preview_Map_Distribution",
@@ -375,6 +382,15 @@ body <- dashboardBody(
                                                             class = 'btn-primary',
                                                             style='color: #FFFFFF;'
                   ))),
+                  
+                  HTML("</br>"),
+                  
+                  
+                  HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
+                                             Please ensure that the uploaded shapefile matches the data file, with consistent area names or codes to align the spatial map with the associated data. Mismatched files may lead to errors in visualization and analysis
+
+                                            </br>
+                       </br>")
                   
                 
                   
@@ -440,9 +456,10 @@ body <- dashboardBody(
                                         
                                             <h4>Map Distribution</h4>
                                             <p>
-                                              The Map Distribution displays an interactive distribution map of the user uploaded shapefile 
-                                              and csv file on the Upload data page using <strong>case column</strong> to plot. 
-                                              Users can visualize and select filters including time point and color scheme.
+                                              The Map Distribution tab provides an interactive map displaying the spatial distribution of cases based on the shapefile 
+                                              and case data uploaded on the Upload Data page. 
+                                              This map uses the designated <strong>case column</strong> to plot the data, allowing users to visualize case distributions across regions. 
+                                              Users can customize the display by selecting filters such as time points and color schemes to enhance data interpretation.
                                             </p>
                                            
                                           </div>
@@ -586,8 +603,10 @@ body <- dashboardBody(
                                        class = "box-white",
                                        tags$img(align='left',width='52px',height='52px',src='cluster.png',style='margin-top: 10px; margin-right: 10px'),
                                        tags$h4("Cluster Detection"),
-                                       HTML("The Cluster detection Tab displays a cluster map of the data, which consist of <strong>hotspot</strong>, and <strong>non-hotspot</strong> areas. 
-                                                    Users can visualize and select filters including time point and color scheme. For details of the model, please refer to the"),
+                                       HTML("The Cluster Detection tab presents a cluster map of the data, 
+                                            highlighting <strong>hotspots</strong> and <strong>non-hotspots</strong>. Users can adjust the visualization by selecting filters such as 
+                                            time points and color schemes to better interpret clustering patterns
+                                            For further information on the underlying models, please refer to the "),
                                        tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point"),
                                        br(),br(),
                                        actionButton("interpret_cluster", class="btn btn-outline-primary2", "Examples of Interpretation")
@@ -719,12 +738,10 @@ body <- dashboardBody(
                                             <h4>Association with Risk Factors</h4>
                                             
                                              
-                                             This tab displays an association between risk factors and case outcomes. 
-                                             From the analysis, this map indicates the <strong>relative risk (RR) value</strong> 
-                                            and <strong>significance</strong> of each risk factor in each area. 
-                                             Users can visualize by using filters including each risk factor and color scheme. 
-                                             
-                                             For details of the model and value, please refer to the
+                                             This tab displays the association between risk factors and case outcomes, 
+                                             showing the relative risk (RR) and significance of each risk factor by area. 
+                                             Users can adjust the view using filters for specific risk factors and color schemes. 
+                                             For more information on the model and interpretation of values, please refer to the 
                                                   "),
                                                   
                                                   tags$a("Help page.", onclick="customHref('Help')",  class = "cursor_point"),
@@ -749,7 +766,10 @@ body <- dashboardBody(
                                                   class = "box-white",
                                                   HTML("<h4>Export Result</h4>
                                             <p>
-                                            The data obtained from the association with risk factors consists of area name, each risk factor calculated as a percentage increase, lower bound, upper bound, and significance                                              </p>
+                                            This presents detailed data from the risk factor association analysis, including area names, 
+                                            the calculated percentage increase for each risk factor, along with lower and upper bounds, 
+                                            and the significance status of each factor. 
+                                            Users can choose to display additional details such as the lower bound, upper bound, and significance indicators.                                           </p>
                                                   
                                                   "),
                                                   
