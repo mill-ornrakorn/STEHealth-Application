@@ -1,7 +1,7 @@
 
 # ================================================================
 
-# @6-9-23
+# @20-Jan-25
 
 # ================================================================
 
@@ -739,7 +739,7 @@ body <- dashboardBody(
                                             
                                              
                                              This tab displays the association between risk factors and case outcomes, 
-                                             showing the relative risk (RR) and significance of each risk factor by area. 
+                                             showing the <strong>relative risk (RR)</strong> and significance of each risk factor by area. 
                                              Users can adjust the view using filters for specific risk factors and color schemes. 
                                              For more information on the model and interpretation of values, please refer to the 
                                                   "),
@@ -1164,9 +1164,10 @@ shinyApp(
           HTML("
               <div class = 'modal__body'>
                 <span class = 'modal__boldbodytitle'>Type 1 </span>
-                <span class = 'modal__bodytitle'>If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br></span>
-                &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
-     the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
+                <span class = 'modal__bodytitle'>If the significance is <strong>significant</strong> and RR value is <strong> > 1</strong>: </br></span>
+                &emsp;       In Lamphun, the relative risk (RR) of suicide associated with expenditure is 1.0016. This suggests that for every 1 baht (THB) increase in expenditure, 
+                the suicide risk increases by 0.16%. 
+                Although the increase in risk per unit is minimal, cumulative increases in expenditure could potentially contribute to a higher overall risk of suicide.
               </div>
               <hr>"),
           
@@ -1177,9 +1178,10 @@ shinyApp(
           HTML("
               <div class = 'modal__body'>
                 <span class = 'modal__boldbodytitle'>Type 2 </span>
-                <span class = 'modal__bodytitle'>If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br></span>
-                &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
-     the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
+                <span class = 'modal__bodytitle'>If the significance is <strong>significant</strong> and RR value is <strong> < 1</strong>: </br></span>
+                &emsp;In Samut Prakan, the relative risk (RR) of suicide associated with expenditure is 0.9985. This indicates that for every 1 baht (THB) increase in expenditure, 
+                the suicide risk decreases by 0.15%. While the reduction in risk per unit is minimal, 
+                cumulative increases in expenditure may lead to a more noticeable overall reduction in suicide risk.
               </div>
               <hr>"),
           
