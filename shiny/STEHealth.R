@@ -547,6 +547,7 @@ body <- dashboardBody(
                           HTML("<h4 style = 'text-align: center;'>Y Value Distribution Map</h4>"),
                           div(
                             class = "box-white",
+                            uiOutput("mapDisError"),
                             addSpinner(
                               leafletOutput("map_distribution", height = "70vh"),  # แผนที่แรก
                               spin = "bounce", color = "#735DFB"
@@ -566,6 +567,7 @@ body <- dashboardBody(
                                                          "Expected Value" = "expected_value"), 
                                           selected = "columnpopindata")
                             ),
+                            uiOutput("mapDisError_2"),
                             addSpinner(
                               leafletOutput("map_distribution_2", height = "70vh"),  # แผนที่ที่สอง
                               spin = "bounce", color = "#735DFB"
@@ -703,6 +705,7 @@ body <- dashboardBody(
                             )),
                           
                           mainPanel(
+                            uiOutput("clusterError"),
                             uiOutput("status_cluster"),
                             div(class = 'error',
                             verbatimTextOutput("messageCheckData_2")
@@ -839,6 +842,7 @@ body <- dashboardBody(
                           ),
                           
                           mainPanel(
+                            uiOutput("assocError"),
                             uiOutput("status_risk_fac"),
                             div(class = 'error',
                             verbatimTextOutput("messageCheckData_3")
@@ -1111,6 +1115,42 @@ shinyApp(
       
     })
     
+    output$mapDisError <- renderUI({
+      if (!is.null(rv$errorMessageMapDis)) {
+        tags$div(
+          style = "color: red; font-weight: bold; margin-top: 10px;",
+          HTML(rv$errorMessageMapDis)
+        )
+      }
+    })
+    
+    output$mapDisError_2 <- renderUI({
+      if (!is.null(rv$errorMessageMapDis_2)) {
+        tags$div(
+          style = "color: red; font-weight: bold; margin-top: 10px;",
+          HTML(rv$errorMessageMapDis_2)
+        )
+      }
+    })
+    
+    output$clusterError <- renderUI({
+      if (!is.null(rv$errorMessageCluster)) {
+        tags$div(
+          style = "color: red; font-weight: bold; margin-top: 10px;",
+          HTML(rv$errorMessageCluster)
+        )
+      }
+    })
+    
+    output$assocError <- renderUI({
+      if (!is.null(rv$errorMessageAssoc)) {
+        tags$div(
+          style = "color: red; font-weight: bold; margin-top: 10px;",
+          HTML(rv$errorMessageAssoc)
+        )
+      }
+    })
+    
     
     # ========================= Modal สำหรับตัวอย่างแปลผล ================================ 
     observeEvent(input$interpret_cluster, {
@@ -1285,7 +1325,12 @@ shinyApp(
       lastselectstage=NULL,
       usedcovs=NULL,
       usedarealcovs=NULL,
-      selectstage='stageuploaddata')
+      selectstage='stageuploaddata',
+      errorMessageMapDis = NULL,
+      errorMessageMapDis_2 = NULL,
+      errorMessageCluster = NULL,  
+      errorMessageAssoc = NULL     
+      )
     
     
     
@@ -1429,6 +1474,9 @@ shinyApp(
         
         
         ######################### คำนวณ cluster ###################################
+        tryCatch({
+          rv$errorMessageCluster <- NULL  # ล้างข้อความ Error หากไม่มีปัญหา
+          
         map <- rv$map
         #data <- rv$datosOriginal
         
@@ -1528,7 +1576,7 @@ shinyApp(
         #   f(province_int, model = "iid")
         
         
-        ####################   Cluter   #################### 
+        ####################   Cluster   #################### 
         
         
         
@@ -1565,15 +1613,25 @@ shinyApp(
         
         rv$model_Cluter <- model_Cluter
         
-        
+        }, error = function(e) {
+          rv$errorMessageCluster <- paste(
+            "An error occurred in Cluster Detection. Please check the uploaded data again.",
+            "<br>Error Message: ", e$message,
+            sep = ""
+          )
+        })
         # model2 <- rv$model
+        
+        print("===================== rv$errorMessageCluster =====================")
+        print(rv$errorMessageCluster)
         
         
         ####################################################
         
         
-        
-        ####################   asso   #################### 
+        tryCatch({
+          rv$errorMessageAssoc  <- NULL  # ล้างข้อความ Error หากไม่มีปัญหา
+        ####################  คำนวณ asso   #################### 
         
         x1 <- input$columncov1indata
         x2 <- input$columncov2indata
@@ -2320,6 +2378,18 @@ shinyApp(
           
         } # จบ else
         
+        }, error = function(e) {
+          rv$errorMessageAssoc <- paste(
+            "An error occurred in Association with Risk Factors. Please check the uploaded data again.",
+            "<br>Error Message: ", e$message,
+            sep = ""
+          )
+        })
+        # model2 <- rv$model
+        
+        print("===================== rv$errorMessageAssoc =====================")
+        print(rv$errorMessageAssoc)
+        
         
         
       }
@@ -2440,72 +2510,92 @@ shinyApp(
     
     
     output$map_distribution <- renderLeaflet({
-      
-      if (is.null(rv$datosOriginal)| is.null(rv$map))
-        return(NULL)
-      
-      print("Plot: ...map distribution.1..")
-      
-      map <- rv$map
-      data <- rv$datosOriginal
-      
-      
-      data <- data %>%
-        filter(
-          data[,input$columndateindata] %in% input$time_point_filter
-          
-        )
-      
-      
-      
-      #datafiltered <- data[which(data[,input$columndateindata] == input$time_point_filter), ]
-      datafiltered <- data
-      ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
-      map@data <- datafiltered[ordercounties, ]
-      
-      # Create leaflet
-      l <- leaflet(map) %>% addTiles()
-      pal <- colorNumeric(palette = input$color, domain = map@data[, input$columncasesindata])
-      labels <- sprintf("<strong> %s </strong> <br/>  %s : %s ",
-                        map@data[, input$columnidareanamedata] , input$columncasesindata, map@data[, input$columncasesindata]
-      ) %>%
-        lapply(htmltools::HTML)
-      
-      l %>%
-        addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
-        addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
-        addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
-        addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
-        #addProviderTiles(providers$Stamen.Watercolor, group = "Stamen Watercolor") %>%
-        #addProviderTiles(providers$Stamen.Toner, group = "Stamen Toner") %>%
+      tryCatch({
+        rv$errorMessageMapDis <- NULL
         
-        addPolygons(
-          color = "grey", weight = 1,
-          fillColor = ~ pal(map@data[, input$columncasesindata]), fillOpacity = 0.7,
-          highlightOptions = highlightOptions(weight = 4),
-          label = labels,
-          labelOptions = labelOptions(
-            style = list(
-              "font-weight" = "normal",
-              padding = "3px 8px"
-            ),
-            textsize = "16px", direction = "auto"
+        # ตรวจสอบว่า rv$datosOriginal และ rv$map มีข้อมูลหรือไม่
+        if (is.null(rv$datosOriginal) | is.null(rv$map)) return(NULL)
+        
+        print("Plot: ...map distribution.1..")
+        
+        map <- rv$map
+        data <- rv$datosOriginal
+        
+        # กรองข้อมูลตามตัวกรองที่กำหนด
+        data <- data %>%
+          filter(
+            data[, input$columndateindata] %in% input$time_point_filter
           )
+        
+        # ตรวจสอบว่าหลังกรองข้อมูลแล้ว ยังมีข้อมูลหรือไม่
+        # if (nrow(data) == 0) {
+        #   showNotification("No data available after filtering", type = "error")
+        #   return(NULL)
+        # }
+        
+        datafiltered <- data
+        ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
+        map@data <- datafiltered[ordercounties, ]
+        
+        # ตรวจสอบว่า map@data มีข้อมูลหรือไม่
+        # if (is.null(map@data) || nrow(map@data) == 0 || all(is.na(map@data[, input$columncasesindata]))) {
+        #   showNotification("No valid data for mapping", type = "error")
+        #   return(NULL)
+        # }
+        
+        # สร้าง colorNumeric โดยจัดการ domain ที่ว่างหรือเป็น NA
+        domain_values <- map@data[, input$columncasesindata]
+        if (all(is.na(domain_values))) {
+          domain_values <- c(0, 1) # ค่าเริ่มต้นหาก domain เป็น NA ทั้งหมด
+        }
+        
+        pal <- colorNumeric(palette = input$color, domain = domain_values, na.color = "transparent")
+        
+        labels <- sprintf(
+          "<strong> %s </strong> <br/>  %s : %s ",
+          map@data[, input$columnidareanamedata], input$columncasesindata, map@data[, input$columncasesindata]
         ) %>%
-        addLegend_decreasing(
-          pal = pal, values = ~map@data[, input$columncasesindata], opacity = 0.7,
-          title = input$columncasesindata, position = "bottomright", 
-          decreasing = TRUE
-        ) %>%
-        addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
-                                        #"Stamen Watercolor", "Stamen Toner"
-        ),
-        position = c("topleft"),
-        options = layersControlOptions(collapsed =  TRUE)
-        ) %>%
-        addFullscreenControl()
+          lapply(htmltools::HTML)
+        
+        # สร้างแผนที่
+        leaflet(map) %>%
+          addTiles() %>%
+          addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
+          addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
+          addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
+          addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
+          addPolygons(
+            color = "grey", weight = 1,
+            fillColor = ~pal(map@data[, input$columncasesindata]), fillOpacity = 0.7,
+            highlightOptions = highlightOptions(weight = 4),
+            label = labels,
+            labelOptions = labelOptions(
+              style = list("font-weight" = "normal", padding = "3px 8px"),
+              textsize = "16px", direction = "auto"
+            )
+          ) %>%
+          addLegend_decreasing(
+            pal = pal, values = ~map@data[, input$columncasesindata], opacity = 0.7,
+            title = input$columncasesindata, position = "bottomright",
+            decreasing = TRUE
+          ) %>%
+          addLayersControl(
+            baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"),
+            position = c("topleft"),
+            options = layersControlOptions(collapsed = TRUE)
+          ) %>%
+          addFullscreenControl()
+      }, error = function(e) {
+        rv$errorMessageMapDis <- paste(
+          "An error occurred in Y Value Distribution Map.", 
+          "<br>Please check the uploaded data again.",
+          "<br>Error Message: ", e$message,
+          sep = ""
+        )
+      })
       
-      
+      print("===================== rv$errorMessageMapDis =====================")
+      print(rv$errorMessageMapDis)
       
     })
     
@@ -2513,89 +2603,98 @@ shinyApp(
     
     output$map_distribution_2 <- renderLeaflet({
       
-      if (is.null(rv$datosOriginal) | is.null(rv$map))
-        return(NULL)
+      tryCatch({
+        rv$errorMessageMapDis_2 <- NULL
+        
+        
+      if (is.null(rv$datosOriginal) | is.null(rv$map)) return(NULL)
       
       print("Plot: ...map distribution.2..")
-    
       
       map <- rv$map
       data <- rv$datosOriginal
       
+      # ตรวจสอบว่า column ที่จำเป็นมีข้อมูลครบถ้วนหรือไม่
+      required_columns <- c(input$columncasesindata, input$columnpopindata, input$columndateindata, input$columnidareanamedata)
+      if (any(!required_columns %in% colnames(data))) {
+        showNotification("Missing required columns in the dataset", type = "error")
+        return(NULL)
+      }
       
-      if(input$Expected_Value_from_csv == "yes" ){
-        if(input$columnexpvalueindata != "" ){
-          print("Check: ...this csv have expected value...")
-          data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
-          
+      # ตรวจสอบว่า csv มี expected value หรือไม่
+      if (input$Expected_Value_from_csv == "yes") {
+        if (input$columnexpvalueindata != "") {
+          print("Check: ...this csv has expected value...")
+          data$expected_value <- as.numeric(data[, input$columnexpvalueindata])
         }
-        
-      }else if (input$Expected_Value_from_csv == "no" ){
+      } else {
         print("Check: ...this csv doesn't have expected value...")
         
-        # คิด (sum(case) / (pop))*population
-        # sum case กับ pop ทั้งหมด เอามาหารกัน แล้วคูณด้วย pop ของจังหวัด,ปี นั้นๆ
-        sum_case <- sum(data[,input$columncasesindata])
-        sum_pop <- sum(data[,input$columnpopindata])
+        # คำนวณ expected value
+        sum_case <- sum(data[, input$columncasesindata], na.rm = TRUE)
+        sum_pop <- sum(data[, input$columnpopindata], na.rm = TRUE)
+        
+        if (sum_pop == 0) {
+          showNotification("Population sum is zero. Cannot calculate expected value.", type = "error")
+          return(NULL)
+        }
         
         divide_case_pop <- sum_case / sum_pop
-        
-        
-        expected_value <- data[,input$columnpopindata] * divide_case_pop
-        
-        
-        # Add a Column to a Data Frame
-        data['expected_value'] <- expected_value
-        
+        data$expected_value <- data[, input$columnpopindata] * divide_case_pop
       }
       
-      
+      # กรองข้อมูล
       data <- data %>%
-        filter(
-          data[,input$columndateindata] %in% input$time_point_filter
-        )
+        filter(data[, input$columndateindata] %in% input$time_point_filter)
       
-      # คำนวณค่า divisor ตามตัวเลือกของผู้ใช้และสำหรับแต่ละแถว
-      if (input$divide_by == "columnpopindata") {
-        data$adjusted_cases <- data[, input$columncasesindata] / data[, input$columnpopindata]
-        
-        print("===================== ตัวหาร columnpopindata =====================")
-        print(data[, input$columnpopindata])
-        
-        
-      } else if (input$divide_by == "expected_value") {
-        data$adjusted_cases <- data[, input$columncasesindata] / data[, 'expected_value']
-        
-        print("===================== ตัวหาร expected_value =====================")
-        print(data[, 'expected_value'])
+      if (nrow(data) == 0) {
+        showNotification("No data available after filtering", type = "error")
+        return(NULL)
       }
       
+      # คำนวณ adjusted cases
+      if (input$divide_by == "columnpopindata") {
+        if (any(data[, input$columnpopindata] == 0, na.rm = TRUE)) {
+          showNotification("Division by zero in columnpopindata", type = "error")
+          return(NULL)
+        }
+        data$adjusted_cases <- data[, input$columncasesindata] / data[, input$columnpopindata]
+      } else if (input$divide_by == "expected_value") {
+        if (any(data$expected_value == 0, na.rm = TRUE)) {
+          showNotification("Division by zero in expected_value", type = "error")
+          return(NULL)
+        }
+        data$adjusted_cases <- data[, input$columncasesindata] / data$expected_value
+      }
+      
+      # จับคู่ข้อมูล map กับ data
       datafiltered <- data
       ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
       map@data <- datafiltered[ordercounties, ]
       
-    
+      # ตรวจสอบว่า map@data มีข้อมูลหรือไม่
+      if (is.null(map@data) || nrow(map@data) == 0 || all(is.na(map@data$adjusted_cases))) {
+        showNotification("No valid data for mapping", type = "error")
+        return(NULL)
+      }
       
+      # สร้าง colorNumeric
+      domain_values <- map@data$adjusted_cases
+      if (all(is.na(domain_values))) {
+        domain_values <- c(0, 1)
+      }
+      pal <- colorNumeric(palette = input$color, domain = domain_values, na.color = "transparent")
       
-      print("================ datafiltered$adjusted_cases ==========================")
-      print(datafiltered$adjusted_cases)
-      
-      
-      
-      print("================ datafiltered$adjusted_cases ==========================")
-      print(datafiltered$adjusted_cases)
-      
-      
-      # สร้างแผนที่ leaflet
-      l <- leaflet(map) %>% addTiles()
-      pal <- colorNumeric(palette = input$color, domain = map@data$adjusted_cases)
-      labels <- sprintf("<strong> %s </strong> <br/>  Adjusted Cases : %s ",
-                        map@data[, input$columnidareanamedata], 
-                        format(round(map@data$adjusted_cases, 5), scientific = FALSE)
+      labels <- sprintf(
+        "<strong> %s </strong> <br/>  Adjusted Cases : %s ",
+        map@data[, input$columnidareanamedata],
+        format(round(map@data$adjusted_cases, 5), scientific = FALSE)
       ) %>%
         lapply(htmltools::HTML)
       
-      l %>%
+      # สร้างแผนที่ leaflet
+      leaflet(map) %>%
+        addTiles() %>%
         addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
         addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
         addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
@@ -2606,24 +2705,35 @@ shinyApp(
           highlightOptions = highlightOptions(weight = 4),
           label = labels,
           labelOptions = labelOptions(
-            style = list(
-              "font-weight" = "normal",
-              padding = "3px 8px"
-            ),
+            style = list("font-weight" = "normal", padding = "3px 8px"),
             textsize = "16px", direction = "auto"
           )
         ) %>%
         addLegend_decreasing(
           pal = pal, values = ~map@data$adjusted_cases, opacity = 0.7,
-          title = "Adjusted Cases", position = "bottomright", 
+          title = "Adjusted Cases", position = "bottomright",
           decreasing = TRUE
         ) %>%
-        addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"),
-                         position = c("topleft"),
-                         options = layersControlOptions(collapsed =  TRUE)
+        addLayersControl(
+          baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"),
+          position = c("topleft"),
+          options = layersControlOptions(collapsed = TRUE)
         ) %>%
         addFullscreenControl()
+      }, error = function(e) {
+          rv$errorMessageMapDis_2 <- paste(
+            "An error occurred in Normalized Y Value Distribution Map.",
+            "<br>Please check the uploaded data again.",
+            "<br>Error Message: ", e$message,
+            sep = ""
+          )
+        })
+      
+      print("===================== rv$errorMessageMapDis_2 =====================")
+      print(rv$errorMessageMapDis_2)
+      
     })
+    
     
     
     
