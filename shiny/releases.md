@@ -5,12 +5,34 @@
 ### **Version History**
 <img width="40px" height="10px" src="Rectangle.svg">
 
+
+- #### version 1.3.1
+    ##### 23 January 2025
+    - Added new error messages for plotting the map.
+    
+
+- #### version 1.3
+    ##### 20 January 2025
+    - On the Map Distribution Page:
+        - Added a second map named Normalized Y Value Distribution Map to display data adjusted by user selection (e.g., population or expected value).
+        - Edited the legend in all map plots.
+        
+    - On the Spatiotemporal Epidemiological Analysis Page, in the Association with Risk Factors Tab:
+        - Changed the calculation method from percentage increase to relative risk (RR).
+        - Highlighted areas with significant values on the map.
+        - Edited the legend in all map plots.
+        - Edited examples of interpretation.
+        
+    - On the Manual Page:
+        - Edited the application Manual.
+
+
 - #### version 1.2 
     ##### 29 July 2023
     - Added dropdown to select an expected value for data that contains this value.
     - Added new installation methods.
     - Edited details in application.
-    - Edited application manual.
+    - Edited the application manual.
     
 
 
@@ -31,7 +53,7 @@
     - Changed UI style.
     - Changed the 'time period' filter from slider to dropdown.
     - Changed button and title color on these pages: Map Distribution and Spatiotemporal Epidemiological Analysis.
-    - Edited application manual.
+    - Edited the application manual.
     - Edited the variable name on 'Association with Risk Factors' tap from 'percent_increase_riskfactor' is 'riskfactor_percent_increase'. According to the usability test, some users are unable to choose their preferred risk factor. Because on the screen of variable names, not all of them are visible, only the word front.
     - Fixed bug of 'Download results' on 'Association with Risk Factors' tap that cannot be downloaded if less than 7 covariates are included.
 
