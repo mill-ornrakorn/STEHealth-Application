@@ -180,13 +180,13 @@ If an error occurs in usage, for example:
 </div>
 
 
-<div class='box-white'>
+<!-- <div class='box-white'>
 
 ### **Contact us**
 <img width="40px" height="10px" src="Rectangle.svg">
 
 If you have any trouble with this  application or have any further questions or feedback, then please contact us at: ornrakorn.mek@outlook.com and we will be happy to help.
 
-</div>
+</div> -->
 
 </div>
