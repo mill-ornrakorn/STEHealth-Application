@@ -1,65 +1,68 @@
 
 <div style = "text-align: justify; margin-right: 80px; font-size: 16px">
 
-## <span style="color:#735DFB"> **About Application** </span>
+## <span style="color:#735DFB"> **About STEHealth Application** </span>
 
 <div class='box-white'>
 
 ###  **Background**   
 <img width="40px" height="10px" src="Rectangle.svg" >
 
-<img align="right" width="500px" height="420px" src="undraw_programming.svg" style = " margin-left: 60px;">
+<!-- <img align="right" width="500px" height="420px" src="undraw_programming.svg" style = " margin-left: 60px;"> -->
 
-&emsp;&emsp;   The accessibility to spatiotemporal analytical tools is currently limited for public health workers and researchers, a user interface using RShiny will also be developed to increase accessibility and facilitate visualization and analysis for future spatiotemporal epidemiological studies. In addition, RShiny is effectively compatible with R-INLA which is the package we used to perform the analysis. To better communicate the results to stakeholders and public health researchers, we will develop user interfaces in the form of web applications with interactive features. However, the spatiotemporal analysis methods have limited availability, particularly for non-technical
-users. Moreover, the previously developed user interfaces do not provide specific features, such as proper cluster detection and space-time association with risk factors. We will then investigate and integrate these features into our project. Therefore, a web application using RShiny will be developed to increase accessibility and facilitate visualization and analysis for future spatiotemporal epidemiological studies. In addition, though this interface will be built in the context of mental health as a case study, this web application can be applied to the space-time analysis of other diseases.
-
+&emsp;&emsp;   Welcome to the STEHealth, a user-friendly application designed to simplify spatiotemporal Bayesian modeling for areal epidemiological data. This tool empowers public health researchers, policymakers, and data analysts to explore, visualize, and analyze complex spatial and spatiotemporal health data with ease.
 </br>
-
-&emsp;&emsp; **STEHealth** (It stands for **S**patiotemporal **E**pidemiological **Health**) is an application for analyzing space-time pattern, cluster detection, and association with risk factors of health outcomes, which allows users to import their own data, analyze, and visualize.
-This application is part of "Spatiotemporal Analysis with Application Development for Epidemiological Study of Suicide Mortality" project of the [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/). 
-
-
-
 
 <!-- style = " margin-bottom: 20px;"> -->
 
 ###  **Purpose**
 <img width="40px" height="10px" src="Rectangle.svg">
 
-&emsp;&emsp; To develop a application to facilitate visualization and analysis for spatial and spatiotemporal epidemiological studies. 
+&emsp;&emsp; The primary goal of this software is to bridge the gap between advanced statistical modeling and practical public health applications. By providing an intuitive interface, we aim to make cutting-edge methodologies like Bayesian hierarchical modeling accessible to users without extensive computational expertise.
+
+
+###  **Features**
+<img width="40px" height="10px" src="Rectangle.svg">
+
+- **Interactive Mapping:** Visualize spatial data using customizable maps, enabling insights into health trends and patterns.
+- **Cluster Detection:** Identify hotspots and non-hotspots within your data using advanced spatial models.
+- **Risk Factor Analysis:** Explore associations between risk factors and health outcomes across geographic areas.
+- **User-Friendly Filters:** Customize visualizations with time points, risk factors, and color schemes to suit your analysis needs.
+- **Data Integration:** Seamlessly upload shapefiles and case data for dynamic analysis.
+
+
+
+###  **Development Approach**
+<img width="40px" height="10px" src="Rectangle.svg">
+
+This software was developed using an iterative design process, incorporating feedback from public health professionals and data scientists. Built on the robust RShiny framework, the application combines technical precision with an emphasis on usability. Extensive usability testing and user interviews guided the development to ensure the interface meets the diverse needs of its users.
+
+
+
+###  **Target Users**
+<img width="40px" height="10px" src="Rectangle.svg">
+
+- Public health professionals
+- Epidemiologists
+- Policymakers
+- Data scientists
+- Academics and researchers
 
 </div>
 
 <div class='box-white'>
 
-###  **Developer**
+###  **Contact and Support**
 <img width="40px" height="10px" src="Rectangle.svg">
 
-1. **Papin Thanutchapat**; Space-time pattern detection model and association with risk factors for suicide.
-2. **Chiraphat Phoncharoenwirote**; Insights information of spatiotemporal epidemiology of suicide mortality and association with risk factors analysis.
-3. **Ornrakorn Mekchaiporn**; Application design and development.
+For more information, user guides, or support, please refer to the **Help** page within the software. If you have additional questions or feedback, feel free to reach out to our team at ornrakorn.mek@outlook.com.
+We hope this software serves as a valuable resource in your work to understand and address critical public health challenges.
 
-
-###  **Advisor**
-<img width="40px" height="10px" src="Rectangle.svg">
-
-1. **Dr. Unchalisa Taetragool**; Department of Computer Engineering, Faculty of Engineering, King Mongkut's University of Technology Thonburi
-2. **Asst. Prof. Dr. Chawarat Rotejanaprasert**; Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University
-3. **Asst. Prof. Dr. Peerut Chienwichai**; Princess Srisavangavadhana College of Medicine, Chulabhorn Royal Academy
 
 </div>
 
 
-<div class='box-white'>
-
-###  **Code**
-<img width="40px" height="10px" src="Rectangle.svg">
-
-Code and data used for case study are available on 
-[Github](https://github.com/mill-ornrakorn/STEHealth-Application).
-
-
-###  **Dependencies**
+<!-- ###  **Dependencies**
 <img width="40px" height="10px" src="Rectangle.svg">
 
 | <div style="margin-right: 20em"> |   |
@@ -89,19 +92,14 @@ Code and data used for case study are available on
 [bsplus](https://cran.rstudio.com/web/packages/bsplus/index.html) | The Bootstrap framework lets you add some JavaScript functionality to your web site by adding attributes to your HTML tags
 
 
-<!-- [R-Portable](https://sourceforge.net/projects/rportable/) | R portable configures R to work with the PortableApps framework, so that R can be ran from a thumb drive or portable hard drive without leaving artifacts on the computer.
-[Google Chrome Portable](https://portableapps.com/apps/internet/google_chrome_portable)  | Google Chrome Portable can run from a cloud folder, external drive, or local folder without installing into Windows. -->
+</div> -->
 
-</div>
+<!-- <div class='box-white'>
 
-<div class='box-white'>
-
-<!-- <img align="left" width="500px" height="420px" src="undraw_file_searching.svg" style = " margin-bottom: 40px;  margin-top: 40px;"> -->
-
-###  **References**
+###  **References** (APA6 style)
 <img width="40px" height="10px" src="Rectangle.svg">
 
-<!-- APA6 style-->
+
 
 1. Wheeler, D. C. (2007). A comparison of spatial clustering and cluster detection techniques for childhood leukemia incidence in Ohio, 1996 – 2003. International Journal of Health Geographics, 6(1), 13. doi:10.1186/1476-072x-6-13
 
@@ -113,9 +111,9 @@ Code and data used for case study are available on
 
 5. ArcMap. (n.d.). Retrieved March 8, 2023, from https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm
 
-</div>
+</div> -->
 
-<div class='box-white'>
+<!-- <div class='box-white'>
 
 ###  **Credits Section**
 <img width="40px" height="10px" src="Rectangle.svg">
@@ -134,6 +132,6 @@ Code and data used for case study are available on
 
 * Manual cover in STEHealth web application was modified from <a href="https://www.canva.com/p/templates/EAE9h5vtwXM-peach-modern-minimal-annual-report-cover/">report cover by Temptackle</a> on Canva 
 
-</div>
+</div> -->
 
 </div>
