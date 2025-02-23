@@ -85,6 +85,14 @@ h5{
 
 }
 
+
+.mapNote {
+  text-align: center;
+  color: #635f7a;
+
+}
+
+
 /*==================== custom shinytheme ====================*/
 /* เว้นระยะห่างด้านซ้ายทุกหน้า */
 .tab-content {
