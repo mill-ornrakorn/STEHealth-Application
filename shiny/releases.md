@@ -5,6 +5,11 @@
 ### **Version History**
 <img width="40px" height="10px" src="Rectangle.svg">
 
+- #### version 1.3.2
+    ##### 24 February 2025
+    - Fixed a bug on the Map Distribution page that caused incorrect data visualization.
+    - Updated the About WebApp page with improved content clarity, refined descriptions, and enhanced readability to better communicate the purpose and functionality of the application.
+
 
 - #### version 1.3.1
     ##### 23 January 2025
