@@ -1,15 +1,18 @@
 
 # ================================================================
 
-# @23-Feb-25
+# @29-apr-26
 
 # ================================================================
 
 # ==================================== Check packages  ==================================== 
 
 list.of.packages <- c("shiny", "shinydashboard", "shinyjs", "shinyBS" , "leaflet" ,
-                      "dplyr", "ggplot2" ,"RColorBrewer" , "rgdal" ,"shinyWidgets",
-                      "shinydashboardPlus","spdep", "leaflet.extras", "bsplus" ,"remotes")
+                      "dplyr", "ggplot2" ,"RColorBrewer" , "shinyWidgets", "sf",
+                      "shinydashboardPlus","spdep", "leaflet.extras", "bsplus" ,"remotes",
+                      "readxl", "plotly", "DT")
+
+
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -21,11 +24,10 @@ if(!require(INLA)){
 }
 
 
-if(!require(capture)){
-  remotes::install_github("dreamRs/capture")
-  library(capture)
-}
-
+# if(!require(capture)){
+#   remotes::install_github("dreamRs/capture")
+#   library(capture)
+# }
 
 # ==================================== import packages  ==================================== 
 
@@ -37,7 +39,7 @@ library(leaflet)
 library(dplyr)
 library(ggplot2)
 library(RColorBrewer)
-library(rgdal)
+library(sf)
 library(shinyWidgets)
 library(shinydashboardPlus)
 
@@ -48,10 +50,7 @@ library(spdep) # อันนี้ใช้ nb2mat
 library(capture) # ลงโดยใช้ remotes::install_github("dreamRs/capture")
 library(leaflet.extras)
 library(bsplus)
-
-# install.packages("sf") 
-# ถ้าลง sf ไม่ได้ให้พิมพ์คำสั่งด้านล่างนี้ก่อน
-# options("install.lock"= FALSE)
+library(DT)
 
 
 # By default the file size limit is 5MB. Here limit is 70MB.
@@ -178,264 +177,270 @@ body <- dashboardBody(
                      <h1>Upload Data</h1>
                    </div>"),
               
-              
               div(style = "margin-bottom: 30px;"),
               
               HTML("<h2>Input Data</h2>"),
               
-              sidebarLayout(
+              tags$script(HTML("
+                $(document).on('click', '.btn-file', function() {
+                  var currentScroll = $(window).scrollTop();
+                  setTimeout(function() {
+                    $(window).scrollTop(currentScroll);
+                  }, 10);
+                });
+              ")),
+              
+              fluidPage(
                 
-                sidebarPanel(
-                  style = "height: 80vh; overflow-y: auto;",
-                  
-                  tags$style(".well {background-color:#FFFFFF;}"),
-                  
-                  
-                  # ==================================== Upload map (shapefile) ==================================== 
-                  div(style="display: inline-block;",
-                      HTML('<h3><span class="purple">1.</span>
-                                   Upload shapefile</h3>
-                                   '),
-                      
-                      div(style = "margin-left: 280px; margin-top: -45px;",
-                          bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
-                          
-                          bsPopover(id = "question_shapefile", title = "Shapefile", 
-                                    content = paste0(strong("What is a shapefile? "),br(),
-                                                     "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
-                                                     a("(5)",
-                                                       href = "https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm",
-                                                       target="_blank"),
-                                                     
-                                                     br(),br(),
-                                                     strong("Examples of shapefiles"),br(),
-                                                     "This examples shapefiles include shp, dbf, shx, prj. ",
-                                                     a("click here to downloads shapefiles",
-                                                       href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
-                                                       target="_blank")
-                                    ),
-                                    placement = "right",
-                                    trigger = "click",
-                                    options = list(container = "body")
-                          ))
-                  ),
-                  
-                  hr(),
-                  HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile at once:</font></strong> shp, dbf, shx and prj."),
-                  fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
-                  
-                  helpText("Select column area name in the map."),
-                  fluidRow(column(12, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")%>%
-                                    shinyInput_label_embed(
-                                      icon("info") %>%
-                                        bs_embed_tooltip(title = '"area name" in the shapefile must be matched to "area name" in the csv file')
-                                    )
-                                  ),
-                           #column(6, selectInput("columnnameareainmap", label = "area name", choices = c(""), selected = ""))
-                  ),
-                  
-                  
-                  HTML("</br>"),
-                  
-                  radioButtons("shapefile_from_thailand", "Are these shapefiles from Thailand and do they include all 77 provinces, representing provincial boundaries (Level 1)? ", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
-                  
-                 
-                  
-                  # ==================================== Upload data (.csv file) ==================================== 
-                  div(style="display: inline-block;",
-                      HTML('<h3><span class="purple">2.</span>
-                                   Upload csv file</h3>'),
-                      
-                      div(style = "margin-left: 240px; margin-top: -45px;",
-                          bsButton("question_csvfile", label = "", icon = icon("question"), style = "Question"),
-                          
-                          bsPopover(id = "question_csvfile", title = "csv file",
-                                    content = paste0(strong("The csv file "),br(),
-                                                     ".csv file needs to have columns: ",
-                                                     strong("<area id> <area name> <cases> <time point> <population>"),
-                                                     br(),br(),
-                                                     strong("Examples of csv file "),
-                                                     #"This examples csv file include column: ....... ",
-                                                     a("click here to downloads csv file",
-                                                       href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
-                                                       target="_blank")
-                                    ),
-                                    placement = "right",
-                                    trigger = "click",
-                                    options = list(container = "body")
-                          ))
-                  ),
-                  
-                  
-                  
-                  hr(),
-                  HTML("csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time point, cases, population</font></strong>"),
-                  fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-                  
-                  helpText("Select columns:"),
-                  fluidRow(column(6, selectInput("columnidareaindata",  label = "area id",  choices = c(""), selected = "")%>%
-                                    shinyInput_label_embed(
-                                      icon("info") %>%
-                                        bs_embed_tooltip(title = '"area id" is a number starting at 1, used to identify provinces.')
-                                    )
-                                  ),
-                           column(6, selectInput("columnidareanamedata", label = "area name", choices = c(""), selected = "")%>%
-                                    shinyInput_label_embed(
-                                      icon("info") %>%
-                                        bs_embed_tooltip(title = '"area name" in the shapefile must be matched to "area name" in the csv file.')
-                                    )
-                                  )
-                  ),
-                  fluidRow(#column(6, selectInput("columnexpvalueindata", label = "expected value", choices = c(""), selected = "")),
-                            column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = "")%>%
-                                     shinyInput_label_embed(
-                                       icon("info") %>%
-                                         bs_embed_tooltip(title = 'population in each area.')
-                                     )
+                # ==================================== Row 1: Shapefile ==================================== 
+                fluidRow( class='box-white',
+                          column(4, class='box-white',
+                                 
+                                 div(
+                                   HTML('<h3><span class="purple">1.</span> Upload shapefile</h3>'),
                                    
-                                   ),
-                            column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = "")%>%
-                                     shinyInput_label_embed(
-                                       icon("info") %>%
-                                         bs_embed_tooltip(title = 'number of cases or outcomes in each area.')
+                                   div(style = "margin-left: 280px; margin-top: -45px;",
+                                       bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
+                                       
+                                       bsPopover(id = "question_shapefile", title = "Shapefile", 
+                                                 content = paste0(strong("What is a shapefile? "),br(),
+                                                                  "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
+                                                                  a("(5)",
+                                                                    href = "https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm",
+                                                                    target="_blank"),
+                                                                  br(),br(),
+                                                                  strong("Examples of shapefiles"),br(),
+                                                                  "This examples shapefiles include shp, dbf, shx, prj. ",
+                                                                  a("click here to downloads shapefiles",
+                                                                    href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
+                                                                    target="_blank")
+                                                 ),
+                                                 placement = "right", trigger = "click", options = list(container = "body")
+                                       ))
+                                 ),
+                                 
+                                 hr(),
+                                 HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile components at once:</font></strong> shp, dbf, shx and prj."),
+                                 fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
+                                 
+                                 helpText("Select column area name in the map."),
+                                 fluidRow(column(12, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")%>%
+                                                   shinyInput_label_embed(
+                                                     icon("info") %>%
+                                                       bs_embed_tooltip(title = '"area name" in the shapefile must be matched to "area name" in the csv file')
+                                                   )
+                                 )),
+                                 
+                                 HTML("</br>"),
+                                 
+                                 radioButtons("shapefile_from_thailand", 
+                                              "Are these shapefiles from Thailand and do they include all 77 provinces, representing provincial boundaries (Level 1)? ", 
+                                              inline=TRUE, c("Yes" = "yes", "No" = "no"), 
+                                              selected="no")
+                                 
+                          ), # จบ column(4)
+                          
+                          column(7, 
+                                 # เพิ่ม min-height ป้องกันหน้าเว็บเด้งตอนเปลี่ยนสถานะ
+                                 div(style = "min-height: 500px; padding: 20px; background-color: #f9f9fc; border-radius: 10px; border: 1px solid #f0f0f0;",
+                                     HTML("<h3 style='margin-top: 0;'><i class='uil uil-map' style='color: #735DFB;'></i> Preview Shapefile</h3>"),
+                                     
+                                     uiOutput('status_map'),  
+                                     
+                                     # ซ่อนกรอบตารางไว้ จนกว่าผู้ใช้จะอัปโหลดไฟล์
+                                     conditionalPanel(
+                                       condition = "output.filemap_uploaded",
+                                       
+                                       # กรอบ Data Table
+                                       div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 4px solid #735DFB;",
+                                           HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-table'></i> Shapefile Table</h4>"),
+                                           DTOutput('uploadmaptable')
+                                       ),
+                                       
+                                       # กรอบ Data Summary
+                                       div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #03989e;",
+                                           HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-analytics'></i> Shapefile Summary</h4>"),
+                                           verbatimTextOutput("uploadmapsummary")
+                                       )
                                      )
+                                 )
+                          ) # จบ column(7) ของ Shapefile
+                          
+                ), # จบ fluidRow
+                
+                # ==================================== Row 2: Upload Data file ==================================== 
+                
+                fluidRow( class='box-white',
+                          column(4, class='box-white',
+                                 div(style="display: inline-block;",
+                                     HTML('<h3><span class="purple">2.</span> Upload csv file</h3>'),
+                                     div(style = "margin-left: 280px; margin-top: -45px;",
+                                         bsButton("question_csvfile", label = "", icon = icon("question"), style = "Question"),
+                                         
+                                         bsPopover(id = "question_csvfile", title = "csv file",
+                                                   content = paste0(strong("The csv file "),br(),
+                                                                    ".csv file needs to have columns: ",
+                                                                    strong("<area id> <area name> <cases> <time point> <population>"),
+                                                                    br(),br(),
+                                                                    strong("Examples of csv file "),
+                                                                    a("click here to downloads csv file",
+                                                                      href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
+                                                                      target="_blank")
+                                                   ),
+                                                   placement = "right", trigger = "click", options = list(container = "body")
+                                         ))
+                                 ),
+                                 
+                                 hr(),
+                                 HTML("csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time point, cases, population</font></strong>"),
+                                 fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+                                 
+                                 helpText("Select columns:"),
+                                 fluidRow(column(6, selectInput("columnidareaindata",  label = "area id",  choices = c(""), selected = "")%>%
+                                                   shinyInput_label_embed(
+                                                     icon("info") %>%
+                                                       bs_embed_tooltip(title = '"area id" is a number starting at 1, used to identify provinces.')
+                                                   )
+                                 ),
+                                 column(6, selectInput("columnidareanamedata", label = "area name", choices = c(""), selected = "")%>%
+                                          shinyInput_label_embed(
+                                            icon("info") %>%
+                                              bs_embed_tooltip(title = '"area name" in the shapefile must be matched to "area name" in the csv file.')
+                                          )
+                                 )
+                                 ),
+                                 fluidRow(
+                                   column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = "")%>%
+                                            shinyInput_label_embed(
+                                              icon("info") %>%
+                                                bs_embed_tooltip(title = 'population in each area.')
+                                            )
+                                          
+                                   ),
+                                   column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = "")%>%
+                                            shinyInput_label_embed(
+                                              icon("info") %>%
+                                                bs_embed_tooltip(title = 'number of cases or outcomes in each area.')
+                                            )
                                    )
-                  ),
-                  fluidRow(column(6, selectInput("columndateindata", label = "time point", choices = c(""), selected = "")%>%
-                                    shinyInput_label_embed(
-                                      icon("info") %>%
-                                        bs_embed_tooltip(title = 'time point in the data, such as day, month, year.')
-                                    )
-                                  )
-                           
-                  ),
-                  
-                  
-                  HTML("<h4><strong>2.1 Select Expected Value</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
-                  
-                  radioButtons("Expected_Value_from_csv", "Does this CSV file have an expected value column?", inline=TRUE, c("Yes" = "yes", "No" = "no"), selected="no"),
-                  
-                  conditionalPanel(condition = "input.Expected_Value_from_csv == 'yes'",
+                                 ),
+                                 fluidRow(column(6, selectInput("columndateindata", label = "time point", choices = c(""), selected = "")%>%
+                                                   shinyInput_label_embed(
+                                                     icon("info") %>%
+                                                       bs_embed_tooltip(title = 'time point in the data, such as day, month, year.')
+                                                   )
+                                 )
+                                 ),
+                                 
+                                 # ===================== ส่วน 2.1 Select Expected Value =====================
+                                 HTML("<h4><strong>2.1 Select Expected Value</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
+                                 
+                                 radioButtons("Expected_Value_from_csv", "Does this CSV file have an expected value column?", 
+                                              inline = TRUE, choices = c("Yes" = "yes", "No" = "no"), selected = "no"),
+                                 
+                                 conditionalPanel(
+                                   condition = "input.Expected_Value_from_csv == 'yes'",
                                    helpText("Select column:"),
-                                   fluidRow(column(12, selectInput("columnexpvalueindata",   label = "expected value",   choices = c(""), selected = "")%>%
-                                                     shinyInput_label_embed(
-                                                       icon("info") %>%
-                                                         bs_embed_tooltip(title = 'The expected value is number of outcomes in the provided area and period which may vary due to the types of diseases.')
-                                                     )
+                                   fluidRow(
+                                     column(12, selectInput("columnexpvalueindata", label = "expected value", choices = c(""), selected = "") %>%
+                                              shinyInput_label_embed(
+                                                icon("info") %>%
+                                                  bs_embed_tooltip(title = 'The expected value is number of outcomes in the provided area and period which may vary due to the types of diseases.')
+                                              )
+                                     )
                                    )
+                                 ),
+                                 
+                                 conditionalPanel(
+                                   condition = "input.Expected_Value_from_csv == 'no'",
+                                   div(style = "margin-bottom: 15px;",
+                                       HTML("<font color=\"#735DFB\"><strong>Note that: </strong></font>
+                                            If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value. For details on how the expected value is calculated, please refer to the "),
+                                       tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point")
                                    )
-                                  
-                                   ),
-                  
-                  
-                  conditionalPanel(condition = "input.Expected_Value_from_csv == 'no'",
-                                   HTML("<font color= \"#735DFB\"><strong>Note that: </strong></font>
-                                        If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value. For details on how the expected value is calculated, please refer to the"),
-                                   tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point"),
-                                  
-                                   
-                  ),
-            
-                  
-                  HTML("</br>
-                       <h4><strong>2.2 Select Covariates</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
-                  HTML("Please arrange the covariates in order from 1 to 7, 
-                       ensuring that all positions are filled consecutively without any skipped numbers. 
-                       This sequential ordering is essential for the model to correctly interpret each covariate’s priority 
-                       or influence in the analysis."),
-                  
-                  helpText("Select column(s):"),
-                  fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
-                           column(6, selectInput("columncov2indata", label = "covariate 2", choices = c(""), selected = ""))
-                  ),
-                  
-                  fluidRow(column(6, selectInput("columncov3indata", label = "covariate 3", choices = c(""), selected = "")),
-                           column(6, selectInput("columncov4indata", label = "covariate 4", choices = c(""), selected = ""))
-                  ),
-                  
-                  fluidRow(column(6, selectInput("columncov5indata", label = "covariate 5", choices = c(""), selected = "")),
-                           column(6, selectInput("columncov6indata", label = "covariate 6", choices = c(""), selected = ""))
-                  ),
-                  
-                  fluidRow(column(6, selectInput("columncov7indata", label = "covariate 7", choices = c(""), selected = "")),
-                           #column(6, selectInput("columncov8indata", label = "covariate 8", choices = c(""), selected = ""))
-                  ),
-                  
-                  # HTML("<font color= \"#735DFB\"><strong>Note that: </strong></font>
-                  #                            <ul style = 'text-align: justify;'>
-                  #                             <li>If the user select 1 covariate, the analysis is <strong>univariable</strong>.</li> 
-                  #                             <li>If the user selects covariates more than 1, all covariates will be calculated at the same time, which is a 
-                  #                               <strong>multivariable</strong> analysis. However, the results will be displayed one by one on the 'Spatiotemporal Epidemiological Analysis' page ('Association with Risk Factors' tap).</li>  
-                  #                             
-                  #                            </ul>
-                  #                               
-                  #                           </br>"),
-                  
-                  
-                  HTML("</br>"),
-                  HTML("</br>"),
-                  
-                  
-                  fluidRow(column(4, offset=3, actionButton("Preview_Map_Distribution",
-                                                            strong("Preview Map Distribution"),
-                                                            onclick = "$('li:eq(7) a').tab('show');",
-                                                            class = 'btn-primary',
-                                                            style='color: #FFFFFF;'
-                  ))),
-                  
-                  HTML("</br>"),
-                  
-                  
-                  HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
-                                             Please ensure that the uploaded shapefile matches the data file, with consistent area names or codes to align the spatial map with the associated data. Mismatched files may lead to errors in visualization and analysis
-
-                                            </br>
-                       </br>")
-                  
+                                 ),
+                                 # ==========================================================
+                                 
+                                 HTML("</br><h4><strong>2.2 Select Covariates</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
+                                 HTML("Please arrange the covariates in order from 1 to 7, 
+                                       ensuring that all positions are filled consecutively without any skipped numbers. 
+                                       This sequential ordering is essential for the model to correctly interpret each covariate’s priority 
+                                       or influence in the analysis."),
+                                 
+                                 helpText("Select column(s):"),
+                                 fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
+                                          column(6, selectInput("columncov2indata", label = "covariate 2", choices = c(""), selected = ""))
+                                 ),
+                                 
+                                 fluidRow(column(6, selectInput("columncov3indata", label = "covariate 3", choices = c(""), selected = "")),
+                                          column(6, selectInput("columncov4indata", label = "covariate 4", choices = c(""), selected = ""))
+                                 ),
+                                 
+                                 fluidRow(column(6, selectInput("columncov5indata", label = "covariate 5", choices = c(""), selected = "")),
+                                          column(6, selectInput("columncov6indata", label = "covariate 6", choices = c(""), selected = ""))
+                                 ),
+                                 
+                                 fluidRow(column(6, selectInput("columncov7indata", label = "covariate 7", choices = c(""), selected = ""))
+                                 )
+                                 
+                          ), # จบ column(4) ของ Row 2
+                          
+                          column(7, 
+                                 # เพิ่ม min-height ป้องกันหน้าเว็บเด้งตอนเปลี่ยนสถานะ
+                                 div(style = "min-height: 600px; padding: 20px; background-color: #f9f9fc; border-radius: 10px; border: 1px solid #f0f0f0;",
+                                     HTML("<h3 style='margin-top: 0;'><i class='uil uil-clipboard-notes' style='color: #735DFB;'></i> Preview Data</h3>"),
+                                     
+                                     uiOutput('status_csv'),  
+                                     
+                                     # ซ่อนกรอบตารางไว้ จนกว่าผู้ใช้จะอัปโหลดไฟล์
+                                     conditionalPanel(
+                                       condition = "output.file1_uploaded",
+                                       
+                                       # กรอบ Data Table
+                                       div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 4px solid #735DFB;",
+                                           HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-table'></i> Data Table</h4>"),
+                                           DTOutput('uploaddatatable')
+                                       ),
+                                       
+                                       # กรอบ Data Summary
+                                       div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #03989e;",
+                                           HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-analytics'></i> Data Summary</h4>"),
+                                           verbatimTextOutput("uploaddatasummary")
+                                       )
+                                     )
+                                 )
+                          ) # จบ column(7) ของ CSV
+                ), # จบ fluidRow
                 
-                  
-                  
-                  
+                # ==================================== Row 3: Note ==================================== 
+                fluidRow(
+                  class='box-white',
+                  HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
+                      Please ensure that the uploaded shapefile matches the data file, with consistent area names or codes to align the spatial map with the associated data. Mismatched files may lead to errors in visualization and analysis
+                      </br>")
                 ),
-                # ==================================== Preview Input Data ==================================== 
-                mainPanel(
-                  div(style = "margin-top: -60px;" ),
-                  HTML("<h2>Preview Input Data</h2>"),
-                  
-                  tabBox(width=12,id="tabBox_next_previous",
-                         tabPanel(HTML("<h4>Map data (shapefile)</h4>"), 
-                                  #HTML("<p style='text-align:center; margin-top: 60px; margin-bottom: 60px;'> 
-                                  #    <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>"),
-                                  
-                                  
-                                  #verbatimTextOutput("status_map"),
-                                  uiOutput('status_map'), 
-                                  
-                                  # div(
-                                  #  plotOutput("uploadmapmap"),
-                                  #  style = 'z-index: -1; position: relative; '
-                                  #    ),
-                                  verbatimTextOutput("uploadmapsummary"), 
-                                  dataTableOutput('uploadmaptable')
-                                  
-                                  
-                         ),
-                         
-                         tabPanel(HTML("<h4>Data (.csv file)</h4>"), 
-                                  #HTML("<p style='text-align:center; margin-top: 60px; margin-bottom: 60px;'> 
-                                  #      <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>"),
-                                  
-                                  #verbatimTextOutput("status_csv"),
-                                  uiOutput('status_csv'),
-                                  verbatimTextOutput("uploaddatasummary"),
-                                  dataTableOutput('uploaddatatable')
-                         )
-                         
-                         
+                
+                # ==================================== Row 4: Buttons ==================================== 
+                fluidRow(
+                  column(2, offset = 8,
+                         actionButton("reload_btn",
+                                      label = tagList(icon("refresh"), "Refresh Data"),
+                                      class = "btn-outline-primary",
+                                      style = "width:90%; height:50px; font-size:18px;",
+                                      onclick = "location.reload();")
+                  ),
+                  column(2,
+                         actionButton("Preview_Map_Distribution",
+                                      label = tagList("Next", icon("angle-right")),
+                                      class = "btn-primary",
+                                      style = "width:90%; height:50px; font-size:18px;",
+                                      onclick = "$('li:eq(7) a').tab('show');") # ลิงก์ไปยัง Map_Distribution หน้าถัดไป
                   )
-                  
-                  
-                ))),
+                ),
+                
+                HTML("</br>")
+              )
+      ),
       
       # ==================================== Map_Distribution ==================================== 
       
@@ -713,8 +718,8 @@ body <- dashboardBody(
                             uiOutput("clusterError"),
                             uiOutput("status_cluster"),
                             div(class = 'error',
-                            verbatimTextOutput("messageCheckData_2")
-                                ),
+                                verbatimTextOutput("messageCheckData_2")
+                            ),
                             #verbatimTextOutput("status_map_cluster"),
                             #leafletOutput("map_cluster", height = "70vh")
                             addSpinner(
@@ -818,28 +823,28 @@ body <- dashboardBody(
                                                   
                                                 ),
                                                 
-                                            #     div(
-                                            #       class = "box-purple",
-                                            #       HTML("<h4>Examples of interpretation (from sample data)</h4>
-                                            # • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
-                                            #   &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
-                                            #   the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
-                                            # 
-                                            # </br></br> 
-                                            # • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
-                                            #   &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
-                                            #   the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
-                                            # 
-                                            # </br></br>     
-                                            # •If the significance is <strong>not significant</strong>: </br>  
-                                            #   &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
-                                            # 
-                                            # </br></br>   
-                                            #   For other examples of interpretation, please refer to the
-                                            #  "),
-                                            #       tags$a("Manual page.", onclick="customHref('Manual')")
-                                            #       
-                                            #     )
+                                                #     div(
+                                                #       class = "box-purple",
+                                                #       HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                                # • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
+                                                #   &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
+                                                #   the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
+                                                # 
+                                                # </br></br> 
+                                                # • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
+                                                #   &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
+                                                #   the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
+                                                # 
+                                                # </br></br>     
+                                                # •If the significance is <strong>not significant</strong>: </br>  
+                                                #   &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
+                                                # 
+                                                # </br></br>   
+                                                #   For other examples of interpretation, please refer to the
+                                                #  "),
+                                                #       tags$a("Manual page.", onclick="customHref('Manual')")
+                                                #       
+                                                #     )
                                                 
                                                 
                                          )
@@ -854,12 +859,12 @@ body <- dashboardBody(
                             uiOutput("assocError"),
                             uiOutput("status_risk_fac"),
                             div(class = 'error',
-                            verbatimTextOutput("messageCheckData_3")
-                              ),  
+                                verbatimTextOutput("messageCheckData_3")
+                            ),  
                             #verbatimTextOutput("status_map_asso"),
                             div(class = 'warning',
-                            verbatimTextOutput("status_risk_fac_nocova")
-                              ),
+                                verbatimTextOutput("status_risk_fac_nocova")
+                            ),
                             addSpinner(
                               leafletOutput("map_risk_fac", height = "80vh"),
                               spin = "bounce", color = "#735DFB"
@@ -901,7 +906,7 @@ body <- dashboardBody(
       ),
       
       tabItem(tabName = "Releases",
-              includeMarkdown("Releases.md")
+              includeMarkdown("releases.md")
       ) 
     )
   ))     
@@ -1031,6 +1036,14 @@ shinyApp(
         
       } 
     })
+    
+    # สร้างตัวแปรเช็กสถานะการอัปโหลดไฟล์
+    output$filemap_uploaded <- reactive({ !is.null(input$filemap) })
+    outputOptions(output, "filemap_uploaded", suspendWhenHidden = FALSE)
+    
+    output$file1_uploaded <- reactive({ !is.null(input$file1) })
+    outputOptions(output, "file1_uploaded", suspendWhenHidden = FALSE)
+    
     
     # ==================================== write error messages ==================================== 
     
@@ -1310,7 +1323,7 @@ shinyApp(
       
     })
     
-
+    
     
     observe({
       x <- names(rv$map)
@@ -1327,7 +1340,7 @@ shinyApp(
       
     })
     
-
+    
     rv <- reactiveValues(
       columnidareainmap=NULL,  columnnameareainmap=NULL, #columnnamesuperareainmap=NULL,
       idpolyhighlighted = NULL, posinmapFilteredIdpolyhighlighted=NULL, colores=NULL,
@@ -1344,11 +1357,11 @@ shinyApp(
       errorMessageMapDis_2 = NULL,
       errorMessageCluster = NULL,  
       errorMessageAssoc = NULL     
-      )
+    )
     
     
     
-
+    
     
     # output$uploadmapmap <- renderPlot({
     #   if (is.null(rv$map))
@@ -1362,40 +1375,27 @@ shinyApp(
     })
     
     output$uploadmapsummary <- renderPrint({
-      if (!is.null(rv$map)){
-        print(summary(rv$map@data))
-      }
+      # req(rv$map) คือการบอกว่าถ้ายังไม่มีข้อมูลไม่ต้องรันต่อ เพื่อกัน Error
+      req(rv$map)
+      print(summary(st_drop_geometry(rv$map)))
     })
+    
+    output$uploadmaptable  <- renderDT({
+      req(rv$map)
+      # ใช้ st_drop_geometry เพราะ DT ไม่สามารถแสดงคอลัมน์ที่เป็นพิกัดแผนที่ได้
+      st_drop_geometry(rv$map)
+    } , options = list(scrollX = TRUE, pageLength = 5))
+    
     
     output$uploaddatasummary <- renderPrint({
-      if (!is.null(rv$datosOriginal)){
-        print(summary(rv$datosOriginal))
-      }
+      req(rv$datosOriginal)
+      print(summary(rv$datosOriginal))
     })
     
-    # output$uploadmaptable  <- renderDataTable({
-    #   if (is.null(rv$map))
-    #     return(NULL)
-    #   rv$map@data
-    #   
-    # } , options = list(scrollX=TRUE, # แถบเลื่อนแนวแกน x
-    #                    pageLength = 5))
-    # 
-    
-    output$uploadmaptable  <- renderDataTable({
-      if (!is.null(rv$map))
-        rv$map@data
-      
-    } , options = list(scrollX=TRUE, # แถบเลื่อนแนวแกน x
-                       pageLength = 5))
-    
-    output$uploaddatatable  <- renderDataTable({
-      if (is.null(rv$datosOriginal))
-        return(NULL)
+    output$uploaddatatable  <- renderDT({
+      req(rv$datosOriginal)
       rv$datosOriginal
-      
-    } , options = list(scrollX=TRUE, # แถบเลื่อนแนวแกน x
-                       pageLength = 5))
+    } , options = list(scrollX = TRUE, pageLength = 5))
     
     
     
@@ -1416,8 +1416,10 @@ shinyApp(
       
       #map <- readShapePoly(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"),  delete_null_obj=TRUE)
       #reads the file that finishes with .shp using $ at the end: grep(pattern="*.shp$", shpdf$name)
-      map <- readOGR(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp$", shpdf$name)], sep="/"), encoding = "UTF-8")#,  delete_null_obj=TRUE)
-      map <- spTransform(map, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+      # map <- readOGR(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp$", shpdf$name)], sep="/"), encoding = "UTF-8")#,  delete_null_obj=TRUE)
+      shp_file <- file.path(uploaddirectory, shpdf$name[grep("\\.shp$", shpdf$name)])
+      map <- st_read(shp_file, quiet = TRUE, options = "ENCODING=UTF-8")
+      map <- st_transform(map, crs = 4326)
       
       rv$map<-map
       
@@ -1491,142 +1493,142 @@ shinyApp(
         tryCatch({
           rv$errorMessageCluster <- NULL  # ล้างข้อความ Error หากไม่มีปัญหา
           
-        map <- rv$map
-        #data <- rv$datosOriginal
-        
-        
-        
-        # y (case)
-        data[,input$columncasesindata] <- as.numeric(data[,input$columncasesindata])
-        
-        
-        ########################## --- คำนวน expected value ---- ######################### 
-        
-        # # ของเก่า: ค่า E ที่ให้ user ใส่มาเอง
-        # data[,input$columnexpvalueindata] <- as.numeric(data[,input$columnexpvalueindata])
-        
-        
-        
-        
-        if(input$Expected_Value_from_csv == "yes" ){
-          if(input$columnexpvalueindata != "" ){
-            print("Check: ...this csv have expected value...")
-            data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
-
+          map <- rv$map
+          #data <- rv$datosOriginal
+          
+          
+          
+          # y (case)
+          data[,input$columncasesindata] <- as.numeric(data[,input$columncasesindata])
+          
+          
+          ########################## --- คำนวน expected value ---- ######################### 
+          
+          # # ของเก่า: ค่า E ที่ให้ user ใส่มาเอง
+          # data[,input$columnexpvalueindata] <- as.numeric(data[,input$columnexpvalueindata])
+          
+          
+          
+          
+          if(input$Expected_Value_from_csv == "yes" ){
+            if(input$columnexpvalueindata != "" ){
+              print("Check: ...this csv have expected value...")
+              data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
+              
+            }
+            
+          }else if (input$Expected_Value_from_csv == "no" ){
+            print("Check: ...this csv doesn't have expected value...")
+            
+            # คิด (sum(case) / (pop))*population
+            # sum case กับ pop ทั้งหมด เอามาหารกัน แล้วคูณด้วย pop ของจังหวัด,ปี นั้นๆ
+            sum_case <- sum(data[,input$columncasesindata])
+            sum_pop <- sum(data[,input$columnpopindata])
+            
+            divide_case_pop <- sum_case / sum_pop
+            
+            
+            expected_value <- data[,input$columnpopindata] * divide_case_pop
+            
+            
+            # Add a Column to a Data Frame
+            data['expected_value'] <- expected_value
+            
           }
-
-        }else if (input$Expected_Value_from_csv == "no" ){
-          print("Check: ...this csv doesn't have expected value...")
-
-          # คิด (sum(case) / (pop))*population
-          # sum case กับ pop ทั้งหมด เอามาหารกัน แล้วคูณด้วย pop ของจังหวัด,ปี นั้นๆ
-          sum_case <- sum(data[,input$columncasesindata])
-          sum_pop <- sum(data[,input$columnpopindata])
-
-          divide_case_pop <- sum_case / sum_pop
-
-
-          expected_value <- data[,input$columnpopindata] * divide_case_pop
-
-
-          # Add a Column to a Data Frame
-          data['expected_value'] <- expected_value
-
-        }
-        
-        
-        
-        # ---------------------------
-        
-        # area id (data$province)
-        data[,input$columnidareaindata] <- as.numeric(data[,input$columnidareaindata]) # id of province 1-77
-        
-        # # year data$year
-        data[,input$columndateindata] <- as.numeric(data[,input$columndateindata]) # id of year 1-11 (?)
-        
-        # # data$province_year <- seq(1, 1064) # id of province-year interaction
-        data$province_year <- seq(1, nrow(data)) # id of year 1-11 (?)
-        
-        # # interaction id
-        province_int <- data[,input$columnidareaindata]
-        year_int <- data[,input$columndateindata]
-        
-        
-        
-        
-        if(input$shapefile_from_thailand == "yes" ){
           
-          # build adj matrix from shape file
-          tha_adj <- nb2mat(
-            poly2nb(map),
-            style = "B",
-            zero.policy = TRUE)
           
-          # add path between Phuket and Pang nga (?)
-          tha_adj[38, 47] <- 1
-          tha_adj[47, 38] <- 1
           
-        }else if (input$shapefile_from_thailand == "no" ){
+          # ---------------------------
           
-          # build adj matrix from shape file
-          tha_adj <- nb2mat(
-            poly2nb(map),
-            style = "B",
-            zero.policy = TRUE)
+          # area id (data$province)
+          data[,input$columnidareaindata] <- as.numeric(data[,input$columnidareaindata]) # id of province 1-77
           
-        }
-        
-        # อันใหม่เด้อ
-        # formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-        #     f(data$x1_id, x1, model = "iid") +
-        #     f(data$x2_id, x2, model = "iid") +
-        #     f(data$x3_id, x3, model = "iid") +
-        #     f(data$x4_id, x4, model = "iid") +
-        #     f(data$x5_id, x5, model = "iid") +
-        #     f(data$x6_id, x6, model = "iid") +
-        #     f(data$x7_id, x7, model = "iid") +
-        #   f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-        #   f(data[,input$columndateindata], model = "rw1") +
-        #   f(province_int, model = "iid")
-        
-        
-        ####################   Cluster   #################### 
-        
-        
-        
-        formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
-          f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-          f(data[,input$columndateindata], model = "rw1") +
-          f(province_int, model = "iid")
-        
-        # computing part
-        model_Cluter <- inla(
-          formula_1_bym_rw1_Cluter,
-          family = "poisson",
-          data = data,
-          #E = data[,input$columnexpvalueindata],
-          E = data[, 'expected_value'],
-          control.predictor = list(compute = TRUE),
-          control.compute = list(
-            dic = TRUE,
-            waic = TRUE,
-            cpo = TRUE,
-            return.marginals.predictor = TRUE))
-        
-        exceedance_prob <- sapply(
-          model_Cluter$marginals.fitted.values,
-          FUN = function(marg) {
-            1 - inla.pmarginal(q = 1, marginal = marg) })
-        
-        data[, "hotspot label"] <- exceedance_prob > 0.95
-        data[, "hotspot label"] <- ifelse(exceedance_prob > 0.95,
-                                  "hotspot", "non-hotspot")
-        
-        rv$data <- data
-        
-        
-        rv$model_Cluter <- model_Cluter
-        
+          # # year data$year
+          data[,input$columndateindata] <- as.numeric(data[,input$columndateindata]) # id of year 1-11 (?)
+          
+          # # data$province_year <- seq(1, 1064) # id of province-year interaction
+          data$province_year <- seq(1, nrow(data)) # id of year 1-11 (?)
+          
+          # # interaction id
+          province_int <- data[,input$columnidareaindata]
+          year_int <- data[,input$columndateindata]
+          
+          
+          
+          
+          if(input$shapefile_from_thailand == "yes" ){
+            
+            # build adj matrix from shape file
+            tha_adj <- nb2mat(
+              poly2nb(map),
+              style = "B",
+              zero.policy = TRUE)
+            
+            # add path between Phuket and Pang nga (?)
+            tha_adj[38, 47] <- 1
+            tha_adj[47, 38] <- 1
+            
+          }else if (input$shapefile_from_thailand == "no" ){
+            
+            # build adj matrix from shape file
+            tha_adj <- nb2mat(
+              poly2nb(map),
+              style = "B",
+              zero.policy = TRUE)
+            
+          }
+          
+          # อันใหม่เด้อ
+          # formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+          #     f(data$x1_id, x1, model = "iid") +
+          #     f(data$x2_id, x2, model = "iid") +
+          #     f(data$x3_id, x3, model = "iid") +
+          #     f(data$x4_id, x4, model = "iid") +
+          #     f(data$x5_id, x5, model = "iid") +
+          #     f(data$x6_id, x6, model = "iid") +
+          #     f(data$x7_id, x7, model = "iid") +
+          #   f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+          #   f(data[,input$columndateindata], model = "rw1") +
+          #   f(province_int, model = "iid")
+          
+          
+          ####################   Cluster   #################### 
+          
+          
+          
+          formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
+            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+            f(data[,input$columndateindata], model = "rw1") +
+            f(province_int, model = "iid")
+          
+          # computing part
+          model_Cluter <- inla(
+            formula_1_bym_rw1_Cluter,
+            family = "poisson",
+            data = data,
+            #E = data[,input$columnexpvalueindata],
+            E = data[, 'expected_value'],
+            control.predictor = list(compute = TRUE),
+            control.compute = list(
+              dic = TRUE,
+              waic = TRUE,
+              cpo = TRUE,
+              return.marginals.predictor = TRUE))
+          
+          exceedance_prob <- sapply(
+            model_Cluter$marginals.fitted.values,
+            FUN = function(marg) {
+              1 - inla.pmarginal(q = 1, marginal = marg) })
+          
+          data[, "hotspot label"] <- exceedance_prob > 0.95
+          data[, "hotspot label"] <- ifelse(exceedance_prob > 0.95,
+                                            "hotspot", "non-hotspot")
+          
+          rv$data <- data
+          
+          
+          rv$model_Cluter <- model_Cluter
+          
         }, error = function(e) {
           rv$errorMessageCluster <- paste(
             "An error occurred in Cluster Detection. Please check the uploaded data again.",
@@ -1645,753 +1647,753 @@ shinyApp(
         
         tryCatch({
           rv$errorMessageAssoc  <- NULL  # ล้างข้อความ Error หากไม่มีปัญหา
-        ####################  คำนวณ asso   #################### 
-        
-        x1 <- input$columncov1indata
-        x2 <- input$columncov2indata
-        x3 <- input$columncov3indata
-        x4 <- input$columncov4indata
-        x5 <- input$columncov5indata
-        x6 <- input$columncov6indata
-        x7 <- input$columncov7indata
-        
-        
-        
-        if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+          ####################  คำนวณ asso   #################### 
+          
+          x1 <- input$columncov1indata
+          x2 <- input$columncov2indata
+          x3 <- input$columncov3indata
+          x4 <- input$columncov4indata
+          x5 <- input$columncov5indata
+          x6 <- input$columncov6indata
+          x7 <- input$columncov7indata
+          
+          
+          
+          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+            
+            print("Check: ...all null...")
+            
+            
+            
+            
+            
+          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            
+            print("Check: ...1 not null...")
+            x1 <- data[,input$columncov1indata]
+            
+            
+            
+            # id for association each province
+            data$x1_id <- data[,input$columnidareaindata]
+            
+            
+            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+              f(data$x1_id, x1, model = "iid") +
+              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+              f(data[,input$columndateindata], model = "rw1") +
+              f(province_int, model = "iid")
+            
+            # computing part
+            model <- inla(
+              formula_1_bym_rw1,
+              family = "poisson",
+              data = data,
+              E = data[,input$columnpopindata],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            
+            
+            rv$data <- data
+            
+            
+            rv$model <- model
+            
+            
+            model2 <- rv$model
+            
+            association_df <- (data.frame(
+              c(exp(model2$summary.random$`data|S|x1_id`$mean))
+            ) )
+            
+            
+            colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""))
+            
+            
+            association_wsf <- cbind(map, association_df)
+            
+            association_wsf_df <- data.frame(association_wsf)
+            
+            
+            #rv$association_wsf_df <- association_wsf_df
+            
+            
+            ad <- names(association_df)
+            updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+            
+            
+            # ค่า sig
+            # x1
+            association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+            association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+            
+            rv$association_wsf_df <- association_wsf_df
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            
+            print("Check: ...1,2 not null...")
+            x1 <- data[,input$columncov1indata]
+            x2 <- data[,input$columncov2indata]
+            
+            
+            
+            # id for association each province
+            data$x1_id <- data[,input$columnidareaindata]
+            data$x2_id <- data[,input$columnidareaindata]
+            
+            
+            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+              f(data$x1_id, x1, model = "iid") +
+              f(data$x2_id, x2, model = "iid") +
+              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+              f(data[,input$columndateindata], model = "rw1") +
+              f(province_int, model = "iid")
+            
+            # computing part
+            model <- inla(
+              formula_1_bym_rw1,
+              family = "poisson",
+              data = data,
+              E = data[,input$columnpopindata],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            
+            
+            rv$model <- model
+            
+            
+            model2 <- rv$model
+            
+            association_df <- (data.frame(
+              c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x2_id`$mean))
+            ) )
+            
+            
+            colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
+                                           paste(input$columncov2indata,"_RR", sep=""))
+            
+            association_wsf <- cbind(map, association_df)
+            
+            association_wsf_df <- data.frame(association_wsf)
+            
+            
+            ad <- names(association_df)
+            updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+            
+            
+            # ค่า sig
+            # x1
+            association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+            association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+            
+            
+            # x2
+            association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+            association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+            
+            
+            rv$association_wsf_df <- association_wsf_df
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+            
+            print("Check: ...1,2,3 not null...")
+            x1 <- data[,input$columncov1indata]
+            x2 <- data[,input$columncov2indata]
+            x3 <- data[,input$columncov3indata]
+            
+            
+            
+            # id for association each province
+            data$x1_id <- data[,input$columnidareaindata]
+            data$x2_id <- data[,input$columnidareaindata]
+            data$x3_id <- data[,input$columnidareaindata]
+            
+            
+            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+              f(data$x1_id, x1, model = "iid") +
+              f(data$x2_id, x2, model = "iid") +
+              f(data$x3_id, x3, model = "iid") +
+              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+              f(data[,input$columndateindata], model = "rw1") +
+              f(province_int, model = "iid")
+            
+            # computing part
+            model <- inla(
+              formula_1_bym_rw1,
+              family = "poisson",
+              data = data,
+              E = data[,input$columnpopindata],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            
+            
+            rv$model <- model
+            
+            
+            model2 <- rv$model
+            
+            association_df <- (data.frame(
+              c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x3_id`$mean))
+            ) )
+            
+            
+            colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
+                                           paste(input$columncov2indata,"_RR", sep=""),
+                                           paste(input$columncov3indata,"_RR", sep=""))
+            
+            association_wsf <- cbind(map, association_df)
+            
+            association_wsf_df <- data.frame(association_wsf)
+            
+            
+            ad <- names(association_df)
+            updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+            
+            # ค่า sig
+            # x1
+            association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+            association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+            
+            
+            # x2
+            association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+            association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+            
+            # x3
+            association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+            association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+            
+            
+            rv$association_wsf_df <- association_wsf_df
+            
+            
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+            
+            print("Check: ...1,2,3,4 not null...")
+            x1 <- data[,input$columncov1indata]
+            x2 <- data[,input$columncov2indata]
+            x3 <- data[,input$columncov3indata]
+            x4 <- data[,input$columncov4indata]
+            
+            
+            
+            # id for association each province
+            data$x1_id <- data[,input$columnidareaindata]
+            data$x2_id <- data[,input$columnidareaindata]
+            data$x3_id <- data[,input$columnidareaindata]
+            data$x4_id <- data[,input$columnidareaindata]
+            
+            
+            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+              f(data$x1_id, x1, model = "iid") +
+              f(data$x2_id, x2, model = "iid") +
+              f(data$x3_id, x3, model = "iid") +
+              f(data$x4_id, x4, model = "iid") +
+              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+              f(data[,input$columndateindata], model = "rw1") +
+              f(province_int, model = "iid")
+            
+            # computing part
+            model <- inla(
+              formula_1_bym_rw1,
+              family = "poisson",
+              data = data,
+              E = data[,input$columnpopindata],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            
+            
+            rv$model <- model
+            
+            
+            model2 <- rv$model
+            
+            association_df <- (data.frame(
+              c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x3_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x4_id`$mean))
+            ) )
+            
+            
+            colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
+                                           paste(input$columncov2indata,"_RR", sep=""),
+                                           paste(input$columncov3indata,"_RR", sep=""),
+                                           paste(input$columncov4indata,"_RR", sep=""))
+            
+            
+            association_wsf <- cbind(map, association_df)
+            
+            association_wsf_df <- data.frame(association_wsf)
+            
+            ad <- names(association_df)
+            updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+            
+            
+            # ค่า sig
+            # x1
+            association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+            association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+            
+            
+            # x2
+            association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+            association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+            
+            # x3
+            association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+            association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+            
+            # x4
+            association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
+            association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
+            
+            rv$association_wsf_df <- association_wsf_df
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+            
+            print("Check: ...1,2,3,4,5 not null...")
+            x1 <- data[,input$columncov1indata]
+            x2 <- data[,input$columncov2indata]
+            x3 <- data[,input$columncov3indata]
+            x4 <- data[,input$columncov4indata]
+            x5 <- data[,input$columncov5indata]
+            
+            
+            
+            # id for association each province
+            data$x1_id <- data[,input$columnidareaindata]
+            data$x2_id <- data[,input$columnidareaindata]
+            data$x3_id <- data[,input$columnidareaindata]
+            data$x4_id <- data[,input$columnidareaindata]
+            data$x5_id <- data[,input$columnidareaindata]
+            
+            
+            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+              f(data$x1_id, x1, model = "iid") +
+              f(data$x2_id, x2, model = "iid") +
+              f(data$x3_id, x3, model = "iid") +
+              f(data$x4_id, x4, model = "iid") +
+              f(data$x5_id, x5, model = "iid") +
+              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+              f(data[,input$columndateindata], model = "rw1") +
+              f(province_int, model = "iid")
+            
+            # computing part
+            model <- inla(
+              formula_1_bym_rw1,
+              family = "poisson",
+              data = data,
+              E = data[,input$columnpopindata],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            
+            rv$model <- model
+            
+            
+            model2 <- rv$model
+            
+            association_df <- (data.frame(
+              c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x3_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x4_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x5_id`$mean))
+            ) )
+            
+            
+            colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
+                                           paste(input$columncov2indata,"_RR", sep=""),
+                                           paste(input$columncov3indata,"_RR", sep=""),
+                                           paste(input$columncov4indata,"_RR", sep=""),
+                                           paste(input$columncov5indata,"_RR", sep=""))
+            
+            association_wsf <- cbind(map, association_df)
+            
+            association_wsf_df <- data.frame(association_wsf)
+            
+            
+            ad <- names(association_df)
+            updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+            
+            
+            # ค่า sig
+            # x1
+            association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+            association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+            
+            
+            # x2
+            association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+            association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+            
+            # x3
+            association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+            association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+            
+            # x4
+            association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
+            association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
+            
+            # x5
+            association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
+            association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
+            
+            rv$association_wsf_df <- association_wsf_df
+            
+            
+          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+            
+            print("Check: ...1,2,3,4,5,6 not null...")
+            x1 <- data[,input$columncov1indata]
+            x2 <- data[,input$columncov2indata]
+            x3 <- data[,input$columncov3indata]
+            x4 <- data[,input$columncov4indata]
+            x5 <- data[,input$columncov5indata]
+            x6 <- data[,input$columncov6indata]
+            
+            
+            
+            # id for association each province
+            data$x1_id <- data[,input$columnidareaindata]
+            data$x2_id <- data[,input$columnidareaindata]
+            data$x3_id <- data[,input$columnidareaindata]
+            data$x4_id <- data[,input$columnidareaindata]
+            data$x5_id <- data[,input$columnidareaindata]
+            data$x6_id <- data[,input$columnidareaindata]
+            
+            
+            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+              f(data$x1_id, x1, model = "iid") +
+              f(data$x2_id, x2, model = "iid") +
+              f(data$x3_id, x3, model = "iid") +
+              f(data$x4_id, x4, model = "iid") +
+              f(data$x5_id, x5, model = "iid") +
+              f(data$x6_id, x6, model = "iid") +
+              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+              f(data[,input$columndateindata], model = "rw1") +
+              f(province_int, model = "iid")
+            
+            # computing part
+            model <- inla(
+              formula_1_bym_rw1,
+              family = "poisson",
+              data = data,
+              E = data[,input$columnpopindata],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            
+            rv$model <- model
+            
+            
+            model2 <- rv$model
+            
+            association_df <- (data.frame(
+              c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x3_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x4_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x5_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x6_id`$mean))
+            ) )
+            
+            
+            colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
+                                           paste(input$columncov2indata,"_RR", sep=""),
+                                           paste(input$columncov3indata,"_RR", sep=""),
+                                           paste(input$columncov4indata,"_RR", sep=""),
+                                           paste(input$columncov5indata,"_RR", sep=""),
+                                           paste(input$columncov6indata,"_RR", sep=""))
+            
+            association_wsf <- cbind(map, association_df)
+            
+            association_wsf_df <- data.frame(association_wsf)
+            
+            
+            
+            ad <- names(association_df)
+            updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+            
+            
+            # ค่า sig
+            # x1
+            association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+            association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+            
+            
+            # x2
+            association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+            association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+            
+            # x3
+            association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+            association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+            
+            # x4
+            association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
+            association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
+            
+            # x5
+            association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
+            association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
+            
+            # x6
+            association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
+            association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
+            
+            rv$association_wsf_df <- association_wsf_df
+            
+            
+            
+          }else {
+            print("Check: ...all not null...")
+            x1 <- data[,input$columncov1indata]
+            x2 <- data[,input$columncov2indata]
+            x3 <- data[,input$columncov3indata]
+            x4 <- data[,input$columncov4indata]
+            x5 <- data[,input$columncov5indata]
+            x6 <- data[,input$columncov6indata]
+            x7 <- data[,input$columncov7indata]
+            
+            
+            
+            # id for association each province
+            data$x1_id <- data[,input$columnidareaindata]
+            data$x2_id <- data[,input$columnidareaindata]
+            data$x3_id <- data[,input$columnidareaindata]
+            data$x4_id <- data[,input$columnidareaindata]
+            data$x5_id <- data[,input$columnidareaindata]
+            data$x6_id <- data[,input$columnidareaindata]
+            data$x7_id <- data[,input$columnidareaindata]
+            
+            
+            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+              f(data$x1_id, x1, model = "iid") +
+              f(data$x2_id, x2, model = "iid") +
+              f(data$x3_id, x3, model = "iid") +
+              f(data$x4_id, x4, model = "iid") +
+              f(data$x5_id, x5, model = "iid") +
+              f(data$x6_id, x6, model = "iid") +
+              f(data$x7_id, x7, model = "iid") +
+              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+              f(data[,input$columndateindata], model = "rw1") +
+              f(province_int, model = "iid")
+            
+            # computing part
+            model <- inla(
+              formula_1_bym_rw1,
+              family = "poisson",
+              data = data,
+              E = data[,input$columnpopindata],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            
+            
+            rv$model <- model
+            
+            
+            model2 <- rv$model
+            
+            association_df <- (data.frame(
+              c(exp(model2$summary.random$`data|S|x1_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x2_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x3_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x4_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x5_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x6_id`$mean)),
+              c(exp(model2$summary.random$`data|S|x7_id`$mean))
+            ) )
+            
+            
+            
+            colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
+                                           paste(input$columncov2indata,"_RR", sep=""),
+                                           paste(input$columncov3indata,"_RR", sep=""),
+                                           paste(input$columncov4indata,"_RR", sep=""),
+                                           paste(input$columncov5indata,"_RR", sep=""),
+                                           paste(input$columncov6indata,"_RR", sep=""),
+                                           paste(input$columncov7indata,"_RR", sep=""))
+            
+            
+            
+            association_wsf <- cbind(map, association_df)
+            
+            association_wsf_df <- data.frame(association_wsf)
+            
+            
+            # rv$association_wsf_df <- association_wsf_df
+            
+            ad <- names(association_df)
+            updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
+            
+            
+            # ค่า sig
+            # x1
+            association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
+            association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
+            
+            
+            # x2
+            association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
+            association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
+            
+            # x3
+            association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
+            association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
+            
+            # x4
+            association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
+            association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
+            
+            # x5
+            association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
+            association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
+            
+            # x6
+            association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
+            association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
+            
+            # x7
+            association_wsf_df[, paste( input$columncov7indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,4]
+            association_wsf_df[, paste( input$columncov7indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,6]
+            
+            association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- model2$summary.random$`data|S|x7_id`[,4] > 0
+            association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x7_id`[,4] > 0 | model2$summary.random$`data|S|x7_id`[,6] < 0, "significant", "not significant")
+            
+            
+            rv$association_wsf_df <- association_wsf_df
+            
+            
+            
+            
+          } # จบ else
           
-          print("Check: ...all null...")
-          
-          
-          
-          
-          
-        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          
-          print("Check: ...1 not null...")
-          x1 <- data[,input$columncov1indata]
-          
-          
-          
-          # id for association each province
-          data$x1_id <- data[,input$columnidareaindata]
-          
-          
-          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-            f(data$x1_id, x1, model = "iid") +
-            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-            f(data[,input$columndateindata], model = "rw1") +
-            f(province_int, model = "iid")
-          
-          # computing part
-          model <- inla(
-            formula_1_bym_rw1,
-            family = "poisson",
-            data = data,
-            E = data[,input$columnpopindata],
-            control.predictor = list(compute = TRUE),
-            control.compute = list(
-              dic = TRUE,
-              waic = TRUE,
-              cpo = TRUE,
-              return.marginals.predictor = TRUE))
-          
-          
-          
-          rv$data <- data
-          
-          
-          rv$model <- model
-          
-          
-          model2 <- rv$model
-          
-          association_df <- (data.frame(
-            c(exp(model2$summary.random$`data|S|x1_id`$mean))
-          ) )
-          
-          
-          colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""))
-          
-          
-          association_wsf <- cbind(map, association_df)
-          
-          association_wsf_df <- data.frame(association_wsf)
-          
-          
-          #rv$association_wsf_df <- association_wsf_df
-          
-          
-          ad <- names(association_df)
-          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-          
-          
-          # ค่า sig
-          # x1
-          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-          
-          rv$association_wsf_df <- association_wsf_df
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          
-          print("Check: ...1,2 not null...")
-          x1 <- data[,input$columncov1indata]
-          x2 <- data[,input$columncov2indata]
-          
-          
-          
-          # id for association each province
-          data$x1_id <- data[,input$columnidareaindata]
-          data$x2_id <- data[,input$columnidareaindata]
-          
-          
-          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-            f(data$x1_id, x1, model = "iid") +
-            f(data$x2_id, x2, model = "iid") +
-            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-            f(data[,input$columndateindata], model = "rw1") +
-            f(province_int, model = "iid")
-          
-          # computing part
-          model <- inla(
-            formula_1_bym_rw1,
-            family = "poisson",
-            data = data,
-            E = data[,input$columnpopindata],
-            control.predictor = list(compute = TRUE),
-            control.compute = list(
-              dic = TRUE,
-              waic = TRUE,
-              cpo = TRUE,
-              return.marginals.predictor = TRUE))
-          
-          
-          
-          rv$model <- model
-          
-          
-          model2 <- rv$model
-          
-          association_df <- (data.frame(
-            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x2_id`$mean))
-          ) )
-          
-          
-          colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
-                                         paste(input$columncov2indata,"_RR", sep=""))
-          
-          association_wsf <- cbind(map, association_df)
-          
-          association_wsf_df <- data.frame(association_wsf)
-          
-          
-          ad <- names(association_df)
-          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-          
-          
-          # ค่า sig
-          # x1
-          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-          
-          
-          # x2
-          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-          
-          
-          rv$association_wsf_df <- association_wsf_df
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          
-          print("Check: ...1,2,3 not null...")
-          x1 <- data[,input$columncov1indata]
-          x2 <- data[,input$columncov2indata]
-          x3 <- data[,input$columncov3indata]
-          
-          
-          
-          # id for association each province
-          data$x1_id <- data[,input$columnidareaindata]
-          data$x2_id <- data[,input$columnidareaindata]
-          data$x3_id <- data[,input$columnidareaindata]
-          
-          
-          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-            f(data$x1_id, x1, model = "iid") +
-            f(data$x2_id, x2, model = "iid") +
-            f(data$x3_id, x3, model = "iid") +
-            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-            f(data[,input$columndateindata], model = "rw1") +
-            f(province_int, model = "iid")
-          
-          # computing part
-          model <- inla(
-            formula_1_bym_rw1,
-            family = "poisson",
-            data = data,
-            E = data[,input$columnpopindata],
-            control.predictor = list(compute = TRUE),
-            control.compute = list(
-              dic = TRUE,
-              waic = TRUE,
-              cpo = TRUE,
-              return.marginals.predictor = TRUE))
-          
-          
-          
-          rv$model <- model
-          
-          
-          model2 <- rv$model
-          
-          association_df <- (data.frame(
-            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x3_id`$mean))
-          ) )
-          
-          
-          colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
-                                         paste(input$columncov2indata,"_RR", sep=""),
-                                         paste(input$columncov3indata,"_RR", sep=""))
-          
-          association_wsf <- cbind(map, association_df)
-          
-          association_wsf_df <- data.frame(association_wsf)
-          
-          
-          ad <- names(association_df)
-          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-          
-          # ค่า sig
-          # x1
-          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-          
-          
-          # x2
-          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-          
-          # x3
-          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-          
-          
-          rv$association_wsf_df <- association_wsf_df
-          
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-          
-          print("Check: ...1,2,3,4 not null...")
-          x1 <- data[,input$columncov1indata]
-          x2 <- data[,input$columncov2indata]
-          x3 <- data[,input$columncov3indata]
-          x4 <- data[,input$columncov4indata]
-          
-          
-          
-          # id for association each province
-          data$x1_id <- data[,input$columnidareaindata]
-          data$x2_id <- data[,input$columnidareaindata]
-          data$x3_id <- data[,input$columnidareaindata]
-          data$x4_id <- data[,input$columnidareaindata]
-          
-          
-          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-            f(data$x1_id, x1, model = "iid") +
-            f(data$x2_id, x2, model = "iid") +
-            f(data$x3_id, x3, model = "iid") +
-            f(data$x4_id, x4, model = "iid") +
-            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-            f(data[,input$columndateindata], model = "rw1") +
-            f(province_int, model = "iid")
-          
-          # computing part
-          model <- inla(
-            formula_1_bym_rw1,
-            family = "poisson",
-            data = data,
-            E = data[,input$columnpopindata],
-            control.predictor = list(compute = TRUE),
-            control.compute = list(
-              dic = TRUE,
-              waic = TRUE,
-              cpo = TRUE,
-              return.marginals.predictor = TRUE))
-          
-          
-          
-          rv$model <- model
-          
-          
-          model2 <- rv$model
-          
-          association_df <- (data.frame(
-            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x4_id`$mean))
-          ) )
-          
-          
-          colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
-                                         paste(input$columncov2indata,"_RR", sep=""),
-                                         paste(input$columncov3indata,"_RR", sep=""),
-                                         paste(input$columncov4indata,"_RR", sep=""))
-          
-          
-          association_wsf <- cbind(map, association_df)
-          
-          association_wsf_df <- data.frame(association_wsf)
-          
-          ad <- names(association_df)
-          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-          
-          
-          # ค่า sig
-          # x1
-          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-          
-          
-          # x2
-          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-          
-          # x3
-          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-          
-          # x4
-          association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
-          association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
-          
-          rv$association_wsf_df <- association_wsf_df
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-          
-          print("Check: ...1,2,3,4,5 not null...")
-          x1 <- data[,input$columncov1indata]
-          x2 <- data[,input$columncov2indata]
-          x3 <- data[,input$columncov3indata]
-          x4 <- data[,input$columncov4indata]
-          x5 <- data[,input$columncov5indata]
-          
-          
-          
-          # id for association each province
-          data$x1_id <- data[,input$columnidareaindata]
-          data$x2_id <- data[,input$columnidareaindata]
-          data$x3_id <- data[,input$columnidareaindata]
-          data$x4_id <- data[,input$columnidareaindata]
-          data$x5_id <- data[,input$columnidareaindata]
-          
-          
-          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-            f(data$x1_id, x1, model = "iid") +
-            f(data$x2_id, x2, model = "iid") +
-            f(data$x3_id, x3, model = "iid") +
-            f(data$x4_id, x4, model = "iid") +
-            f(data$x5_id, x5, model = "iid") +
-            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-            f(data[,input$columndateindata], model = "rw1") +
-            f(province_int, model = "iid")
-          
-          # computing part
-          model <- inla(
-            formula_1_bym_rw1,
-            family = "poisson",
-            data = data,
-            E = data[,input$columnpopindata],
-            control.predictor = list(compute = TRUE),
-            control.compute = list(
-              dic = TRUE,
-              waic = TRUE,
-              cpo = TRUE,
-              return.marginals.predictor = TRUE))
-          
-          
-          rv$model <- model
-          
-          
-          model2 <- rv$model
-          
-          association_df <- (data.frame(
-            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x5_id`$mean))
-          ) )
-          
-          
-          colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
-                                         paste(input$columncov2indata,"_RR", sep=""),
-                                         paste(input$columncov3indata,"_RR", sep=""),
-                                         paste(input$columncov4indata,"_RR", sep=""),
-                                         paste(input$columncov5indata,"_RR", sep=""))
-          
-          association_wsf <- cbind(map, association_df)
-          
-          association_wsf_df <- data.frame(association_wsf)
-          
-          
-          ad <- names(association_df)
-          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-          
-          
-          # ค่า sig
-          # x1
-          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-          
-          
-          # x2
-          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-          
-          # x3
-          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-          
-          # x4
-          association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
-          association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
-          
-          # x5
-          association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
-          association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
-          
-          rv$association_wsf_df <- association_wsf_df
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-          
-          print("Check: ...1,2,3,4,5,6 not null...")
-          x1 <- data[,input$columncov1indata]
-          x2 <- data[,input$columncov2indata]
-          x3 <- data[,input$columncov3indata]
-          x4 <- data[,input$columncov4indata]
-          x5 <- data[,input$columncov5indata]
-          x6 <- data[,input$columncov6indata]
-          
-          
-          
-          # id for association each province
-          data$x1_id <- data[,input$columnidareaindata]
-          data$x2_id <- data[,input$columnidareaindata]
-          data$x3_id <- data[,input$columnidareaindata]
-          data$x4_id <- data[,input$columnidareaindata]
-          data$x5_id <- data[,input$columnidareaindata]
-          data$x6_id <- data[,input$columnidareaindata]
-          
-          
-          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-            f(data$x1_id, x1, model = "iid") +
-            f(data$x2_id, x2, model = "iid") +
-            f(data$x3_id, x3, model = "iid") +
-            f(data$x4_id, x4, model = "iid") +
-            f(data$x5_id, x5, model = "iid") +
-            f(data$x6_id, x6, model = "iid") +
-            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-            f(data[,input$columndateindata], model = "rw1") +
-            f(province_int, model = "iid")
-          
-          # computing part
-          model <- inla(
-            formula_1_bym_rw1,
-            family = "poisson",
-            data = data,
-            E = data[,input$columnpopindata],
-            control.predictor = list(compute = TRUE),
-            control.compute = list(
-              dic = TRUE,
-              waic = TRUE,
-              cpo = TRUE,
-              return.marginals.predictor = TRUE))
-          
-          
-          rv$model <- model
-          
-          
-          model2 <- rv$model
-          
-          association_df <- (data.frame(
-            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x5_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x6_id`$mean))
-          ) )
-          
-          
-          colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
-                                         paste(input$columncov2indata,"_RR", sep=""),
-                                         paste(input$columncov3indata,"_RR", sep=""),
-                                         paste(input$columncov4indata,"_RR", sep=""),
-                                         paste(input$columncov5indata,"_RR", sep=""),
-                                         paste(input$columncov6indata,"_RR", sep=""))
-          
-          association_wsf <- cbind(map, association_df)
-          
-          association_wsf_df <- data.frame(association_wsf)
-          
-          
-          
-          ad <- names(association_df)
-          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-          
-          
-          # ค่า sig
-          # x1
-          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-          
-          
-          # x2
-          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-          
-          # x3
-          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-          
-          # x4
-          association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
-          association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
-          
-          # x5
-          association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
-          association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
-          
-          # x6
-          association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
-          association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
-          
-          rv$association_wsf_df <- association_wsf_df
-          
-          
-          
-        }else {
-          print("Check: ...all not null...")
-          x1 <- data[,input$columncov1indata]
-          x2 <- data[,input$columncov2indata]
-          x3 <- data[,input$columncov3indata]
-          x4 <- data[,input$columncov4indata]
-          x5 <- data[,input$columncov5indata]
-          x6 <- data[,input$columncov6indata]
-          x7 <- data[,input$columncov7indata]
-          
-          
-          
-          # id for association each province
-          data$x1_id <- data[,input$columnidareaindata]
-          data$x2_id <- data[,input$columnidareaindata]
-          data$x3_id <- data[,input$columnidareaindata]
-          data$x4_id <- data[,input$columnidareaindata]
-          data$x5_id <- data[,input$columnidareaindata]
-          data$x6_id <- data[,input$columnidareaindata]
-          data$x7_id <- data[,input$columnidareaindata]
-          
-          
-          formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-            f(data$x1_id, x1, model = "iid") +
-            f(data$x2_id, x2, model = "iid") +
-            f(data$x3_id, x3, model = "iid") +
-            f(data$x4_id, x4, model = "iid") +
-            f(data$x5_id, x5, model = "iid") +
-            f(data$x6_id, x6, model = "iid") +
-            f(data$x7_id, x7, model = "iid") +
-            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-            f(data[,input$columndateindata], model = "rw1") +
-            f(province_int, model = "iid")
-          
-          # computing part
-          model <- inla(
-            formula_1_bym_rw1,
-            family = "poisson",
-            data = data,
-            E = data[,input$columnpopindata],
-            control.predictor = list(compute = TRUE),
-            control.compute = list(
-              dic = TRUE,
-              waic = TRUE,
-              cpo = TRUE,
-              return.marginals.predictor = TRUE))
-          
-          
-          
-          rv$model <- model
-          
-          
-          model2 <- rv$model
-          
-          association_df <- (data.frame(
-            c(exp(model2$summary.random$`data|S|x1_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x2_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x3_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x4_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x5_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x6_id`$mean)),
-            c(exp(model2$summary.random$`data|S|x7_id`$mean))
-          ) )
-          
-          
-          
-          colnames(association_df) <-  c(paste(input$columncov1indata,"_RR", sep=""),
-                                         paste(input$columncov2indata,"_RR", sep=""),
-                                         paste(input$columncov3indata,"_RR", sep=""),
-                                         paste(input$columncov4indata,"_RR", sep=""),
-                                         paste(input$columncov5indata,"_RR", sep=""),
-                                         paste(input$columncov6indata,"_RR", sep=""),
-                                         paste(input$columncov7indata,"_RR", sep=""))
-          
-          
-          
-          association_wsf <- cbind(map, association_df)
-          
-          association_wsf_df <- data.frame(association_wsf)
-          
-          
-          # rv$association_wsf_df <- association_wsf_df
-          
-          ad <- names(association_df)
-          updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
-          
-          
-          # ค่า sig
-          # x1
-          association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
-          association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
-          
-          
-          # x2
-          association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
-          association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
-          
-          # x3
-          association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
-          association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
-          
-          # x4
-          association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
-          association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
-          
-          # x5
-          association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
-          association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
-          
-          # x6
-          association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
-          association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
-          
-          # x7
-          association_wsf_df[, paste( input$columncov7indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,4]
-          association_wsf_df[, paste( input$columncov7indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,6]
-          
-          association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- model2$summary.random$`data|S|x7_id`[,4] > 0
-          association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x7_id`[,4] > 0 | model2$summary.random$`data|S|x7_id`[,6] < 0, "significant", "not significant")
-          
-          
-          rv$association_wsf_df <- association_wsf_df
-          
-          
-          
-          
-        } # จบ else
-        
         }, error = function(e) {
           rv$errorMessageAssoc <- paste(
             "An error occurred in Association with Risk Factors. Please check the uploaded data again.",
@@ -2521,7 +2523,7 @@ shinyApp(
     }
     
     
-     
+    
     ###### map_distribution 1 ######### 
     # output$map_distribution <- renderLeaflet({
     #   tryCatch({
@@ -2639,16 +2641,25 @@ shinyApp(
       
       
       
-      #datafiltered <- data[which(data[,input$columndateindata] == input$time_point_filter), ]
+      # datafiltered <- data[which(data[,input$columndateindata] == input$time_point_filter), ]
+      # datafiltered <- data
+      # ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
+      # map@data <- datafiltered[ordercounties, ]
+      
       datafiltered <- data
-      ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
-      map@data <- datafiltered[ordercounties, ]
+      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[input$columnidareanamedata]])
+      
+      # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
+      temp_geom <- st_geometry(map)
+      map <- datafiltered[ordercounties, ]
+      st_geometry(map) <- temp_geom
+      
       
       # Create leaflet
       l <- leaflet(map) %>% addTiles()
-      pal <- colorNumeric(palette = input$color, domain = map@data[, input$columncasesindata])
+      pal <- colorNumeric(palette = input$color, domain = map[[input$columncasesindata]])
       labels <- sprintf("<strong> %s </strong> <br/>  %s : %s ",
-                        map@data[, input$columnidareanamedata] , input$columncasesindata, map@data[, input$columncasesindata]
+                        map[[input$columnidareanamedata]] , input$columncasesindata, map[[input$columncasesindata]]
       ) %>%
         lapply(htmltools::HTML)
       
@@ -2662,7 +2673,7 @@ shinyApp(
         
         addPolygons(
           color = "grey", weight = 1,
-          fillColor = ~ pal(map@data[, input$columncasesindata]), fillOpacity = 0.7,
+          fillColor = ~ pal(map[[input$columncasesindata]]), fillOpacity = 0.7,
           highlightOptions = highlightOptions(weight = 4),
           label = labels,
           labelOptions = labelOptions(
@@ -2674,7 +2685,7 @@ shinyApp(
           )
         ) %>%
         addLegend_decreasing(
-          pal = pal, values = ~map@data[, input$columncasesindata], opacity = 0.7,
+          pal = pal, values = ~map[[input$columncasesindata]], opacity = 0.7,
           title = input$columncasesindata, position = "bottomright", 
           decreasing = TRUE
         ) %>%
@@ -2694,7 +2705,7 @@ shinyApp(
     
     
     ###### map_distribution 2 ######### 
-
+    
     
     # output$map_distribution_2 <- renderLeaflet({
     #   
@@ -2887,8 +2898,12 @@ shinyApp(
       }
       
       datafiltered <- data
-      ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
-      map@data <- datafiltered[ordercounties, ]
+      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[input$columnidareanamedata]])
+      
+      # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
+      temp_geom <- st_geometry(map)
+      map <- datafiltered[ordercounties, ]
+      st_geometry(map) <- temp_geom
       
       
       
@@ -2904,10 +2919,10 @@ shinyApp(
       
       # สร้างแผนที่ leaflet
       l <- leaflet(map) %>% addTiles()
-      pal <- colorNumeric(palette = input$color, domain = map@data$adjusted_cases)
+      pal <- colorNumeric(palette = input$color, domain = map$adjusted_cases)
       labels <- sprintf("<strong> %s </strong> <br/>  Adjusted Cases : %s ",
-                        map@data[, input$columnidareanamedata], 
-                        format(round(map@data$adjusted_cases, 5), scientific = FALSE)
+                        map[[input$columnidareanamedata]], 
+                        format(round(map$adjusted_cases, 5), scientific = FALSE)
       ) %>%
         lapply(htmltools::HTML)
       
@@ -2918,7 +2933,7 @@ shinyApp(
         addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
         addPolygons(
           color = "grey", weight = 1,
-          fillColor = ~ pal(map@data$adjusted_cases), fillOpacity = 0.7,
+          fillColor = ~ pal(map$adjusted_cases), fillOpacity = 0.7,
           highlightOptions = highlightOptions(weight = 4),
           label = labels,
           labelOptions = labelOptions(
@@ -2930,7 +2945,7 @@ shinyApp(
           )
         ) %>%
         addLegend_decreasing(
-          pal = pal, values = ~map@data$adjusted_cases, opacity = 0.7,
+          pal = pal, values = ~map$adjusted_cases, opacity = 0.7,
           title = "Adjusted Cases", position = "bottomright", 
           decreasing = TRUE
         ) %>%
@@ -2966,17 +2981,21 @@ shinyApp(
         
         
         datafiltered <- data2
-        ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
-        map@data <- datafiltered[ordercounties, ]
+        ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[input$columnidareanamedata]])
+        
+        # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
+        temp_geom <- st_geometry(map)
+        map <- datafiltered[ordercounties, ]
+        st_geometry(map) <- temp_geom
         
         # print(map@data[, "label"])
         
         # Create leaflet c("red", "blue")
         l <- leaflet(map) %>% addTiles()
-        pal <- colorFactor(palette = input$color_cluster, domain = map@data[, "hotspot label"],
+        pal <- colorFactor(palette = input$color_cluster, domain = map[["hotspot label"]],
                            levels = c("hotspot", "non-hotspot"))
         labels <- sprintf("<strong> %s </strong> <br/> hotspot label : %s ",
-                          map@data[, input$columnidareanamedata] ,  map@data[, "hotspot label"]
+                          map[[input$columnidareanamedata]] ,  map[["hotspot label"]]
         ) %>%
           lapply(htmltools::HTML)
         
@@ -2990,7 +3009,7 @@ shinyApp(
           
           addPolygons(
             color = "grey", weight = 1,
-            fillColor = ~ pal(map@data[, "hotspot label"]), fillOpacity = 0.7,
+            fillColor = ~ pal(map[["hotspot label"]]), fillOpacity = 0.7,
             highlightOptions = highlightOptions(weight = 4),
             label = labels,
             labelOptions = labelOptions(
@@ -3002,7 +3021,7 @@ shinyApp(
             )
           ) %>%
           addLegend(
-            pal = pal, values = ~map@data[, "hotspot label"] , opacity = 0.7,
+            pal = pal, values = ~map[["hotspot label"]] , opacity = 0.7,
             title = "hotspot label", position = "bottomright"
           )%>%
           addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
@@ -3119,39 +3138,44 @@ shinyApp(
       
       map <- rv$map
       association_wsf_df <- rv$association_wsf_df 
+      
       datafiltered <- association_wsf_df
-      ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareainmap])
-      map@data <- datafiltered[ordercounties, ]
+      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[input$columnidareainmap]])
+      
+      # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
+      temp_geom <- st_geometry(map)
+      map <- datafiltered[ordercounties, ]
+      st_geometry(map) <- temp_geom
       
       sig_col <- NULL
       
       if (input$risk_factor_filter == paste(input$columncov1indata,"_RR", sep="")){
-        sig_col <- map@data[, paste(input$columncov1indata,"_significance", sep="")]
+        sig_col <- map[[paste(input$columncov1indata,"_significance", sep="")]]
         
       } else if (input$risk_factor_filter == paste(input$columncov2indata,"_RR", sep="")) {
-        sig_col <- map@data[, paste(input$columncov2indata,"_significance", sep="")]
+        sig_col <- map[[paste(input$columncov2indata,"_significance", sep="")]]
         
       } else if (input$risk_factor_filter == paste(input$columncov3indata,"_RR", sep="")) {
-        sig_col <- map@data[, paste(input$columncov3indata,"_significance", sep="")]
+        sig_col <- map[[paste(input$columncov3indata,"_significance", sep="")]]
         
       } else if (input$risk_factor_filter == paste(input$columncov4indata,"_RR", sep="")) {
-        sig_col <- map@data[, paste(input$columncov4indata,"_significance", sep="")]
+        sig_col <- map[[paste(input$columncov4indata,"_significance", sep="")]]
         
       } else if (input$risk_factor_filter == paste(input$columncov5indata,"_RR", sep="")) {
-        sig_col <- map@data[, paste(input$columncov5indata,"_significance", sep="")]
+        sig_col <- map[[paste(input$columncov5indata,"_significance", sep="")]]
         
       } else if (input$risk_factor_filter == paste(input$columncov6indata,"_RR", sep="")) {
-        sig_col <- map@data[, paste(input$columncov6indata,"_significance", sep="")]
+        sig_col <- map[[paste(input$columncov6indata,"_significance", sep="")]]
         
       } else if (input$risk_factor_filter == paste(input$columncov7indata,"_RR",sep="")) {
-        sig_col <- map@data[, paste(input$columncov7indata,"_significance", sep="")]
+        sig_col <- map[[paste(input$columncov7indata,"_significance", sep="")]]
       } 
       
       # Create leaflet
       l <- leaflet(map) %>% addTiles()
-      pal <- colorNumeric(palette = input$color_asso, domain = map@data[, input$risk_factor_filter])
+      pal <- colorNumeric(palette = input$color_asso, domain = map[[input$risk_factor_filter]])
       labels <- sprintf("<strong> %s </strong> <br/>  %s : %s <br/> Significance: %s",
-                        map@data[, input$columnidareainmap] , input$risk_factor_filter, map@data[, input$risk_factor_filter] , sig_col
+                        map[[input$columnidareainmap]] , input$risk_factor_filter, map[[input$risk_factor_filter]] , sig_col
       ) %>%
         lapply(htmltools::HTML)
       
@@ -3164,7 +3188,7 @@ shinyApp(
         addPolygons(
           color = ifelse(sig_col == "significant", "black", "grey"), 
           weight = ifelse(sig_col == "significant", 5, 1), 
-          fillColor = ~ pal(map@data[, input$risk_factor_filter]), 
+          fillColor = ~ pal(map[[input$risk_factor_filter]]), 
           fillOpacity = 0.7,
           label = labels,
           labelOptions = labelOptions(
@@ -3177,7 +3201,7 @@ shinyApp(
           )
         ) %>%
         addLegend_decreasing(
-          pal = pal, values = ~map@data[, input$risk_factor_filter], opacity = 0.7,
+          pal = pal, values = ~map[[input$risk_factor_filter]], opacity = 0.7,
           title = input$risk_factor_filter, position = "bottomright",
           decreasing = TRUE
         ) %>%
