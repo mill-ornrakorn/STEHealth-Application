@@ -1,1 +1,0 @@
-shiny::runApp('shiny/STEHealth.R')
