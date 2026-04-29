@@ -92,6 +92,20 @@ sidebar <- dashboardSidebar(
 
 
 body <- dashboardBody(
+  useShinyjs(),
+  # เพิ่ม CSS เพื่อทำให้เมนูที่โดน Disable ดูเป็นสีเทาและกดไม่ได้
+  tags$head(
+    tags$style(HTML("
+      /* สไตล์สำหรับเมนูที่ถูกล็อก */
+      .shinyjs-disabled {
+        cursor: not-allowed !important;
+        opacity: 0.4 !important;
+      }
+      .shinyjs-disabled a {
+        pointer-events: none !important;
+      }
+    "))
+  ),
   tags$script("document.title = 'STEHealth | Spatiotemporal Epidemiological Analysis'"),
   tags$head(tags$link(rel="icon", 
                       href="STEHealth_logo_0.ico")
@@ -102,6 +116,31 @@ body <- dashboardBody(
     tags$link(rel="stylesheet" ,href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"), # UNICONS
     tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),   # import css file
     tags$script(src="js/index.js"), # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่นม ๆ
+    # สคริปต์สร้าง Tooltip ด้วยตัวเองเมื่อเอาเมาส์ชี้เมนูสีเทา
+    tags$script(HTML("
+      $(document).on('mouseenter', 'a.locked-menu', function() {
+        // แก้ไขข้อความเป็นภาษาอังกฤษที่นี่
+        var tooltip = $('<div class=\"custom-locked-tooltip\">Please upload data first</div>');
+        
+        $('body').append(tooltip);
+        var offset = $(this).offset();
+        tooltip.css({
+            top: offset.top + 8 + 'px',
+            left: '235px', 
+            position: 'absolute',
+            zIndex: 999999,
+            backgroundColor: '#333333',
+            color: '#ffffff',
+            padding: '6px 12px',
+            borderRadius: '4px',
+            fontSize: '14px',
+            pointerEvents: 'none'
+        });
+      }).on('mouseleave', 'a.locked-menu', function() {
+        $('.custom-locked-tooltip').remove();
+      });
+    ")),
+  
     tags$style(HTML("
       #divide_by {
         position: absolute;
@@ -191,6 +230,21 @@ body <- dashboardBody(
               ")),
               
               fluidPage(
+                
+                # วางไว้ก่อนส่วนที่ 1. Upload shapefile
+                div(class = "box-white",
+                    HTML("<h3><i class='uil uil-database' style='color: #735DFB;'></i> Data Source</h3>"),
+                    radioButtons("data_source_type", "Select Data Source:",
+                                 choices = c("Upload your own files" = "upload", 
+                                             "Use Sample Data (Thailand Suicide)" = "sample"),
+                                 selected = "upload", inline = TRUE),
+                    
+                    # เพิ่มคำแนะนำสั้นๆ
+                    conditionalPanel(
+                      condition = "input.data_source_type == 'sample'",
+                      helpText(HTML("<i class='uil uil-info-circle'></i> The app will use pre-loaded data from the 'sample data' folder."))
+                    )
+                ),
                 
                 # ==================================== Row 1: Shapefile ==================================== 
                 fluidRow( class='box-white',
@@ -931,6 +985,28 @@ shinyApp(
   
   server <- function(input, output, session) { 
     
+    # ====================================
+    # ควบคุมการล็อกเมนู Map Distribution และ Analysis
+    # ====================================
+    observe({
+      target_tabs <- c("Map_Distribution", "Analysis")
+      is_ready <- !is.null(rv$map) && !is.null(rv$datosOriginal)
+      
+      if (is_ready) {
+        # ---- เมื่อข้อมูลพร้อม (ปลดล็อก) ----
+        for(tab in target_tabs) {
+          shinyjs::removeClass(selector = paste0("a[data-value='", tab, "']"), class = "locked-menu")
+          shinyjs::runjs(sprintf("$('a[data-value=\"%s\"]').attr('data-toggle', 'tab');", tab))
+        }
+      } else {
+        # ---- เมื่อข้อมูลยังไม่มี (ล็อก) ----
+        for(tab in target_tabs) {
+          shinyjs::addClass(selector = paste0("a[data-value='", tab, "']"), class = "locked-menu")
+          shinyjs::runjs(sprintf("$('a[data-value=\"%s\"]').removeAttr('data-toggle');", tab))
+        }
+      }
+    })
+
     #observe(print(input$columnexpvalueindata))
     
     # message menu
@@ -951,13 +1027,30 @@ shinyApp(
     })
     
     
+    # ====================================
+    # สั่งล็อกเมนู Analysis ตอนเริ่มแอป
+    # ====================================
+    shinyjs::addClass(selector = "a[data-value='Analysis']", class = "locked-menu")
     
-    # แบบรูปไม่ position:absolute
+    # ตรวจสอบสถานะข้อมูลเพื่อปลดล็อก
+    observe({
+      # ถ้ามีข้อมูลครบทั้ง แผนที่ และ ข้อมูล
+      if (!is.null(rv$map) && !is.null(rv$datosOriginal)) {
+        # สั่งปลดล็อก (ลบคลาสสีเทาออก)
+        shinyjs::removeClass(selector = "a[data-value='Analysis']", class = "locked-menu")
+      } else {
+        # ถ้าข้อมูลหายไป ให้กลับมาล็อกใหม่
+        shinyjs::addClass(selector = "a[data-value='Analysis']", class = "locked-menu")
+      }
+    })
+    
+    
+    
+    # รูป nodata สำหรับฝั่ง Shapefile
     output$status_map <- renderUI({
-      if (is.null(input$filemap)) { 
+      if (is.null(rv$map)) { 
         HTML("<p style='margin-top: 60px; margin-bottom: 40px; text-align:center;'> 
          <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>")
-        
       } 
     })
     
@@ -969,11 +1062,11 @@ shinyApp(
     # })
     
     
+    # รูป nodata สำหรับฝั่ง CSV Data
     output$status_csv <- renderUI({
-      if (is.null(input$file1)) { 
+      if (is.null(rv$datosOriginal)) { 
         HTML("<p style='text-align:center; margin-top: 60px; margin-bottom: 40px; '> 
          <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>")
-        
       } 
     })
     
@@ -986,10 +1079,9 @@ shinyApp(
     # })
     
     output$status_map_dis <- renderUI({
-      if (is.null(input$filemap) &  is.null(input$file1)) { 
+      if (is.null(rv$map) & is.null(rv$datosOriginal)) { 
         HTML("<p style='margin-top: 10%; left: 10%; position:absolute;'> 
          <img src='undraw_world_re.svg',  height  = '500px', width = '700px'>")
-        
       } 
     })
     
@@ -1003,10 +1095,9 @@ shinyApp(
     # })
     
     output$status_cluster <- renderUI({
-      if (is.null(input$filemap) &  is.null(input$file1)) {
+      if (is.null(rv$map) & is.null(rv$datosOriginal)) {
         HTML("<p style='margin-top: 15%; left: 15%; position:absolute;'>
          <img src='undraw_location_search_re.svg',  height  = '450px', width = '600px'>")
-        
       }
     })
     
@@ -1030,18 +1121,21 @@ shinyApp(
     
     
     output$status_risk_fac <- renderUI({
-      if (is.null(input$filemap) &  is.null(input$file1)) { 
+      if (is.null(rv$map) & is.null(rv$datosOriginal)) { 
         HTML("<p style='margin-top: 15%; left: 15%; position:absolute;'>
          <img src='undraw_adventure_re.svg',  height  = '450px', width = '600px'>")
-        
       } 
     })
     
-    # สร้างตัวแปรเช็กสถานะการอัปโหลดไฟล์
-    output$filemap_uploaded <- reactive({ !is.null(input$filemap) })
+    # สร้างตัวแปรเช็กสถานะการอัปโหลดไฟล์ หรือ เลือก Sample Data
+    output$filemap_uploaded <- reactive({ 
+      !is.null(input$filemap) || input$data_source_type == "sample" 
+    })
     outputOptions(output, "filemap_uploaded", suspendWhenHidden = FALSE)
     
-    output$file1_uploaded <- reactive({ !is.null(input$file1) })
+    output$file1_uploaded <- reactive({ 
+      !is.null(input$file1) || input$data_source_type == "sample" 
+    })
     outputOptions(output, "file1_uploaded", suspendWhenHidden = FALSE)
     
     
@@ -1291,53 +1385,76 @@ shinyApp(
     
     
     observe({
-      if (is.null(names(rv$datosOriginal)))
+      xd <- names(rv$datosOriginal)
+      if (is.null(xd)) {
         xd <- character(0)
+      }
+      xd2 <- c("-", xd)
       
-      xd<-names(rv$datosOriginal)
-      
-      if (is.null(xd))
-        xd <- character(0)
-      
-      xd2<- c("-", xd)
-      
-      # Can also set the label and select items
-      #label = paste("Select input label", length(x)),
-      updateSelectInput(session, "columnidareaindata", choices = xd,  selected = head(xd, 1))
-      updateSelectInput(session, "columnidareanamedata", choices = xd,  selected = head(xd, 1))
-      updateSelectInput(session, "columndateindata",   choices = xd,  selected = head(xd, 1))
-      updateSelectInput(session, "columnexpvalueindata",    choices = xd,  selected = head(xd, 1))
-      updateSelectInput(session, "columncasesindata",  choices = xd,  selected = head(xd, 1))
-      updateSelectInput(session, "columnpopindata",  choices = xd,  selected = head(xd, 1))
-      
-      
-      #columncov1indata
-      updateSelectInput(session, "columncov1indata",  choices = xd,  selected =  "-")
-      updateSelectInput(session, "columncov2indata",  choices = xd,  selected =  "-")
-      updateSelectInput(session, "columncov3indata",  choices = xd,  selected =  "-")
-      updateSelectInput(session, "columncov4indata",  choices = xd,  selected =  "-")
-      updateSelectInput(session, "columncov5indata",  choices = xd,  selected =  "-")
-      updateSelectInput(session, "columncov6indata",  choices = xd,  selected =  "-")
-      updateSelectInput(session, "columncov7indata",  choices = xd,  selected =  "-")
-      #updateSelectInput(session, "columncov5indata",  choices = xd,  selected = "-")
-      
+      if (input$data_source_type == "sample" && length(xd) > 0) {
+        # **รบกวนแก้ชื่อ string สีเขียวด้านล่างนี้ ให้ตรงกับคอลัมน์จริงในไฟล์ suicide_th_data_sample ของคุณ**
+        updateSelectInput(session, "columnidareaindata", choices = xd, selected = "province_id")
+        updateSelectInput(session, "columnidareanamedata", choices = xd, selected = "province")
+        updateSelectInput(session, "columndateindata", choices = xd, selected = "year")
+        updateSelectInput(session, "columncasesindata", choices = xd, selected = "suicide")
+        updateSelectInput(session, "columnpopindata", choices = xd, selected = "population")
+        updateSelectInput(session, "columnexpvalueindata", choices = xd, selected = "expected.value")
+        
+        # ตั้งค่า Covariates อัตโนมัติสำหรับ Sample Data (ถ้ามี)
+        updateSelectInput(session, "columncov1indata", choices = xd2, selected = "debt")
+        updateSelectInput(session, "columncov2indata", choices = xd2, selected = "income")
+        
+        # อันที่ไม่ได้ใช้ให้เป็น "-"
+        updateSelectInput(session, "columncov3indata", choices = xd2, selected = "poverty")
+        updateSelectInput(session, "columncov4indata", choices = xd2, selected = "expenditure")
+        updateSelectInput(session, "columncov5indata", choices = xd2, selected = "homicide.crime")
+        updateSelectInput(session, "columncov6indata", choices = xd2, selected = "property.crime")
+        updateSelectInput(session, "columncov7indata", choices = xd2, selected = "shocking.crime")
+        
+      } else {
+        # กรณีอัปโหลดเอง ให้ default เป็นคอลัมน์แรก
+        updateSelectInput(session, "columnidareaindata", choices = xd, selected = head(xd, 1))
+        updateSelectInput(session, "columnidareanamedata", choices = xd, selected = head(xd, 1))
+        updateSelectInput(session, "columndateindata", choices = xd, selected = head(xd, 1))
+        updateSelectInput(session, "columnexpvalueindata", choices = xd, selected = head(xd, 1))
+        updateSelectInput(session, "columncasesindata", choices = xd, selected = head(xd, 1))
+        updateSelectInput(session, "columnpopindata", choices = xd, selected = head(xd, 1))
+        
+        updateSelectInput(session, "columncov1indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov2indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov3indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov4indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov5indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov6indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov7indata", choices = xd2, selected = "-")
+      }
+    })
+    
+    
+    # อัปเดต Radio Buttons อัตโนมัติเมื่อเลือก Sample Data
+    observeEvent(input$data_source_type, {
+      if (input$data_source_type == "sample") {
+        updateRadioButtons(session, "shapefile_from_thailand", selected = "yes")
+        updateRadioButtons(session, "Expected_Value_from_csv", selected = "yes")
+      }
     })
     
     
     
     observe({
       x <- names(rv$map)
-      xd<-c("-",x)
-      # Can use character(0) to remove all choices
-      if (is.null(x)){
+      if (is.null(x)) {
         x <- character(0)
-        xd<-x
       }
       
-      updateSelectInput(session, "columnidareainmap",        choices = x,  selected = head(x, 1))
-      #updateSelectInput(session, "columnnameareainmap",      choices = x,  selected = head(x, 1))
-      #updateSelectInput(session, "columnnamesuperareainmap", choices = xd, selected = head(xd, 1))
-      
+      if (input$data_source_type == "sample" && length(x) > 0) {
+        # **แก้ไขชื่อ "NAME_1" ให้ตรงกับชื่อคอลัมน์จังหวัดในไฟล์ gadm40_THA_1 ของคุณ**
+        updateSelectInput(session, "columnidareainmap", choices = x, selected = "NAME_1")
+        
+      } else {
+        # กรณีอัปโหลดเอง ให้ default เป็นคอลัมน์แรก
+        updateSelectInput(session, "columnidareainmap", choices = x, selected = head(x, 1))
+      }
     })
     
     
@@ -1401,40 +1518,52 @@ shinyApp(
     
     # Upload shapefile
     observe({
-      
-      shpdf <- input$filemap
-      if(is.null(shpdf)){
-        return()
+      if (input$data_source_type == "upload") {
+        shpdf <- input$filemap
+        if(is.null(shpdf)){
+          return()
+        }
+        previouswd <- getwd()
+        uploaddirectory <- dirname(shpdf$datapath[1])
+        setwd(uploaddirectory)
+        for(i in 1:nrow(shpdf)){
+          file.rename(shpdf$datapath[i], shpdf$name[i])
+        }
+        setwd(previouswd)
+        
+        shp_file <- file.path(uploaddirectory, shpdf$name[grep("\\.shp$", shpdf$name)])
+        
+      } else {
+        # ถ้าผู้ใช้เลือก Sample Data ให้ชี้ไปที่โฟลเดอร์ตรงๆ
+        shp_file <- "sample data/gadm40_THA_1.shp"
       }
-      previouswd <- getwd()
-      uploaddirectory <- dirname(shpdf$datapath[1])
-      setwd(uploaddirectory)
-      for(i in 1:nrow(shpdf)){
-        file.rename(shpdf$datapath[i], shpdf$name[i])
-      }
-      setwd(previouswd)
       
-      #map <- readShapePoly(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"),  delete_null_obj=TRUE)
-      #reads the file that finishes with .shp using $ at the end: grep(pattern="*.shp$", shpdf$name)
-      # map <- readOGR(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp$", shpdf$name)], sep="/"), encoding = "UTF-8")#,  delete_null_obj=TRUE)
-      shp_file <- file.path(uploaddirectory, shpdf$name[grep("\\.shp$", shpdf$name)])
-      map <- st_read(shp_file, quiet = TRUE, options = "ENCODING=UTF-8")
-      map <- st_transform(map, crs = 4326)
-      
-      rv$map<-map
-      
-      
-      
-      
+      # โหลดแผนที่ด้วย sf (ใช้ร่วมกันทั้งแบบ Upload และ Sample)
+      tryCatch({
+        map <- st_read(shp_file, quiet = TRUE, options = "ENCODING=UTF-8")
+        map <- st_transform(map, crs = 4326)
+        rv$map <- map
+      }, error = function(e) {
+        showNotification(paste("Error reading shapefile:", e$message), type = "error")
+      })
     })
     
     # Upload data
     observe({
-      inFile <- input$file1
-      if (is.null(inFile))
-        return(invisible())
-      rv$datosOriginal<-read.csv(inFile$datapath)
+      if (input$data_source_type == "upload") {
+        inFile <- input$file1
+        if (is.null(inFile)) return(invisible())
+        path <- inFile$datapath
+      } else {
+        # ถ้าผู้ใช้เลือก Sample Data ให้ชี้ไปที่ไฟล์ CSV ในโฟลเดอร์ตรงๆ
+        path <- "sample data/suicide_th_data_sample_have_e_value.csv"
+      }
       
+      tryCatch({
+        rv$datosOriginal <- read.csv(path)
+      }, error = function(e) {
+        showNotification(paste("Error reading CSV:", e$message), type = "error")
+      })
     })
     
     

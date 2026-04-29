@@ -780,3 +780,42 @@ span.purple {
   }
   
 }
+
+
+/* ====================================
+   สไตล์สำหรับเมนูที่ถูกล็อก (Locked Menu)
+   ==================================== */
+/* สไตล์สำหรับเมนูที่ถูกล็อก */
+.sidebar-menu li a.locked-menu {
+    color: #c4c4cc !important; 
+    background-color: transparent !important; 
+    opacity: 0.6 !important; 
+    cursor: not-allowed !important; /* รูปเมาส์ห้ามกด */
+    /* ห้ามมีคำว่า pointer-events: none; เด็ดขาด */
+}
+
+/* ป้องกันสีเปลี่ยนตอนเอาเมาส์ชี้ */
+.sidebar-menu li a.locked-menu:hover, 
+.sidebar-menu li a.locked-menu:focus {
+    background-color: transparent !important;
+    color: #c4c4cc !important;
+}
+
+.sidebar-menu li a.locked-menu i {
+    color: #c4c4cc !important; 
+}
+
+
+/* ====================================
+   แก้ไขปัญหา Tooltip โดน Sidebar บัง
+   ==================================== */
+.tooltip {
+    z-index: 999999999 !important; /* บังคับให้ Tooltip ลอยอยู่ชั้นบนสุดเสมอ */
+}
+
+.tooltip-inner {
+    font-size: 14px; /* ปรับขนาดฟอนต์ให้ใหญ่ขึ้นเพื่อให้อ่านง่าย */
+    padding: 8px 12px;
+    background-color: #333333 !important; /* เปลี่ยนสีพื้นหลัง Tooltip (ตัวเลือกเสริม) */
+    border-radius: 6px;
+}
