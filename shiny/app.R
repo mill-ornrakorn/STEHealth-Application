@@ -174,25 +174,27 @@ body <- dashboardBody(
                             Spatiotemporal Epidemiological Analysis
                         </h1>
                         <p class="home__caption"  style = "text-align: justify;">
-                            This is an application for analyzing space-time pattern and 
-                             association with risk factors of suicide and other health outcomes, 
-                             which allows users to import their own data, analyze, and visualize.</p>
+                            An advanced analytical platform designed for exploring 
+                            spatiotemporal patterns and identifying risk factor associations 
+                            for health outcomes. Empowers researchers to import custom datasets 
+                            for integrated statistical analysis and high-resolution visualization.
+                        </p>
                       
                       <div class="button">
                         
-                        <!-- เปลี่ยนเป็น .click() และเอาฟันหนูที่ชื่อเมนูออก เพื่อไม่ให้ HTML พัง -->
+                        <!-- ปรับขนาดปุ่ม Get Started: เพิ่ม font-size และ padding -->
                         <a class="btn btn-primary" 
                                  onclick="$(\'.sidebar-menu a[data-value=Upload_data]\').click();" 
                                  role="button"
-                                 style = "border-color: #735DFB; cursor: pointer;" >
+                                 style = "border-color: #735DFB; cursor: pointer; font-size: 16px; padding: 12px 30px; margin-right: 10px;" >
                            <strong>Get Started <i class="uil uil-angle-right-b"></i></strong> 
                         </a>
                         
-                        <!-- เปลี่ยนเป็น .click() และเอาฟันหนูที่ชื่อเมนูออก -->
+                        <!-- ปรับขนาดปุ่ม How to use?: เพิ่ม font-size และ padding -->
                         <a class="btn btn-outline-primary"
                                  onclick="$(\'.sidebar-menu a[data-value=Manual]\').click();"
                                  role="button"
-                                 style="cursor: pointer;"
+                                 style="cursor: pointer; font-size: 16px; padding: 12px 30px;"
                                  >
                             <strong>How to use?</strong>
                         </a>
@@ -323,19 +325,16 @@ body <- dashboardBody(
                                      # 2. เปลี่ยนสไตล์ตรงนี้เป็น position: absolute ชิดขวา (right: 0px)
                                      # สามารถปรับค่า top (บน) หรือ right (ขวา)
                                      div(style = "position: absolute; right: 0px; top: 15px;",
-                                         bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
+                                         
+                                         # 1. ใช้ actionButton แทน bsButton และใส่ CSS บังคับทรงกลม กว้างยาวเท่ากัน
+                                         actionButton("question_shapefile", label = icon("question"), 
+                                                      style = "border-radius: 50% !important; width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background-color: #735DFB; color: white; border: none;"),
                                          
                                          bsPopover(id = "question_shapefile", title = "Shapefile", 
                                                    content = paste0(strong("What is a shapefile? "),br(),
                                                                     "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
-                                                                    a("(5)",
+                                                                    a("[Reference]",
                                                                       href = "https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm",
-                                                                      target="_blank"),
-                                                                    br(),br(),
-                                                                    strong("Examples of shapefiles"),br(),
-                                                                    "This examples shapefiles include shp, dbf, shx, prj. ",
-                                                                    a("click here to downloads shapefiles",
-                                                                      href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
                                                                       target="_blank")
                                                    ),
                                                    placement = "right", trigger = "click", options = list(container = "body")
@@ -405,24 +404,6 @@ body <- dashboardBody(
                                               tags$i(class = "uil uil-clipboard-notes", style = "color:#735DFB; margin-right:6px;"),
                                               "Upload CSV Data File")
                                            # p(class = "section-subtitle", "Upload all 4 components together")
-                                         )
-                                     ),
-                                     
-                                     # 2. ปุ่มจะวิ่งไปชิดขอบขวาสุดของกล่องทันที
-                                     div(style = "position: absolute; right: 0px; top: 15px;",
-                                         bsButton("question_csvfile", label = "", icon = icon("question"), style = "Question"),
-                                         
-                                         bsPopover(id = "question_csvfile", title = "csv file",
-                                                   content = paste0(strong("The csv file "),br(),
-                                                                    ".csv file needs to have columns: ",
-                                                                    strong("<area id> <area name> <cases> <time point> <population>"),
-                                                                    br(),br(),
-                                                                    strong("Examples of csv file "),
-                                                                    a("click here to downloads csv file",
-                                                                      href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
-                                                                      target="_blank")
-                                                   ),
-                                                   placement = "right", trigger = "click", options = list(container = "body")
                                          )
                                      )
                                  ), # จบ div(position: relative)
@@ -1130,14 +1111,15 @@ shinyApp(
     #observe(print(input$columnexpvalueindata))
     
     # message menu
-    
     output$messageMenu <- renderMenu({
       dropdownMenu(type = "messages", 
                    messageItem(
                      from = "Project in Github", 
                      message = "Documentation, Source, Citation",
                      icon = icon("github", style = 'color: #5c5c68;'),
-                     href = "https://github.com/mill-ornrakorn/STEHealth-Application"),
+                     # ใช้ JavaScript บังคับเปิดลิงก์ในแท็บใหม่ เพื่อหลบข้อจำกัด iframe ของ Hugging Face
+                     href = "javascript:window.open('https://github.com/mill-ornrakorn/STEHealth-Application', '_blank');"
+                   ),
                    
                    badgeStatus = NULL,
                    icon = tags$i(tags$img(src='info.png', height='16', width='16')),

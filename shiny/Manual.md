@@ -1,7 +1,7 @@
 <div style = "text-align: justify; margin-right: 60px; font-size: 16px">
 
 ## <span style="color:#735DFB"> **Manual** </span>
-This manual includes step-by-step instructions on how to use each page of the application. If this manual is not displayed, you can view it by [click here](https://drive.google.com/drive/folders/11YfEo3pXg7V0UOQAAI_PvDp-4uQ5OxYz?usp=share_link).
+This manual includes step-by-step instructions on how to use each page of the application. If this manual is not displayed, you can view it by <a href="https://canva.link/yk8vjfdonxnxu0o" target="_blank">clicking here</a>.
 
 <iframe src="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAFouZH35Qs&#x2F;qlle3OhsD55DukcBjBT3_w&#x2F;view?embed" allowfullscreen="allowfullscreen" allow="fullscreen", width="100%", height="800vh", scrolling="auto"> </iframe>
 <!-- <div style="position: relative; width: 100%; height: 0; padding-top: 141.4286%;

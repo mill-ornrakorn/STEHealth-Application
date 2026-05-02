@@ -148,7 +148,8 @@ If an error occurs in usage, for example:
 
 
 
-&emsp;&emsp; The sample data used for case study in this application consists of Thailand shapefile and csv file which can be [downloaded here📑](https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link).
+&emsp;&emsp; The sample data used for case study in this application consists of Thailand shapefile and csv file which can be 
+<a href="https://github.com/mill-ornrakorn/STEHealth-Application/tree/main/shiny/sample%20data" target="_blank">downloaded here📑</a>.
 
 1. **Thailand shapefile** contains 4 files that cannot be missing any of them due to their references to each other: shp, dbf, shx, and prj. These Shapefiles represent **provincial boundaries (Level 1)**.
   <p align="center">
@@ -158,7 +159,7 @@ If an error occurs in usage, for example:
   </p> 
   </br>
 
-2. **csv file** contains the following 12 columns: 
+2. **csv file (Suicide Mortality and Risk Factors in Thailand from 2011 to 2021)** contains the following 12 columns: 
 
     **1. province** is the name of province which has a total of 77 provinces.
 
@@ -175,7 +176,7 @@ If an error occurs in usage, for example:
   <p align="center">
     <img width="60%" src="th_csv.jpg" alt= “csv_file”>
     </br>
-    Thailand suicide mortality and risk factors 2011-2021
+    Suicide Mortality and Risk Factors in Thailand from 2011 to 2021
   </p> 
 </div>
 

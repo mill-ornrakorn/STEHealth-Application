@@ -60,14 +60,16 @@ STEHealth Application is fully deployed on the cloud via **Hugging Face Spaces**
 
 ## Deployment Architecture 🚀
 
-Deploying STEHealth to the cloud involved solving complex dependency challenges between R spatial packages and the `R-INLA` model. We achieved a stable cloud deployment on **Hugging Face Spaces** using the following strategy:
-* **Docker Containerization:** We built a custom environment using `rocker/shiny:4.2.2` as the base image to ensure OS-level stability.
-* **Time-Locked Repository:** We utilized a Posit Package Manager snapshot from **March 1, 2023**, to successfully install classic spatial libraries (`rgdal`, `spdep`) without C++ compilation errors.
-* **Model Versioning:** We locked `R-INLA` to version `22.05.07` to maintain compatibility with the system environment and completely bypass `GLIBC` issues found in newer versions.
+Deploying STEHealth to the cloud involved addressing complex dependency challenges between modern R spatial packages and the `R-INLA` computational engine. We achieved a high-performance, stable cloud deployment on **Hugging Face Spaces** using the following updated strategy:
+
+*   **Modern Docker Infrastructure:** We utilized the latest `rocker/shiny` base image, transitioning to **R 4.5+** and **Ubuntu 24.04 (Noble)**. This ensures access to the latest security patches and high-performance system libraries.
+*   **Next-Generation Spatial Stack:** We migrated from legacy libraries (like `rgdal`) to the modern **`sf` (Simple Features)** and **`spdep`** stack. By leveraging dynamic package management instead of time-locked snapshots, the application stays compatible with current geospatial standards.
+*   **Optimized Model Integration:** To maintain peak analytical accuracy, we integrate the **`R-INLA` Testing Build**, specifically configured to remain compatible with advanced R environments. This bypasses traditional `GLIBC` and shared library conflicts (e.g., `libproj`) common in complex epidemiological modeling.
+*   **Containerized Portability:** The entire environment is encapsulated in a custom Docker container, exposing **Port 7860** for seamless integration with Hugging Face's infrastructure, ensuring that the local development environment perfectly matches the cloud production state.
 
 
 ## Sample Data 📁
-The [sample data](https://github.com/mill-ornrakorn/STEHealth-Application/tree/main/sample%20data) used for case study in this application consists of Thailand shapefile and csv file (Suicide Mortality and Risk Factors in Thailand from 2011 to 2021)
+The [sample data](https://github.com/mill-ornrakorn/STEHealth-Application/tree/main/shiny/sample%20data) used for case study in this application consists of Thailand shapefile and csv file (Suicide Mortality and Risk Factors in Thailand from 2011 to 2021)
 
 
 
@@ -104,12 +106,13 @@ Suicide Mortality and Risk Factors in Thailand from 2011 to 2021
 ## Manual📗
 🚧 Note: The manual is currently under revision to reflect the latest updates and the new Cloud Deployment on Hugging Face Spaces.
 
-This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/shiny/www/STEHealth_Application_Manual.pdf)
+This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://canva.link/yk8vjfdonxnxu0o)
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_Application_Manual_cover.png?raw=true" alt= “STEHealth_Manual” height="600">
+  <a href="https://canva.link/yk8vjfdonxnxu0o" target="_blank">
+    <img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_Application_Manual_cover.png?raw=true" alt="STEHealth_Manual" height="600" style="cursor: pointer;">
+  </a>
 </p>
-
 
 
 ### Deployment & Infrastructure
