@@ -219,8 +219,6 @@ body <- dashboardBody(
               
               div(style = "margin-bottom: 30px;"),
               
-              HTML("<h2>Input Data</h2>"),
-              
               tags$script(HTML("
                 $(document).on('click', '.btn-file', function() {
                   var currentScroll = $(window).scrollTop();
@@ -232,50 +230,115 @@ body <- dashboardBody(
               
               fluidPage(
                 
-                # วางไว้ก่อนส่วนที่ 1. Upload shapefile
+                # ==================== STEP 1: Data Source ====================
                 fluidRow(class = "box-white",
                          column(12,
-                                HTML("<h3><i class='uil uil-database' style='color: #735DFB;'></i> Data Source</h3>"),
-                                radioButtons("data_source_type", "Select Data Source:",
-                                             choices = c("Upload your own files" = "upload", 
-                                                         "Use Sample Data (Thailand Suicide)" = "sample"),
-                                             selected = "upload", inline = TRUE),
+                                # Section Header
+                                div(class = "section-header",
+                                    # div(class = "section-number", "1"),
+                                    HTML('<h3><span class="purple">1.</span></h3>'),
+                                    div(
+                                      h3(class = "section-title-text", 
+                                        tags$i(class = "uil uil-database", style = "color:#735DFB; margin-right:6px;"),
+                                        "Data Source"),
+                                      p(class = "section-subtitle", "Choose how you want to provide data for analysis")
+                                    )
+                                ),
+                                div(class = "section-divider"),
                                 
-                                # เพิ่มคำแนะนำสั้นๆ
+                                # Card selector (ส่วนนี้ใช้ HTML cards แต่ยังผูกกับ input$data_source_type เดิม)
+                                div(class = "source-card-group",
+                                    
+                                    # Card: Upload own files
+                                    tags$div(
+                                      class = "source-card selected",
+                                      id = "card_upload",
+                                      onclick = "
+                                  $('#data_source_type input[value=upload]').prop('checked', true).trigger('change');
+                                  $('.source-card').removeClass('selected');
+                                  $('#card_upload').addClass('selected');
+                                ",
+                                      div(class = "check-badge", HTML("&#10003;")),
+                                      tags$span(class = "card-icon", HTML("&#128193;")),
+                                      div(class = "card-title", "Upload Your Own Files"),
+                                      div(class = "card-desc", "Upload a shapefile (.shp, .dbf, .shx, .prj) and a CSV file with your own data.")
+                                    ),
+                                    
+                                    # Card: Sample data
+                                    tags$div(
+                                      class = "source-card",
+                                      id = "card_sample",
+                                      onclick = "
+                                  $('#data_source_type input[value=sample]').prop('checked', true).trigger('change');
+                                  $('.source-card').removeClass('selected');
+                                  $('#card_sample').addClass('selected');
+                                ",
+                                      div(class = "check-badge", HTML("&#10003;")),
+                                      tags$span(class = "card-icon", HTML("&#128161;")),
+                                      div(class = "card-title", "Use Sample Data"),
+                                      div(class = "card-desc", "Thailand Suicide Mortality 2011–2021 (77 provinces, pre-loaded with all covariates).")
+                                    )
+                                ),
+                                
+                                # radio button ซ่อนไว้ (ยังทำงานอยู่เบื้องหลัง)
+                                div(style = "display:none;",
+                                    radioButtons("data_source_type", "",
+                                                 choices = c("Upload your own files" = "upload",
+                                                             "Use Sample Data (Thailand Suicide)" = "sample"),
+                                                 selected = "upload", inline = TRUE)
+                                ),
+                                
+                                # Sample data hint
                                 conditionalPanel(
                                   condition = "input.data_source_type == 'sample'",
-                                  helpText(HTML("<i class='uil uil-info-circle'></i> The app will use pre-loaded data from the 'sample data' folder."))
+                                  div(style = "margin-top: 14px;",
+                                      div(class = "info-note",
+                                          HTML("<i class='uil uil-info-circle'></i> <strong>Sample data loaded.</strong> Columns will be auto-filled below. You can proceed directly to <em>Next</em>.")
+                                      )
+                                  )
                                 )
                          )
+                ), # end Data Source row
                 
-                ),
-                
-                # ==================================== Row 1: Shapefile ==================================== 
+                # ==================================== STEP 2: Shapefile ==================================== 
                 fluidRow( class='box-white',
                           column(4, class='box-white',
                                  
-                                 div(
-                                   HTML('<h3><span class="purple">1.</span> Upload shapefile</h3>'),
-                                   
-                                   div(style = "margin-left: 280px; margin-top: -45px;",
-                                       bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
-                                       
-                                       bsPopover(id = "question_shapefile", title = "Shapefile", 
-                                                 content = paste0(strong("What is a shapefile? "),br(),
-                                                                  "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
-                                                                  a("(5)",
-                                                                    href = "https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm",
-                                                                    target="_blank"),
-                                                                  br(),br(),
-                                                                  strong("Examples of shapefiles"),br(),
-                                                                  "This examples shapefiles include shp, dbf, shx, prj. ",
-                                                                  a("click here to downloads shapefiles",
-                                                                    href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
-                                                                    target="_blank")
-                                                 ),
-                                                 placement = "right", trigger = "click", options = list(container = "body")
-                                       ))
-                                 ),
+                                 # 1. เพิ่ม div ครอบตรงนี้ และตั้ง position: relative เพื่อเป็นจุดอ้างอิง
+                                 div(style = "position: relative;", 
+                                     div(class = "section-header",
+                                         # div(class = "section-number", "1"),
+                                         HTML('<h3><span class="purple">2.</span></h3>'),
+                                         div(
+                                           h3(class = "section-title-text", 
+                                              tags$i(class = "uil uil-map-marker", style = "color:#735DFB; margin-right:6px;"),
+                                              "Upload Shapefile")
+                                           # p(class = "section-subtitle", "Upload all 4 components together")
+                                         )
+                                     ),
+                                     
+                                     # 2. เปลี่ยนสไตล์ตรงนี้เป็น position: absolute ชิดขวา (right: 0px)
+                                     # สามารถปรับค่า top (บน) หรือ right (ขวา)
+                                     div(style = "position: absolute; right: 0px; top: 15px;",
+                                         bsButton("question_shapefile", label = "", icon = icon("question"), style = "Question"),
+                                         
+                                         bsPopover(id = "question_shapefile", title = "Shapefile", 
+                                                   content = paste0(strong("What is a shapefile? "),br(),
+                                                                    "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
+                                                                    a("(5)",
+                                                                      href = "https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm",
+                                                                      target="_blank"),
+                                                                    br(),br(),
+                                                                    strong("Examples of shapefiles"),br(),
+                                                                    "This examples shapefiles include shp, dbf, shx, prj. ",
+                                                                    a("click here to downloads shapefiles",
+                                                                      href = "https://drive.google.com/drive/folders/1vheBturgr3gclBq7kqp5dWouPf_C0VbQ?usp=share_link",
+                                                                      target="_blank")
+                                                   ),
+                                                   placement = "right", trigger = "click", options = list(container = "body")
+                                         )
+                                     )
+                                 ), # จบ div(position: relative)
                                  
                                  hr(),
                                  HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile components at once:</font></strong> shp, dbf, shx and prj."),
@@ -284,7 +347,6 @@ body <- dashboardBody(
                                  helpText("Select column area name in the map."),
                                  fluidRow(
                                    column(12, selectInput("columnidareainmap",   
-                                                          # ยัด HTML เข้าไปตรงๆ ทะลุข้อจำกัดของแพ็กเกจไปเลยครับ
                                                           label = HTML('area name <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">"area name" in the shapefile must be matched to "area name" in the csv file</span></div>'),   
                                                           choices = c(""), selected = "")
                                    )),
@@ -326,13 +388,25 @@ body <- dashboardBody(
                           
                 ), # จบ fluidRow
                 
-                # ==================================== Row 2: Upload Data file ==================================== 
-                
+                # ==================================== STEP 3: Upload Data file ==================================== 
                 fluidRow( class='box-white',
                           column(4, class='box-white',
-                                 div(style="display: inline-block;",
-                                     HTML('<h3><span class="purple">2.</span> Upload csv file</h3>'),
-                                     div(style = "margin-left: 280px; margin-top: -45px;",
+                                 
+                                 # 1. เปลี่ยนตรงนี้เป็น position: relative; เพื่อใช้เป็นกรอบอ้างอิง
+                                 div(style = "position: relative;",
+                                     div(class = "section-header",
+                                         # div(class = "section-number", "1"),
+                                         HTML('<h3><span class="purple">3.</span></h3>'),
+                                         div(
+                                           h3(class = "section-title-text", 
+                                              tags$i(class = "uil uil-clipboard-notes", style = "color:#735DFB; margin-right:6px;"),
+                                              "Upload CSV Data File")
+                                           # p(class = "section-subtitle", "Upload all 4 components together")
+                                         )
+                                     ),
+                                     
+                                     # 2. ปุ่มจะวิ่งไปชิดขอบขวาสุดของกล่องทันที
+                                     div(style = "position: absolute; right: 0px; top: 15px;",
                                          bsButton("question_csvfile", label = "", icon = icon("question"), style = "Question"),
                                          
                                          bsPopover(id = "question_csvfile", title = "csv file",
@@ -346,8 +420,9 @@ body <- dashboardBody(
                                                                       target="_blank")
                                                    ),
                                                    placement = "right", trigger = "click", options = list(container = "body")
-                                         ))
-                                 ),
+                                         )
+                                     )
+                                 ), # จบ div(position: relative)
                                  
                                  hr(),
                                  HTML("csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time point, cases, population</font></strong>"),
@@ -381,8 +456,8 @@ body <- dashboardBody(
                                    )
                                  ),
                                  
-                                 # ===================== ส่วน 2.1 Select Expected Value =====================
-                                 HTML("<h4><strong>2.1 Select Expected Value</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
+                                 # ===================== 3.1 Select Expected Value =====================
+                                 HTML("<h4><strong>3.1 Expected Value</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
                                  
                                  radioButtons("Expected_Value_from_csv", "Does this CSV file have an expected value column?", 
                                               inline = TRUE, choices = c("Yes" = "yes", "No" = "no"), selected = "no"),
@@ -400,19 +475,34 @@ body <- dashboardBody(
                                  
                                  conditionalPanel(
                                    condition = "input.Expected_Value_from_csv == 'no'",
-                                   div(style = "margin-bottom: 15px;",
-                                       HTML("<font color=\"#735DFB\"><strong>Note that: </strong></font>
-                                            If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value. For details on how the expected value is calculated, please refer to the "),
-                                       tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point")
+                                   # div(style = "margin-bottom: 15px;",
+                                   #     HTML("<font color=\"#735DFB\"><strong>Note that: </strong></font>
+                                   #          If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value. For details on how the expected value is calculated, please refer to the "),
+                                   #     tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point")
+                                   # )
+                                   div(class = "info-note",
+                                       HTML("<strong>Note:</strong> If no expected value column is provided, 
+                                          it will be calculated automatically from <em>cases</em> and <em>population</em>. 
+                                          See the "),
+                                       tags$a("Help page", onclick = "customHref('Help')", class = "cursor_point"),
+                                       HTML(" for details.")
                                    )
                                  ),
                                  # ==========================================================
                                  
-                                 HTML("</br><h4><strong>2.2 Select Covariates</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
-                                 HTML("Please arrange the covariates in order from 1 to 7, 
-                                       ensuring that all positions are filled consecutively without any skipped numbers. 
-                                       This sequential ordering is essential for the model to correctly interpret each covariate’s priority 
-                                       or influence in the analysis."),
+                                 HTML("</br><h4><strong>3.2 Covariates</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
+                                 # HTML("Please arrange the covariates in order from 1 to 7, 
+                                 #       ensuring that all positions are filled consecutively without any skipped numbers. 
+                                 #       This sequential ordering is essential for the model to correctly interpret each covariate’s priority 
+                                 #       or influence in the analysis."),
+                               
+                                 
+                                 div(class = "cov-hint",
+                                     HTML("<i class='uil uil-info-circle'></i> 
+                                        Assign covariates <strong>in order from 1 onwards</strong>, 
+                                        without skipping any numbers. 
+                                        Leave unused slots as <strong>–</strong>.")
+                                 ),
                                  
                                  helpText("Select column(s):"),
                                  fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
@@ -459,15 +549,26 @@ body <- dashboardBody(
                           ) # จบ column(7) ของ CSV
                 ), # จบ fluidRow
                 
-                # ==================================== Row 3: Note ==================================== 
-                fluidRow(
-                  class='box-white',
-                  HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
-                      Please ensure that the uploaded shapefile matches the data file, with consistent area names or codes to align the spatial map with the associated data. Mismatched files may lead to errors in visualization and analysis
-                      </br>")
+                # ==================================== Note ==================================== 
+                # fluidRow(
+                #   class='box-white',
+                #   HTML("<font color= \"#735DFB\"><strong>Note: </strong></font>
+                #       Please ensure that the uploaded shapefile matches the data file, with consistent area names or codes to align the spatial map with the associated data. Mismatched files may lead to errors in visualization and analysis
+                #       </br>")
+                # ),
+                # 
+                fluidRow(class = "box-white",
+                         column(12,
+                                div(class = "info-note",
+                                    HTML("<i class='uil uil-exclamation-triangle'></i>
+                                    <strong>Important:</strong> 
+                                    The shapefile and CSV file must use <strong>matching area names</strong>. 
+                                    Mismatched names will cause errors in visualization and analysis.")
+                                )
+                         )
                 ),
                 
-                # ==================================== Row 4: Buttons ==================================== 
+                # ==================================== Buttons ==================================== 
                 fluidRow(
                   column(2, offset = 8,
                          actionButton("reload_btn",
@@ -566,28 +667,26 @@ body <- dashboardBody(
                                    style = "border-radius: 100px;"
                                  )
                                  
-                               ),
+                               )
                                
                                
-                               fluidRow(column(4,
-                                               offset=3,
-                                               actionButton("nextpage",
-                                                            strong("Go to analysis page"), # ► ◄
-                                                            onclick = "$('li:eq(8) a').tab('show');",
-                                                            class = 'btn-primary',
-                                                            style='color: #FFFFFF; margin-top: 20px;'
-                                               )
-                               ))
+                               # fluidRow(column(4,
+                               #                 offset=3,
+                               #                 actionButton("nextpage",
+                               #                              strong("Go to analysis page"), # ► ◄
+                               #                              onclick = "$('li:eq(8) a').tab('show');",
+                               #                              class = 'btn-primary',
+                               #                              style='color: #FFFFFF; margin-top: 20px;'
+                               #                 )
+                               # ))
                                
                                
                         )
                       )
                       
-                    )
+                      
+                    ),
                     
-                    
-                    
-                    ,
                     # mainPanel(uiOutput("status_map_dis"),
                     #           #leafletOutput("map_distribution", height = "70vh")
                     #           div(class = 'error',
@@ -646,7 +745,22 @@ body <- dashboardBody(
                     
                     
                     
-                  ))
+                  )),
+              fluidRow(
+                column(2, offset = 10,
+                       # actionButton("nextpage",
+                       #              strong("Go to analysis page"), # ► ◄
+                       #              onclick = "$('li:eq(8) a').tab('show');",
+                       #              class = 'btn-primary',
+                       #              style='color: #FFFFFF; margin-top: 20px;'
+                       # )
+                       actionButton("nextpage", 
+                                    label = tagList("Next", icon("angle-right")), 
+                                    onclick = "$('li:eq(8) a').tab('show');",
+                                    class = "btn-primary", 
+                                    style = "width:90%; height:50px; font-size:18px;")
+                )
+              )
               
       ),
       
