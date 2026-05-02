@@ -107,6 +107,7 @@ h5{
 
 /* สีกรอบ sidebar */
 .well { 
+  background-color: #FFFFFF;
   border-color: #FFFFFF;
   }
 
@@ -811,6 +812,7 @@ span.purple {
    ==================================== */
 .tooltip {
     z-index: 999999999 !important; /* บังคับให้ Tooltip ลอยอยู่ชั้นบนสุดเสมอ */
+    position: absolute !important;
 }
 
 .tooltip-inner {
@@ -819,3 +821,104 @@ span.purple {
     background-color: #333333 !important; /* เปลี่ยนสีพื้นหลัง Tooltip (ตัวเลือกเสริม) */
     border-radius: 6px;
 }
+
+
+
+
+/* ---- CSS สำหรับ Tooltip ปุ่ม Next ที่สร้างเอง 100% ---- */
+      .my-custom-tooltip {
+        position: relative;
+        display: inline-block;
+        width: 90%;
+        cursor: not-allowed;
+      }
+      .my-custom-tooltip .tooltiptext {
+        visibility: hidden;
+        width: 250px;
+        background-color: #333333;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px 12px;
+        position: absolute;
+        z-index: 99999999;
+        bottom: 120%; 
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 14px;
+        line-height: 1.5;
+        pointer-events: none;
+      }
+      .my-custom-tooltip .tooltiptext::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #333333 transparent transparent transparent;
+      }
+      .my-custom-tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+
+
+
+      /* ---- CSS สำหรับ Tooltip ไอคอน Info (i) แบบสร้างเอง 100% ---- */
+      /* 1. กำหนดให้กล่อง Input ของ Shiny เป็นจุดอ้างอิงพิกัด */
+      .shiny-input-container {
+        position: relative !important;
+      }
+      
+      /* 2. ดันไอคอน Info ไปชิดขวาของกรอบ Input */
+      .info-tooltip-container {
+        position: absolute;
+        right: 0;   /* ชิดขวาสุด */
+        top: 0;     /* ระดับเดียวกับข้อความ Label */
+        display: inline-block;
+      }
+      
+      /* 3. ตั้งค่ากล่องข้อความ Tooltip (ยืดไปทางซ้าย ป้องกันล้นขอบจอ) */
+      .info-tooltip-container .tooltip-text {
+        visibility: hidden;
+        background-color: #333333;
+        color: #ffffff;
+        text-align: left;
+        padding: 8px 12px;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 99999999;
+        bottom: 140%;
+        right: -8px; /* ขยับให้จุดศูนย์กลางตรงกับไอคอน */
+        width: max-content;
+        max-width: 250px;
+        font-family: 'Poppins', 'Prompt', sans-serif;
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 1.4;
+        pointer-events: none;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      
+      /* 4. สร้างลูกศรชี้ลงมาที่ไอคอน */
+      .info-tooltip-container .tooltip-text::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        right: 12px; /* ให้ลูกศรชี้ตรงกับตำแหน่งไอคอนพอดี */
+        border-width: 5px;
+        border-style: solid;
+        border-color: #333333 transparent transparent transparent;
+      }
+      
+      /* 5. โชว์ข้อความเมื่อเอาเมาส์ชี้ */
+      .info-tooltip-container:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }

@@ -148,6 +148,7 @@ body <- dashboardBody(
         right: 10px;
         z-index: 9999;
       }
+      
     "))
     
   ),
@@ -232,18 +233,21 @@ body <- dashboardBody(
               fluidPage(
                 
                 # วางไว้ก่อนส่วนที่ 1. Upload shapefile
-                div(class = "box-white",
-                    HTML("<h3><i class='uil uil-database' style='color: #735DFB;'></i> Data Source</h3>"),
-                    radioButtons("data_source_type", "Select Data Source:",
-                                 choices = c("Upload your own files" = "upload", 
-                                             "Use Sample Data (Thailand Suicide)" = "sample"),
-                                 selected = "upload", inline = TRUE),
-                    
-                    # เพิ่มคำแนะนำสั้นๆ
-                    conditionalPanel(
-                      condition = "input.data_source_type == 'sample'",
-                      helpText(HTML("<i class='uil uil-info-circle'></i> The app will use pre-loaded data from the 'sample data' folder."))
-                    )
+                fluidRow(class = "box-white",
+                         column(12,
+                                HTML("<h3><i class='uil uil-database' style='color: #735DFB;'></i> Data Source</h3>"),
+                                radioButtons("data_source_type", "Select Data Source:",
+                                             choices = c("Upload your own files" = "upload", 
+                                                         "Use Sample Data (Thailand Suicide)" = "sample"),
+                                             selected = "upload", inline = TRUE),
+                                
+                                # เพิ่มคำแนะนำสั้นๆ
+                                conditionalPanel(
+                                  condition = "input.data_source_type == 'sample'",
+                                  helpText(HTML("<i class='uil uil-info-circle'></i> The app will use pre-loaded data from the 'sample data' folder."))
+                                )
+                         )
+                
                 ),
                 
                 # ==================================== Row 1: Shapefile ==================================== 
@@ -278,12 +282,12 @@ body <- dashboardBody(
                                  fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
                                  
                                  helpText("Select column area name in the map."),
-                                 fluidRow(column(12, selectInput("columnidareainmap",   label = "area name",   choices = c(""), selected = "")%>%
-                                                   shinyInput_label_embed(
-                                                     icon("info") %>%
-                                                       bs_embed_tooltip(title = '"area name" in the shapefile must be matched to "area name" in the csv file')
-                                                   )
-                                 )),
+                                 fluidRow(
+                                   column(12, selectInput("columnidareainmap",   
+                                                          # ยัด HTML เข้าไปตรงๆ ทะลุข้อจำกัดของแพ็กเกจไปเลยครับ
+                                                          label = HTML('area name <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">"area name" in the shapefile must be matched to "area name" in the csv file</span></div>'),   
+                                                          choices = c(""), selected = "")
+                                   )),
                                  
                                  HTML("</br>"),
                                  
@@ -296,7 +300,7 @@ body <- dashboardBody(
                           
                           column(7, 
                                  # เพิ่ม min-height ป้องกันหน้าเว็บเด้งตอนเปลี่ยนสถานะ
-                                 div(style = "min-height: 500px; padding: 20px; background-color: #f9f9fc; border-radius: 10px; border: 1px solid #f0f0f0;",
+                                 div(style = "min-height: 500px; padding: 20px; border-radius: 10px;",
                                      HTML("<h3 style='margin-top: 0;'><i class='uil uil-map' style='color: #735DFB;'></i> Preview Shapefile</h3>"),
                                      
                                      uiOutput('status_map'),  
@@ -350,40 +354,31 @@ body <- dashboardBody(
                                  fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
                                  
                                  helpText("Select columns:"),
-                                 fluidRow(column(6, selectInput("columnidareaindata",  label = "area id",  choices = c(""), selected = "")%>%
-                                                   shinyInput_label_embed(
-                                                     icon("info") %>%
-                                                       bs_embed_tooltip(title = '"area id" is a number starting at 1, used to identify provinces.')
-                                                   )
-                                 ),
-                                 column(6, selectInput("columnidareanamedata", label = "area name", choices = c(""), selected = "")%>%
-                                          shinyInput_label_embed(
-                                            icon("info") %>%
-                                              bs_embed_tooltip(title = '"area name" in the shapefile must be matched to "area name" in the csv file.')
-                                          )
-                                 )
-                                 ),
                                  fluidRow(
-                                   column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = "")%>%
-                                            shinyInput_label_embed(
-                                              icon("info") %>%
-                                                bs_embed_tooltip(title = 'population in each area.')
-                                            )
-                                          
+                                   column(6, selectInput("columnidareaindata",  
+                                                         label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">"area id" is a number starting at 1, used to identify provinces.</span></div>'),  
+                                                         choices = c(""), selected = "")
                                    ),
-                                   column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = "")%>%
-                                            shinyInput_label_embed(
-                                              icon("info") %>%
-                                                bs_embed_tooltip(title = 'number of cases or outcomes in each area.')
-                                            )
+                                   column(6, selectInput("columnidareanamedata", 
+                                                         label = HTML('area name <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">"area name" in the shapefile must be matched to "area name" in the csv file.</span></div>'), 
+                                                         choices = c(""), selected = "")
                                    )
                                  ),
-                                 fluidRow(column(6, selectInput("columndateindata", label = "time point", choices = c(""), selected = "")%>%
-                                                   shinyInput_label_embed(
-                                                     icon("info") %>%
-                                                       bs_embed_tooltip(title = 'time point in the data, such as day, month, year.')
-                                                   )
-                                 )
+                                 fluidRow(
+                                   column(6, selectInput("columnpopindata", 
+                                                         label = HTML('population <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">population in each area.</span></div>'), 
+                                                         choices = c(""), selected = "")
+                                   ),
+                                   column(6, selectInput("columncasesindata", 
+                                                         label = HTML('cases <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">number of cases or outcomes in each area.</span></div>'), 
+                                                         choices = c(""), selected = "")
+                                   )
+                                 ),
+                                 fluidRow(
+                                   column(6, selectInput("columndateindata", 
+                                                         label = HTML('time point <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">time point in the data, such as day, month, year.</span></div>'), 
+                                                         choices = c(""), selected = "")
+                                   )
                                  ),
                                  
                                  # ===================== ส่วน 2.1 Select Expected Value =====================
@@ -396,11 +391,9 @@ body <- dashboardBody(
                                    condition = "input.Expected_Value_from_csv == 'yes'",
                                    helpText("Select column:"),
                                    fluidRow(
-                                     column(12, selectInput("columnexpvalueindata", label = "expected value", choices = c(""), selected = "") %>%
-                                              shinyInput_label_embed(
-                                                icon("info") %>%
-                                                  bs_embed_tooltip(title = 'The expected value is number of outcomes in the provided area and period which may vary due to the types of diseases.')
-                                              )
+                                     column(12, selectInput("columnexpvalueindata", 
+                                                            label = HTML('expected value <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">The expected value is number of outcomes in the provided area and period which may vary due to the types of diseases.</span></div>'), 
+                                                            choices = c(""), selected = "")
                                      )
                                    )
                                  ),
@@ -441,7 +434,7 @@ body <- dashboardBody(
                           
                           column(7, 
                                  # เพิ่ม min-height ป้องกันหน้าเว็บเด้งตอนเปลี่ยนสถานะ
-                                 div(style = "min-height: 600px; padding: 20px; background-color: #f9f9fc; border-radius: 10px; border: 1px solid #f0f0f0;",
+                                 div(style = "min-height: 600px; padding: 20px;  border-radius: 10px;",
                                      HTML("<h3 style='margin-top: 0;'><i class='uil uil-clipboard-notes' style='color: #735DFB;'></i> Preview Data</h3>"),
                                      
                                      uiOutput('status_csv'),  
@@ -484,11 +477,22 @@ body <- dashboardBody(
                                       onclick = "location.reload();")
                   ),
                   column(2,
-                         actionButton("Preview_Map_Distribution",
-                                      label = tagList("Next", icon("angle-right")),
-                                      class = "btn-primary",
-                                      style = "width:90%; height:50px; font-size:18px;",
-                                      onclick = "$('li:eq(7) a').tab('show');") # ลิงก์ไปยัง Map_Distribution หน้าถัดไป
+                         # ปุ่มที่ 1: ปุ่มหลอกสีเทา พร้อม CSS Tooltip ที่เราเพิ่งสร้าง
+                         tags$div(id = "btn_disabled_wrapper", class = "my-custom-tooltip",
+                                  actionButton("dummy_btn", 
+                                               label = tagList("Next", icon("angle-right")), 
+                                               class = "btn-primary", 
+                                               style = "width:100%; height:50px; font-size:18px; opacity: 0.5; pointer-events: none;"),
+                                  tags$span(class = "tooltiptext", "⚠️ Please upload shapefile (map) and csv file first.")
+                         ),
+                         
+                         # ปุ่มที่ 2: ปุ่มจริงสีสว่าง ซ่อนไว้ก่อน
+                         shinyjs::hidden(
+                           actionButton("Preview_Map_Distribution", 
+                                        label = tagList("Next", icon("angle-right")), 
+                                        class = "btn-primary", 
+                                        style = "width:90%; height:50px; font-size:18px;")
+                         )
                   )
                 ),
                 
@@ -984,6 +988,23 @@ shinyApp(
   ###############################################################
   
   server <- function(input, output, session) { 
+    
+    # ====================================
+    # ควบคุมการสลับปุ่ม Next
+    # ====================================
+    observe({
+      is_ready <- !is.null(rv$map) && !is.null(rv$datosOriginal)
+      
+      if (is_ready) {
+        # ข้อมูลครบ: ซ่อนปุ่มหลอก โชว์ปุ่มจริง
+        shinyjs::hide("btn_disabled_wrapper")
+        shinyjs::show("Preview_Map_Distribution")
+      } else {
+        # ข้อมูลไม่ครบ: โชว์ปุ่มหลอก ซ่อนปุ่มจริง
+        shinyjs::show("btn_disabled_wrapper")
+        shinyjs::hide("Preview_Map_Distribution")
+      }
+    })
     
     # ====================================
     # ควบคุมการล็อกเมนู Map Distribution และ Analysis
@@ -1567,35 +1588,22 @@ shinyApp(
     })
     
     
+
     # ==================================== ปุ่ม preview map dis ==================================== 
-    
-    #observeEvent(input$Preview_Map_Distribution | input$tabs == "Map_Distribution" , {
     observeEvent(input$Preview_Map_Distribution , {
-      if (is.null(rv$datosOriginal)| is.null(rv$map))
-        return(NULL)
+      # ย้ำเงื่อนไขอีกรอบ ป้องกันการถูกคลิกตอนที่ข้อมูลยังไม่มี
+      if (is.null(rv$datosOriginal)| is.null(rv$map)) return(NULL)
       
-      #print(input$tabs)
-      if(input$tabs == "Map_Distribution"){
-        data <- rv$datosOriginal
-        
-        #updateSelectInput(session, "columnidareainmap",        choices = x,  selected = head(x, 1))
-        updateSelectInput(session, "time_point_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
-        #min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
-        # print(min(data[,input$columndateindata]))
-        # print(max(data[,input$columndateindata]))
-        # print(range(data[,input$columndateindata]))
-        
-        updateSelectInput(session, "time_point_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
-        
-        
-      }
+      # 1. เลื่อนไปหน้า Map Distribution ทันที
+      shinyjs::runjs("$('li:eq(7) a').tab('show');")
       
+      # 2. จัดการข้อมูล dropdown (โค้ดเดิมของคุณ Mill)
+      data <- rv$datosOriginal
       
-      
-      
+      updateSelectInput(session, "time_point_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
+      updateSelectInput(session, "time_point_filter_cluster", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
       
     })
-    
     
     
     
