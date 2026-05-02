@@ -179,17 +179,20 @@ body <- dashboardBody(
                              which allows users to import their own data, analyze, and visualize.</p>
                       
                       <div class="button">
+                        
+                        <!-- เปลี่ยนเป็น .click() และเอาฟันหนูที่ชื่อเมนูออก เพื่อไม่ให้ HTML พัง -->
                         <a class="btn btn-primary" 
-                                 onclick="$(\'li:eq(6) a\').tab(\'show\');" 
+                                 onclick="$(\'.sidebar-menu a[data-value=Upload_data]\').click();" 
                                  role="button"
-                                 style = "border-color: #735DFB;" >
+                                 style = "border-color: #735DFB; cursor: pointer;" >
                            <strong>Get Started <i class="uil uil-angle-right-b"></i></strong> 
                         </a>
                         
-                        
+                        <!-- เปลี่ยนเป็น .click() และเอาฟันหนูที่ชื่อเมนูออก -->
                         <a class="btn btn-outline-primary"
-                                 onclick="$(\'li:eq(10) a\').tab(\'show\');"
+                                 onclick="$(\'.sidebar-menu a[data-value=Manual]\').click();"
                                  role="button"
+                                 style="cursor: pointer;"
                                  >
                             <strong>How to use?</strong>
                         </a>
@@ -354,7 +357,7 @@ body <- dashboardBody(
                                  HTML("</br>"),
                                  
                                  radioButtons("shapefile_from_thailand", 
-                                              "Are these shapefiles from Thailand and do they include all 77 provinces, representing provincial boundaries (Level 1)? ", 
+                                              "Does this shapefile represent Thailand's provincial boundaries (Admin Level 1) including all 77 provinces?", 
                                               inline=TRUE, c("Yes" = "yes", "No" = "no"), 
                                               selected="no")
                                  
@@ -668,19 +671,6 @@ body <- dashboardBody(
                                  )
                                  
                                )
-                               
-                               
-                               # fluidRow(column(4,
-                               #                 offset=3,
-                               #                 actionButton("nextpage",
-                               #                              strong("Go to analysis page"), # ► ◄
-                               #                              onclick = "$('li:eq(8) a').tab('show');",
-                               #                              class = 'btn-primary',
-                               #                              style='color: #FFFFFF; margin-top: 20px;'
-                               #                 )
-                               # ))
-                               
-                               
                         )
                       )
                       
@@ -748,15 +738,10 @@ body <- dashboardBody(
                   )),
               fluidRow(
                 column(2, offset = 10,
-                       # actionButton("nextpage",
-                       #              strong("Go to analysis page"), # ► ◄
-                       #              onclick = "$('li:eq(8) a').tab('show');",
-                       #              class = 'btn-primary',
-                       #              style='color: #FFFFFF; margin-top: 20px;'
-                       # )
+                       
                        actionButton("nextpage", 
                                     label = tagList("Next", icon("angle-right")), 
-                                    onclick = "$('li:eq(8) a').tab('show');",
+                                    onclick = "$('.sidebar-menu a[data-value=Analysis]').click();",
                                     class = "btn-primary", 
                                     style = "width:90%; height:50px; font-size:18px;")
                 )
@@ -1709,7 +1694,7 @@ shinyApp(
       if (is.null(rv$datosOriginal)| is.null(rv$map)) return(NULL)
       
       # 1. เลื่อนไปหน้า Map Distribution ทันที
-      shinyjs::runjs("$('li:eq(7) a').tab('show');")
+      shinyjs::runjs("$('.sidebar-menu a[data-value=Map_Distribution]').click();")
       
       # 2. จัดการข้อมูล dropdown (โค้ดเดิมของคุณ Mill)
       data <- rv$datosOriginal
