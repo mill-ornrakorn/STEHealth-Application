@@ -1867,6 +1867,10 @@ shinyApp(
           rv$errorMessageAssoc  <- NULL  # ล้างข้อความ Error หากไม่มีปัญหา
           ####################  คำนวณ asso   #################### 
           
+          
+          not_empty <- function(x) x != "" & x != "-"
+          
+          
           x1 <- input$columncov1indata
           x2 <- input$columncov2indata
           x3 <- input$columncov3indata
@@ -1875,9 +1879,10 @@ shinyApp(
           x6 <- input$columncov6indata
           x7 <- input$columncov7indata
           
+          # ← เพิ่ม print นี้
+          print(paste("DEBUG covariates:", x1, x2, x3, x4, x5, x6, x7))
           
-          
-          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
+          if (!not_empty(x1) & !not_empty(x2) & !not_empty(x3) & !not_empty(x4) & !not_empty(x5) & !not_empty(x6) & !not_empty(x7)) {
             
             print("Check: ...all null...")
             
@@ -1885,7 +1890,7 @@ shinyApp(
             
             
             
-          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+          }else if (not_empty(x1) & !not_empty(x2) & !not_empty(x3) & !not_empty(x4) & !not_empty(x5) & !not_empty(x6) & !not_empty(x7)) {
             
             print("Check: ...1 not null...")
             x1 <- data[,input$columncov1indata]
@@ -1935,6 +1940,7 @@ shinyApp(
             
             association_wsf <- cbind(map, association_df)
             
+            
             association_wsf_df <- data.frame(association_wsf)
             
             
@@ -1953,11 +1959,15 @@ shinyApp(
             association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- model2$summary.random$`data|S|x1_id`[,4] > 0
             association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
             
+            
+            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
+            print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
+            
             rv$association_wsf_df <- association_wsf_df
             
             
             
-          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+          }else if (not_empty(x1) & not_empty(x2) & !not_empty(x3) & !not_empty(x4) & !not_empty(x5) & !not_empty(x6) & !not_empty(x7)) {
             
             print("Check: ...1,2 not null...")
             x1 <- data[,input$columncov1indata]
@@ -2031,12 +2041,13 @@ shinyApp(
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
             
-            
+            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
+            print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
             
             
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
+          }else if (not_empty(x1) & not_empty(x2) & not_empty(x3) & !not_empty(x4) & !not_empty(x5) & !not_empty(x6) & !not_empty(x7)) {
             
             print("Check: ...1,2,3 not null...")
             x1 <- data[,input$columncov1indata]
@@ -2121,13 +2132,14 @@ shinyApp(
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
             
-            
+            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
+            print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
             
             
             
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
+          }else if (not_empty(x1) & not_empty(x2) & not_empty(x3) & not_empty(x4) & !not_empty(x5) & !not_empty(x6) & !not_empty(x7)) {
             
             print("Check: ...1,2,3,4 not null...")
             x1 <- data[,input$columncov1indata]
@@ -2225,10 +2237,12 @@ shinyApp(
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
             
+            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
+            print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
             
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
+          }else if (not_empty(x1) & not_empty(x2) & not_empty(x3) & not_empty(x4) & not_empty(x5) & !not_empty(x6) & !not_empty(x7)) {
             
             print("Check: ...1,2,3,4,5 not null...")
             x1 <- data[,input$columncov1indata]
@@ -2337,10 +2351,12 @@ shinyApp(
             association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
             association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
             
+            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
+            print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
             
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
+          }else if (not_empty(x1) & not_empty(x2) & not_empty(x3) & not_empty(x4) & not_empty(x5) & not_empty(x6) & !not_empty(x7)) {
             
             print("Check: ...1,2,3,4,5,6 not null...")
             x1 <- data[,input$columncov1indata]
@@ -2462,6 +2478,9 @@ shinyApp(
             association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
             association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
             
+            
+            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
+            print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
             
@@ -2604,7 +2623,8 @@ shinyApp(
             association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- model2$summary.random$`data|S|x7_id`[,4] > 0
             association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x7_id`[,4] > 0 | model2$summary.random$`data|S|x7_id`[,6] < 0, "significant", "not significant")
             
-            
+            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
+            print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
             
@@ -3349,21 +3369,19 @@ shinyApp(
     
     output$map_risk_fac <- renderLeaflet({
       
-      if (is.null(rv$datosOriginal) | is.null(rv$map))
+      if (is.null(rv$datosOriginal) | is.null(rv$map) | is.null(rv$association_wsf_df))
         return(NULL)
       
       print("Plot: ...map risk factor...")
       
       map <- rv$map
-      association_wsf_df <- rv$association_wsf_df 
+      association_wsf_df <- rv$association_wsf_df
       
-      datafiltered <- association_wsf_df
-      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[input$columnidareainmap]])
-      
-      # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
-      temp_geom <- st_geometry(map)
-      map <- datafiltered[ordercounties, ]
-      st_geometry(map) <- temp_geom
+      area_col <- input$columnidareainmap
+      cols_to_join <- names(association_wsf_df)[!names(association_wsf_df) %in% names(map)]
+      cols_to_join <- c(area_col, cols_to_join)
+      map <- merge(map, association_wsf_df[, cols_to_join, drop = FALSE],
+                   by = area_col, all.x = TRUE)
       
       sig_col <- NULL
       
@@ -3471,1082 +3489,35 @@ shinyApp(
     
     
     dataresult_asso_risk <- reactive({
+      req(rv$association_wsf_df)
       
-      x1 <- input$columncov1indata
-      x2 <- input$columncov2indata
-      x3 <- input$columncov3indata
-      x4 <- input$columncov4indata
-      x5 <- input$columncov5indata
-      x6 <- input$columncov6indata
-      x7 <- input$columncov7indata
+      not_empty <- function(x) x != "" & x != "-"  # ← เพิ่ม
       
+      covs <- list(x1 = input$columncov1indata,
+                   x2 = input$columncov2indata,
+                   x3 = input$columncov3indata,
+                   x4 = input$columncov4indata,
+                   x5 = input$columncov5indata,
+                   x6 = input$columncov6indata,
+                   x7 = input$columncov7indata)
       
-      asso_select_column <- paste(input$asso_select_column, collapse = ",")
+      has_lower <- "lowerbound" %in% input$asso_select_column
+      has_upper <- "upperbound" %in% input$asso_select_column
+      has_sig   <- "significance" %in% input$asso_select_column
       
+      col_order <- input$columnidareainmap
       
+      for (cov_name in Filter(not_empty, unlist(covs))) {  # ← เปลี่ยน function(x) x != "" เป็น not_empty
+        col_order <- c(col_order, paste0(cov_name, "_RR"))
+        if (has_lower) col_order <- c(col_order, paste0(cov_name, "_lowerbound"))
+        if (has_upper) col_order <- c(col_order, paste0(cov_name, "_upperbound"))
+        if (has_sig)   col_order <- c(col_order, paste0(cov_name, "_significance"))
+      }
       
-      if (asso_select_column != ""){
-        
-        if (asso_select_column == "lowerbound,upperbound,significance"){
-          
-          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-            
-            # print("all null")
-            
-          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_lowerbound", sep=""),
-                           paste(input$columncov6indata,"_upperbound", sep=""),
-                           paste(input$columncov6indata,"_significance", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_lowerbound", sep=""),
-                           paste(input$columncov6indata,"_upperbound", sep=""),
-                           paste(input$columncov6indata,"_significance", sep=""),
-                           
-                           paste(input$columncov7indata,"_RR", sep=""),
-                           paste(input$columncov7indata,"_lowerbound", sep=""),
-                           paste(input$columncov7indata,"_upperbound", sep=""),
-                           paste(input$columncov7indata,"_significance", sep=""))
-            
-          }
-          
-        } # จบ if (asso_select_column == "lowerbound,upperbound,significance"){
-        else if (asso_select_column == "lowerbound,upperbound"){
-          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-            
-            # print("all null")
-            
-          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_lowerbound", sep=""),
-                           paste(input$columncov6indata,"_upperbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_lowerbound", sep=""),
-                           paste(input$columncov6indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov7indata,"_RR", sep=""),
-                           paste(input$columncov7indata,"_lowerbound", sep=""),
-                           paste(input$columncov7indata,"_upperbound", sep=""))
-            
-          }
-          
-          
-        }else if (asso_select_column == "upperbound,significance"){
-          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-            
-            # print("all null")
-            
-          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_upperbound", sep=""),
-                           paste(input$columncov6indata,"_significance", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_upperbound", sep=""),
-                           paste(input$columncov6indata,"_significance", sep=""),
-                           
-                           paste(input$columncov7indata,"_RR", sep=""),
-                           paste(input$columncov7indata,"_upperbound", sep=""),
-                           paste(input$columncov7indata,"_significance", sep=""))
-            
-          }
-          
-        }else if (asso_select_column == "lowerbound,significance"){
-          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-            
-            # print("all null")
-            
-          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_lowerbound", sep=""),
-                           paste(input$columncov6indata,"_significance", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_lowerbound", sep=""),
-                           paste(input$columncov6indata,"_significance", sep=""),
-                           
-                           paste(input$columncov7indata,"_RR", sep=""),
-                           paste(input$columncov7indata,"_lowerbound", sep=""),
-                           paste(input$columncov7indata,"_significance", sep=""))
-            
-          }
-          
-        }else if (asso_select_column == "lowerbound"){
-          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-            
-            # print("all null")
-            
-          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_lowerbound", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_lowerbound", sep=""),
-                           
-                           paste(input$columncov7indata,"_RR", sep=""),
-                           paste(input$columncov7indata,"_lowerbound", sep=""))
-            
-          }
-          
-          
-        }else if (asso_select_column == "upperbound"){
-          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-            
-            # print("all null")
-            
-          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_upperbound", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_upperbound", sep=""),
-                           
-                           paste(input$columncov7indata,"_RR", sep=""),
-                           paste(input$columncov7indata,"_upperbound", sep=""))
-            
-          }
-          
-          
-        }else if (asso_select_column == "significance"){
-          if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-            
-            # print("all null")
-            
-          }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""))
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_significance", sep=""))
-            
-            
-            
-          }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-            
-            col_order <- c(input$columnidareainmap,
-                           paste(input$columncov1indata,"_RR", sep=""),
-                           paste(input$columncov1indata,"_significance", sep=""),
-                           
-                           paste(input$columncov2indata,"_RR", sep=""),
-                           paste(input$columncov2indata,"_significance", sep=""),
-                           
-                           paste(input$columncov3indata,"_RR", sep=""),
-                           paste(input$columncov3indata,"_significance", sep=""),
-                           
-                           paste(input$columncov4indata,"_RR", sep=""),
-                           paste(input$columncov4indata,"_significance", sep=""),
-                           
-                           paste(input$columncov5indata,"_RR", sep=""),
-                           paste(input$columncov5indata,"_significance", sep=""),
-                           
-                           paste(input$columncov6indata,"_RR", sep=""),
-                           paste(input$columncov6indata,"_significance", sep=""),
-                           
-                           paste(input$columncov7indata,"_RR", sep=""),
-                           paste(input$columncov7indata,"_significance", sep=""))
-            
-          }
-        }
-        
-        
-        
-      } # จบ  if (asso_select_column != ""){
-      else if (asso_select_column == ""){
-        if(x1 == ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ){
-          
-          # print("all null")
-          
-        }else if (x1 != ""& x2== ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_RR", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3== ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_RR", sep=""),
-                         
-                         paste(input$columncov2indata,"_RR", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4== ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_RR", sep=""),
-                         
-                         paste(input$columncov2indata,"_RR", sep=""),
-                         
-                         paste(input$columncov3indata,"_RR", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5== ""& x6== "" & x7== "" ) {
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_RR", sep=""),
-                         
-                         paste(input$columncov2indata,"_RR", sep=""),
-                         
-                         paste(input$columncov3indata,"_RR", sep=""),
-                         
-                         paste(input$columncov4indata,"_RR", sep=""))
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6== "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_RR", sep=""),
-                         
-                         paste(input$columncov2indata,"_RR", sep=""),
-                         
-                         paste(input$columncov3indata,"_RR", sep=""),
-                         
-                         paste(input$columncov4indata,"_RR", sep=""),
-                         
-                         paste(input$columncov5indata,"_RR", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7== "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_RR", sep=""),
-                         
-                         paste(input$columncov2indata,"_RR", sep=""),
-                         
-                         paste(input$columncov3indata,"_RR", sep=""),
-                         
-                         paste(input$columncov4indata,"_RR", sep=""),
-                         
-                         paste(input$columncov5indata,"_RR", sep=""),
-                         
-                         paste(input$columncov6indata,"_RR", sep=""))
-          
-          
-          
-        }else if (x1 != ""& x2!= ""& x3!= ""& x4!= ""& x5!= ""& x6!= "" & x7!= "" ) {
-          
-          col_order <- c(input$columnidareainmap,
-                         paste(input$columncov1indata,"_RR", sep=""),
-                         
-                         paste(input$columncov2indata,"_RR", sep=""),
-                         
-                         paste(input$columncov3indata,"_RR", sep=""),
-                         
-                         paste(input$columncov4indata,"_RR", sep=""),
-                         
-                         paste(input$columncov5indata,"_RR", sep=""),
-                         
-                         paste(input$columncov6indata,"_RR", sep=""),
-                         
-                         paste(input$columncov7indata,"_RR", sep=""))
-          
-        }
-        
-        
-        
-      } # จบ else if (is.null(asso_select_column)){
-      
-      
-      
-      df2 <- rv$association_wsf_df[,col_order]
-      
-      
-      
+      col_order <- col_order[col_order %in% names(rv$association_wsf_df)]
+      df2 <- rv$association_wsf_df[, col_order]
+      df2
     })
-    
     
     
     output$downloadData_asso_risk <- downloadHandler(
