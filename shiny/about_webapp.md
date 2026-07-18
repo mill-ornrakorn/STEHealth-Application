@@ -1,4 +1,3 @@
-
 <div style = "text-align: justify; margin-right: 80px; font-size: 16px">
 
 ## <span style="color:#735DFB"> **About STEHealth Application** </span>
@@ -26,9 +25,10 @@
 
 - **Interactive Mapping:** Visualize spatial data using customizable maps, enabling insights into health trends and patterns.
 - **Cluster Detection:** Identify hotspots and non-hotspots within your data using advanced spatial models.
-- **Risk Factor Analysis:** Explore associations between risk factors and health outcomes across geographic areas.
+- **Risk Factor Analysis:** Explore associations between risk factors and health outcomes across geographic areas, with relative risk (RR) and significance shown for each area.
 - **User-Friendly Filters:** Customize visualizations with time points, risk factors, and color schemes to suit your analysis needs.
-- **Data Integration:** Seamlessly upload shapefiles and case data for dynamic analysis.
+- **Data Integration:** Seamlessly upload shapefiles and case data (CSV or Excel) for dynamic analysis.
+- **Ready-to-Use Sample Datasets:** Explore the application immediately with three built-in sample datasets covering both spatial and spatial-temporal case studies, complete with a data dictionary for each.
 
 
 

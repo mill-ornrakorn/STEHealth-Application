@@ -1,4 +1,3 @@
-
 # ================================================================
 
 # @29-apr-26
@@ -51,6 +50,7 @@ library(capture) # ลงโดยใช้ remotes::install_github("dreamRs/cap
 library(leaflet.extras)
 library(bsplus)
 library(DT)
+library(readxl)
 
 
 # By default the file size limit is 5MB. Here limit is 70MB.
@@ -81,7 +81,7 @@ sidebar <- dashboardSidebar(
               menuItem(HTML("&ensp;Home"), tabName = "Home", icon = icon("house")),
               menuItem(HTML("&ensp;Upload Data"), tabName = "Upload_data", icon = icon("folder-open")),
               menuItem(HTML("&ensp;Map Distribution"), tabName = "Map_Distribution", icon = icon("map")),
-              menuItem(HTML("&ensp;Spatiotemporal <br/>&emsp; &ensp;Epidemiology Analysis"), tabName="Analysis", icon=icon("globe")),
+              menuItem(HTML("&ensp;Spatial &amp; Spatio-Temporal <br/>&emsp; &ensp;Epidemiology Analysis"), tabName="Analysis", icon=icon("globe")),
               menuItem(HTML("&ensp;About Application"), tabName = "About", icon = icon("file")),
               menuItem(HTML("&ensp;Manual"), tabName = "Manual", icon = icon("book")),
               menuItem(HTML("&ensp;Help"), tabName = "Help", icon=icon("question")),
@@ -104,9 +104,106 @@ body <- dashboardBody(
       .shinyjs-disabled a {
         pointer-events: none !important;
       }
+      
+      /* ===== Tooltip แบบใหม่ที่แยกเฉพาะ ไม่ชนกับ .info-tooltip-container เดิม ===== */
+      .mr-tip {
+        position: relative;
+        display: inline-block;
+        margin-left: 6px;
+        vertical-align: middle;
+        cursor: help;
+      }
+      .mr-tip .mr-tip-icon {
+        color: #999999;
+        font-size: 14px;
+      }
+      .mr-tip .mr-tip-text {
+        visibility: hidden;
+        opacity: 0;
+        display: block;
+        position: absolute;
+        top: 130%;
+        left: 0;
+        background: #2b2b2b;
+        color: #ffffff;
+        text-align: left;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: normal;
+        line-height: 1.5;
+        width: 260px;
+        max-width: 260px;
+        white-space: normal;
+        word-wrap: break-word;
+        z-index: 99999;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        transition: opacity 0.15s ease-in-out;
+        pointer-events: none;
+      }
+      .mr-tip:hover .mr-tip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+      
+      /* ===== ทำให้ 2 คอลัมน์ในแถวเดียวกันสูงเท่ากันเสมอ (สำหรับ Upload Shapefile/CSV และ Association) ===== */
+      .equal-height-row, .equal-height-row > .row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+      }
+      .equal-height-row > [class*='col-'],
+      .equal-height-row > .row > [class*='col-'] {
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      
+
+      .info-tooltip-container {
+        position: relative !important;
+        display: inline-block !important;
+        margin-left: 6px !important;
+        vertical-align: middle !important;
+      }
+      .info-tooltip-container .tooltip-text {
+        display: block !important;
+        visibility: hidden;
+        opacity: 0;
+        position: absolute !important;
+        top: 135% !important;
+        bottom: auto !important;
+        left: 0 !important;
+        right: auto !important;
+        transform: none !important;
+        background: #2b2b2b !important;
+        color: #fff !important;
+        padding: 10px 12px !important;
+        border-radius: 8px !important;
+        font-size: 12.5px !important;
+        font-weight: normal !important;
+        line-height: 1.5 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        width: 280px !important;
+        max-width: 280px !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        z-index: 99999 !important;
+        transition: opacity 0.15s ease-in-out;
+        pointer-events: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      }
+      .info-tooltip-container .tooltip-text::after {
+        display: none !important;
+      }
+      .info-tooltip-container:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
     "))
   ),
-  tags$script("document.title = 'STEHealth | Spatiotemporal Epidemiological Analysis'"),
+  tags$script("document.title = 'STEHealth | Spatial & Spatio-Temporal Epidemiological Analysis'"),
   tags$head(tags$link(rel="icon", 
                       href="STEHealth_logo_0.ico")
   ),
@@ -140,7 +237,7 @@ body <- dashboardBody(
         $('.custom-locked-tooltip').remove();
       });
     ")),
-  
+    
     tags$style(HTML("
       #divide_by {
         position: absolute;
@@ -171,7 +268,7 @@ body <- dashboardBody(
                      <div class="infos">
                         <img src="STEHealth_logo1.png", class = "home__logo", alt="STEHealth_logo" , height  = "37px", width = "174px">
                         <h1 class="title">
-                            Spatiotemporal Epidemiological Analysis
+                            Spatial &amp; Spatio-Temporal<br>Epidemiological Analysis
                         </h1>
                         <p class="home__caption"  style = "text-align: justify;">
                             An advanced analytical platform designed for exploring 
@@ -244,8 +341,8 @@ body <- dashboardBody(
                                     HTML('<h3><span class="purple">1.</span></h3>'),
                                     div(
                                       h3(class = "section-title-text", 
-                                        tags$i(class = "uil uil-database", style = "color:#735DFB; margin-right:6px;"),
-                                        "Data Source"),
+                                         tags$i(class = "uil uil-database", style = "color:#735DFB; margin-right:6px;"),
+                                         "Data Source"),
                                       p(class = "section-subtitle", "Choose how you want to provide data for analysis")
                                     )
                                 ),
@@ -256,12 +353,13 @@ body <- dashboardBody(
                                     
                                     # Card: Upload own files
                                     tags$div(
-                                      class = "source-card selected",
+                                      class = "source-card",
                                       id = "card_upload",
                                       onclick = "
                                   $('#data_source_type input[value=upload]').prop('checked', true).trigger('change');
                                   $('.source-card').removeClass('selected');
                                   $('#card_upload').addClass('selected');
+                                  Shiny.setInputValue('source_confirmed', true, {priority: 'event'});
                                 ",
                                       div(class = "check-badge", HTML("&#10003;")),
                                       tags$span(class = "card-icon", HTML("&#128193;")),
@@ -277,11 +375,100 @@ body <- dashboardBody(
                                   $('#data_source_type input[value=sample]').prop('checked', true).trigger('change');
                                   $('.source-card').removeClass('selected');
                                   $('#card_sample').addClass('selected');
+                                  Shiny.setInputValue('source_confirmed', true, {priority: 'event'});
                                 ",
                                       div(class = "check-badge", HTML("&#10003;")),
                                       tags$span(class = "card-icon", HTML("&#128161;")),
                                       div(class = "card-title", "Use Sample Data"),
-                                      div(class = "card-desc", "Thailand Suicide Mortality 2011–2021 (77 provinces, pre-loaded with all covariates).")
+                                      div(class = "card-desc", "3 ready-to-use sample datasets are available - pick one from the dropdown below."),
+                                      
+                                      # CSS สำหรับ badge เล็กๆ ใน dropdown (Spatial / Spatial-Temporal)
+                                      tags$style(HTML("
+                                        .sample-badge {
+                                          display: inline-block; padding: 2px 10px; border-radius: 10px;
+                                          font-size: 11px; font-weight: 600; margin-left: 10px; vertical-align: middle;
+                                          white-space: nowrap;
+                                        }
+                                        .badge-st { background: #e6f4ea; color: #1e7e34; border: 1px solid #1e7e34; }
+                                        .badge-s  { background: #fff4e5; color: #b25400; border: 1px solid #b25400; }
+                                        
+                                        /* ตัวกล่องที่แสดงค่าที่เลือกอยู่ (.selectize-input) ไม่ได้ถูกย้ายไปที่ <body> เหมือน
+                                           dropdown list เลย CSS ปกติ scope ผ่านนี้ได้ - ใช้ปิด search <input> ที่ selectize
+                                           แทรกไว้ต่อจาก item ของเรา ไม่งั้นพอ item กว้าง 100% แล้ว input จะถูกดันลงบรรทัดใหม่
+                                           ทำให้เห็นเป็นเคอร์เซอร์กระพริบบรรทัดที่ 2 เวลาเปิด dropdown */
+                                        #sample_dataset_choice + .selectize-control .selectize-input > input {
+                                          position: absolute !important;
+                                          width: 1px !important;
+                                          height: 1px !important;
+                                          padding: 0 !important;
+                                          margin: 0 !important;
+                                          opacity: 0;
+                                        }
+                                      ")),
+                                      
+                                      # Sample data: dropdown เลือกชุดข้อมูลตัวอย่าง (มี 3 ชุดให้เลือก) -
+                                      # วางไว้ในการ์ด "Use Sample Data" เอง ไม่ให้หลุดไปอยู่ฝั่ง Upload
+                                      conditionalPanel(
+                                        condition = "input.data_source_type == 'sample'",
+                                        div(
+                                          # กัน click ที่ dropdown ไม่ให้ไปเด้ง onclick ของการ์ดซ้ำ
+                                          onclick = "event.stopPropagation();",
+                                          style = "margin-top: 14px; text-align: left;",
+                                          selectizeInput("sample_dataset_choice",
+                                                         label = "Choose a sample dataset:",
+                                                         choices = c(
+                                                           "Thailand Suicide Mortality 2011–2021 (77 provinces)" = "thailand",
+                                                           "Pollution & Health Data, 2007–2011 (CARBayesST)" = "pollution",
+                                                           "Pollution & Health Data, 2007 Only (CARBayesST)" = "pollution_2007"
+                                                         ),
+                                                         selected = "thailand", width = "100%",
+                                                         # หมายเหตุ: Shiny เมาท์ dropdown ของ selectize ไว้ที่ <body> ไม่ใช่ในตัว
+                                                         # .selectize-control เอง ทำให้ CSS ที่ scope ผ่าน DOM nesting ใช้ไม่ได้
+                                                         # -> ใส่ inline style ลงใน HTML ที่ return จาก render function โดยตรงแทน
+                                                         # ซึ่งจะทำงานได้แน่นอนไม่ว่า dropdown จะถูกเมาท์ไว้ที่ไหนก็ตาม
+                                                         options = list(render = I("{
+                                                        option: function(item, escape) {
+                                                          var meta = {
+                                                            thailand: {badge:'Spatial-Temporal', cls:'badge-st'},
+                                                            pollution: {badge:'Spatial-Temporal', cls:'badge-st'},
+                                                            pollution_2007: {badge:'Spatial', cls:'badge-s'}
+                                                          };
+                                                          var m = meta[item.value] || {badge:'', cls:''};
+                                                          var b = m.badge ? (`<span class=\"sample-badge ${m.cls}\">${m.badge}</span>`) : '';
+                                                          return `<div style=\"display:flex; align-items:center; justify-content:space-between;
+                                                                              width:100%; padding:6px 10px; line-height:1.4;
+                                                                              box-sizing:border-box; white-space:normal;\">
+                                                                    <span>${escape(item.label)}</span>${b}
+                                                                  </div>`;
+                                                        },
+                                                        item: function(item, escape) {
+                                                          var meta = {
+                                                            thailand: {badge:'Spatial-Temporal', cls:'badge-st'},
+                                                            pollution: {badge:'Spatial-Temporal', cls:'badge-st'},
+                                                            pollution_2007: {badge:'Spatial only', cls:'badge-s'}
+                                                          };
+                                                          var m = meta[item.value] || {badge:'', cls:''};
+                                                          var b = m.badge ? (`<span class=\"sample-badge ${m.cls}\">${m.badge}</span>`) : '';
+                                                          return `<div style=\"display:flex; align-items:center; justify-content:space-between;
+                                                                              width:100%; padding-right:22px; box-sizing:border-box;\">
+                                                                    <span>${escape(item.label)}</span>${b}
+                                                                  </div>`;
+                                                        }
+                                                      }"))
+                                          ),
+                                          # คำอธิบาย coverage (Spatial / Spatial-Temporal) ของ dataset ที่เลือกอยู่ - อัปเดตอัตโนมัติ
+                                          uiOutput("sample_dataset_info"),
+                                          div(class = "info-note",
+                                              HTML("<i class='uil uil-info-circle'></i> <strong>Sample data loaded.</strong> Columns will be auto-filled below. You can proceed directly to <em>Next</em>.")
+                                          ),
+                                          br(),
+                                          actionButton("view_data_dictionary", class = "btn btn-outline-primary2",
+                                                       icon = icon("table"), label = "View Data Dictionary"),
+                                          downloadButton("download_sample_csv", class = "btn btn-outline-primary2",
+                                                         label = "Download sample data (.csv)",
+                                                         style = "margin-left: 8px;")
+                                        )
+                                      )
                                     )
                                 ),
                                 
@@ -289,249 +476,251 @@ body <- dashboardBody(
                                 div(style = "display:none;",
                                     radioButtons("data_source_type", "",
                                                  choices = c("Upload your own files" = "upload",
-                                                             "Use Sample Data (Thailand Suicide)" = "sample"),
+                                                             "Use Sample Data" = "sample"),
                                                  selected = "upload", inline = TRUE)
-                                ),
-                                
-                                # Sample data hint
-                                conditionalPanel(
-                                  condition = "input.data_source_type == 'sample'",
-                                  div(style = "margin-top: 14px;",
-                                      div(class = "info-note",
-                                          HTML("<i class='uil uil-info-circle'></i> <strong>Sample data loaded.</strong> Columns will be auto-filled below. You can proceed directly to <em>Next</em>.")
-                                      )
-                                  )
                                 )
                          )
                 ), # end Data Source row
                 
-                # ==================================== STEP 2: Shapefile ==================================== 
-                fluidRow( class='box-white',
-                          column(4, class='box-white',
-                                 
-                                 # 1. เพิ่ม div ครอบตรงนี้ และตั้ง position: relative เพื่อเป็นจุดอ้างอิง
-                                 div(style = "position: relative;", 
-                                     div(class = "section-header",
-                                         # div(class = "section-number", "1"),
-                                         HTML('<h3><span class="purple">2.</span></h3>'),
-                                         div(
-                                           h3(class = "section-title-text", 
-                                              tags$i(class = "uil uil-map-marker", style = "color:#735DFB; margin-right:6px;"),
-                                              "Upload Shapefile")
-                                           # p(class = "section-subtitle", "Upload all 4 components together")
-                                         )
-                                     ),
-                                     
-                                     # 2. เปลี่ยนสไตล์ตรงนี้เป็น position: absolute ชิดขวา (right: 0px)
-                                     # สามารถปรับค่า top (บน) หรือ right (ขวา)
-                                     div(style = "position: absolute; right: 0px; top: 15px;",
-                                         
-                                         # 1. ใช้ actionButton แทน bsButton และใส่ CSS บังคับทรงกลม กว้างยาวเท่ากัน
-                                         actionButton("question_shapefile", label = icon("question"), 
-                                                      style = "border-radius: 50% !important; width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background-color: #735DFB; color: white; border: none;"),
-                                         
-                                         bsPopover(id = "question_shapefile", title = "Shapefile", 
-                                                   content = paste0(strong("What is a shapefile? "),br(),
-                                                                    "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
-                                                                    a("[Reference]",
-                                                                      href = "https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm",
-                                                                      target="_blank")
-                                                   ),
-                                                   placement = "right", trigger = "click", options = list(container = "body")
-                                         )
-                                     )
-                                 ), # จบ div(position: relative)
-                                 
-                                 hr(),
-                                 HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile components at once:</font></strong> shp, dbf, shx and prj."),
-                                 fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
-                                 
-                                 helpText("Select column area name in the map."),
-                                 fluidRow(
-                                   column(12, selectInput("columnidareainmap",   
-                                                          label = HTML('area name <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">"area name" in the shapefile must be matched to "area name" in the csv file</span></div>'),   
-                                                          choices = c(""), selected = "")
-                                   )),
-                                 
-                                 HTML("</br>"),
-                                 
-                                 radioButtons("shapefile_from_thailand", 
-                                              "Does this shapefile represent Thailand's provincial boundaries (Admin Level 1) including all 77 provinces?", 
-                                              inline=TRUE, c("Yes" = "yes", "No" = "no"), 
-                                              selected="no")
-                                 
-                          ), # จบ column(4)
-                          
-                          column(7, 
-                                 # เพิ่ม min-height ป้องกันหน้าเว็บเด้งตอนเปลี่ยนสถานะ
-                                 div(style = "min-height: 500px; padding: 20px; border-radius: 10px;",
-                                     HTML("<h3 style='margin-top: 0;'><i class='uil uil-map' style='color: #735DFB;'></i> Preview Shapefile</h3>"),
-                                     
-                                     uiOutput('status_map'),  
-                                     
-                                     # ซ่อนกรอบตารางไว้ จนกว่าผู้ใช้จะอัปโหลดไฟล์
-                                     conditionalPanel(
-                                       condition = "output.filemap_uploaded",
-                                       
-                                       # กรอบ Data Table
-                                       div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 4px solid #735DFB;",
-                                           HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-table'></i> Shapefile Table</h4>"),
-                                           DTOutput('uploadmaptable')
+                conditionalPanel(
+                  condition = "input.source_confirmed",
+                  # ==================================== STEP 2: Shapefile ==================================== 
+                  fluidRow( class='box-white equal-height-row',
+                            column(4, class='box-white',
+                                   
+                                   # 1. เพิ่ม div ครอบตรงนี้ และตั้ง position: relative เพื่อเป็นจุดอ้างอิง
+                                   div(style = "position: relative;", 
+                                       div(class = "section-header",
+                                           # div(class = "section-number", "1"),
+                                           HTML('<h3><span class="purple">2.</span></h3>'),
+                                           div(
+                                             h3(class = "section-title-text", 
+                                                tags$i(class = "uil uil-map-marker", style = "color:#735DFB; margin-right:6px;"),
+                                                "Upload Shapefile")
+                                             # p(class = "section-subtitle", "Upload all 4 components together")
+                                           )
                                        ),
                                        
-                                       # กรอบ Data Summary
-                                       div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #03989e;",
-                                           HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-analytics'></i> Shapefile Summary</h4>"),
-                                           verbatimTextOutput("uploadmapsummary")
+                                       # 2. เปลี่ยนสไตล์ตรงนี้เป็น position: absolute ชิดขวา (right: 0px)
+                                       # สามารถปรับค่า top (บน) หรือ right (ขวา)
+                                       div(style = "position: absolute; right: 0px; top: 15px;",
+                                           
+                                           # 1. ใช้ actionButton แทน bsButton และใส่ CSS บังคับทรงกลม กว้างยาวเท่ากัน
+                                           actionButton("question_shapefile", label = icon("question"), 
+                                                        style = "border-radius: 50% !important; width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background-color: #735DFB; color: white; border: none;"),
+                                           
+                                           bsPopover(id = "question_shapefile", title = "Shapefile", 
+                                                     content = paste0(strong("What is a shapefile? "),br(),
+                                                                      "A shapefile is a simple, nontopological format for storing the geometric location and attribute information of geographic features. ",
+                                                                      a("[Reference]",
+                                                                        href = "https://desktop.arcgis.com/en/arcmap/latest/manage-data/shapefiles/what-is-a-shapefile.htm",
+                                                                        target="_blank")
+                                                     ),
+                                                     placement = "right", trigger = "click", options = list(container = "body")
+                                           )
+                                       )
+                                   ), # จบ div(position: relative)
+                                   
+                                   hr(),
+                                   HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile components at once:</font></strong> shp, dbf, shx and prj."),
+                                   fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
+                                   
+                                   helpText("Select the column that matches the area id in the CSV file (e.g. a unique code such as IZ). Do NOT use a descriptive name column here if it contains duplicate values."),
+                                   fluidRow(
+                                     column(12, selectInput("columnidareainmap",   
+                                                            label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">This column is used to match each shapefile polygon to a row in the CSV. It must contain a value that uniquely identifies each area (e.g. an area code like "IZ"), matched against the "area id" column selected on the data page. Do not use a descriptive name column here if names can repeat.</span></div>'),   
+                                                            choices = c(""), selected = "")
+                                     )),
+                                   
+                                   HTML("</br>"),
+                                   
+                                   radioButtons("shapefile_from_thailand", 
+                                                "Does this shapefile represent Thailand's provincial boundaries (Admin Level 1) including all 77 provinces?", 
+                                                inline=TRUE, c("Yes" = "yes", "No" = "no"), 
+                                                selected="no")
+                                   
+                            ), # จบ column(4)
+                            
+                            column(7, 
+                                   # เพิ่ม min-height ป้องกันหน้าเว็บเด้งตอนเปลี่ยนสถานะ
+                                   div(style = "min-height: 500px; padding: 20px; border-radius: 10px;",
+                                       HTML("<h3 style='margin-top: 0;'><i class='uil uil-map' style='color: #735DFB;'></i> Preview Shapefile</h3>"),
+                                       
+                                       uiOutput('status_map'),  
+                                       
+                                       # ซ่อนกรอบตารางไว้ จนกว่าผู้ใช้จะอัปโหลดไฟล์
+                                       conditionalPanel(
+                                         condition = "output.filemap_uploaded",
+                                         
+                                         # กรอบแผนที่ ให้เห็นหน้าตาของพื้นที่ในชั้นข้อมูล sf ทันทีที่อัปโหลด
+                                         div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 4px solid #03989e;",
+                                             HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-location-point'></i> Shapefile Boundary Preview</h4>"),
+                                             plotOutput("uploadmapmap", height = "300px")
+                                         ),
+                                         
+                                         # กรอบ Data Table
+                                         div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 4px solid #735DFB;",
+                                             HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-table'></i> Shapefile Table</h4>"),
+                                             DTOutput('uploadmaptable')
+                                         ),
+                                         
+                                         # กรอบ Data Summary
+                                         div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #03989e;",
+                                             HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-analytics'></i> Shapefile Summary</h4>"),
+                                             tableOutput("uploadmapsummary")
+                                         )
+                                       )
+                                   )
+                            ) # จบ column(7) ของ Shapefile
+                            
+                  ), # จบ fluidRow
+                  
+                  # ==================================== STEP 3: Upload Data file ==================================== 
+                  fluidRow( class='box-white equal-height-row',
+                            column(4, class='box-white',
+                                   
+                                   # 1. เปลี่ยนตรงนี้เป็น position: relative; เพื่อใช้เป็นกรอบอ้างอิง
+                                   div(style = "position: relative;",
+                                       div(class = "section-header",
+                                           # div(class = "section-number", "1"),
+                                           HTML('<h3><span class="purple">3.</span></h3>'),
+                                           div(
+                                             h3(class = "section-title-text", 
+                                                tags$i(class = "uil uil-clipboard-notes", style = "color:#735DFB; margin-right:6px;"),
+                                                "Upload CSV Data File")
+                                             # p(class = "section-subtitle", "Upload all 4 components together")
+                                           )
+                                       )
+                                   ), # จบ div(position: relative)
+                                   
+                                   hr(),
+                                   HTML("CSV or Excel (.xlsx/.xls) file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time point, cases, population</font></strong>"),
+                                   fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv", ".xlsx", ".xls")),
+                                   
+                                   helpText("Select columns:"),
+                                   
+                                   # area id (unique code, e.g. IZ) and area name (display label) on the same row
+                                   fluidRow(
+                                     column(6, selectInput("columnidareaindata", 
+                                                           label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">A column with a UNIQUE code for each area (e.g. "IZ"). This is used to match rows to the shapefile ("area id" selected on the Upload Shapefile page) and to run the statistical model. Do not select a descriptive name column here if its values can repeat.</span></div>'), 
+                                                           choices = c(""), selected = "")
+                                     ),
+                                     column(6, selectInput("columnidareanamedata", 
+                                                           label = HTML('area name <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">A descriptive name for each area, shown as the label on the maps (e.g. in tooltips/popups). This can repeat across different areas - it is NOT used to match data, only to display text.</span></div>'), 
+                                                           choices = c(""), selected = "")
+                                     )
+                                   ),
+                                   
+                                   fluidRow(
+                                     column(6, selectInput("columnpopindata", 
+                                                           label = HTML('population <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">The raw population count for each area. Used to calculate the expected number of cases in every tab (Cluster Detection, Association with Risk Factors). If your data already has a pre-computed expected-cases column (e.g. the &quot;expected&quot; column in CARBayesST&#39;s pollutionhealthdata), leave this as population and instead answer &quot;Yes&quot; in section 3.1 below and select that column there.</span></div>'), 
+                                                           choices = c(""), selected = "")
+                                     ),
+                                     column(6, selectInput("columncasesindata", 
+                                                           label = HTML('cases <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">number of cases or outcomes in each area.</span></div>'), 
+                                                           choices = c(""), selected = "")
+                                     )
+                                   ),
+                                   fluidRow(
+                                     column(6, selectInput("columndateindata", 
+                                                           label = HTML('time point <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">time point in the data, such as day, month, year.</span></div>'), 
+                                                           choices = c(""), selected = "")
+                                     )
+                                   ),
+                                   
+                                   # ===================== 3.1 Select Expected Value =====================
+                                   HTML("<h4><strong>3.1 Expected Value</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
+                                   
+                                   radioButtons("Expected_Value_from_csv", "Does this CSV file have an expected value column?", 
+                                                inline = TRUE, choices = c("Yes" = "yes", "No" = "no"), selected = "no"),
+                                   
+                                   conditionalPanel(
+                                     condition = "input.Expected_Value_from_csv == 'yes'",
+                                     helpText("Select column:"),
+                                     fluidRow(
+                                       column(12, selectInput("columnexpvalueindata", 
+                                                              label = HTML('expected value <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">The expected value is number of outcomes in the provided area and period which may vary due to the types of diseases.</span></div>'), 
+                                                              choices = c(""), selected = "")
                                        )
                                      )
-                                 )
-                          ) # จบ column(7) ของ Shapefile
-                          
-                ), # จบ fluidRow
-                
-                # ==================================== STEP 3: Upload Data file ==================================== 
-                fluidRow( class='box-white',
-                          column(4, class='box-white',
-                                 
-                                 # 1. เปลี่ยนตรงนี้เป็น position: relative; เพื่อใช้เป็นกรอบอ้างอิง
-                                 div(style = "position: relative;",
-                                     div(class = "section-header",
-                                         # div(class = "section-number", "1"),
-                                         HTML('<h3><span class="purple">3.</span></h3>'),
-                                         div(
-                                           h3(class = "section-title-text", 
-                                              tags$i(class = "uil uil-clipboard-notes", style = "color:#735DFB; margin-right:6px;"),
-                                              "Upload CSV Data File")
-                                           # p(class = "section-subtitle", "Upload all 4 components together")
-                                         )
-                                     )
-                                 ), # จบ div(position: relative)
-                                 
-                                 hr(),
-                                 HTML("csv file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time point, cases, population</font></strong>"),
-                                 fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-                                 
-                                 helpText("Select columns:"),
-                                 fluidRow(
-                                   column(6, selectInput("columnidareaindata",  
-                                                         label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">"area id" is a number starting at 1, used to identify provinces.</span></div>'),  
-                                                         choices = c(""), selected = "")
                                    ),
-                                   column(6, selectInput("columnidareanamedata", 
-                                                         label = HTML('area name <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">"area name" in the shapefile must be matched to "area name" in the csv file.</span></div>'), 
-                                                         choices = c(""), selected = "")
-                                   )
-                                 ),
-                                 fluidRow(
-                                   column(6, selectInput("columnpopindata", 
-                                                         label = HTML('population <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">population in each area.</span></div>'), 
-                                                         choices = c(""), selected = "")
-                                   ),
-                                   column(6, selectInput("columncasesindata", 
-                                                         label = HTML('cases <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">number of cases or outcomes in each area.</span></div>'), 
-                                                         choices = c(""), selected = "")
-                                   )
-                                 ),
-                                 fluidRow(
-                                   column(6, selectInput("columndateindata", 
-                                                         label = HTML('time point <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">time point in the data, such as day, month, year.</span></div>'), 
-                                                         choices = c(""), selected = "")
-                                   )
-                                 ),
-                                 
-                                 # ===================== 3.1 Select Expected Value =====================
-                                 HTML("<h4><strong>3.1 Expected Value</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
-                                 
-                                 radioButtons("Expected_Value_from_csv", "Does this CSV file have an expected value column?", 
-                                              inline = TRUE, choices = c("Yes" = "yes", "No" = "no"), selected = "no"),
-                                 
-                                 conditionalPanel(
-                                   condition = "input.Expected_Value_from_csv == 'yes'",
-                                   helpText("Select column:"),
-                                   fluidRow(
-                                     column(12, selectInput("columnexpvalueindata", 
-                                                            label = HTML('expected value <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">The expected value is number of outcomes in the provided area and period which may vary due to the types of diseases.</span></div>'), 
-                                                            choices = c(""), selected = "")
-                                     )
-                                   )
-                                 ),
-                                 
-                                 conditionalPanel(
-                                   condition = "input.Expected_Value_from_csv == 'no'",
-                                   # div(style = "margin-bottom: 15px;",
-                                   #     HTML("<font color=\"#735DFB\"><strong>Note that: </strong></font>
-                                   #          If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value. For details on how the expected value is calculated, please refer to the "),
-                                   #     tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point")
-                                   # )
-                                   div(class = "info-note",
-                                       HTML("<strong>Note:</strong> If no expected value column is provided, 
+                                   
+                                   conditionalPanel(
+                                     condition = "input.Expected_Value_from_csv == 'no'",
+                                     # div(style = "margin-bottom: 15px;",
+                                     #     HTML("<font color=\"#735DFB\"><strong>Note that: </strong></font>
+                                     #          If the CSV file lacks an expected value column, the calculation will use the 'cases' and 'population' columns to derive an expected value. For details on how the expected value is calculated, please refer to the "),
+                                     #     tags$a("Help page.", onclick="customHref('Help')", class = "cursor_point")
+                                     # )
+                                     div(class = "info-note",
+                                         HTML("<strong>Note:</strong> If no expected value column is provided, 
                                           it will be calculated automatically from <em>cases</em> and <em>population</em>. 
                                           See the "),
-                                       tags$a("Help page", onclick = "customHref('Help')", class = "cursor_point"),
-                                       HTML(" for details.")
-                                   )
-                                 ),
-                                 # ==========================================================
-                                 
-                                 HTML("</br><h4><strong>3.2 Covariates</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
-                                 # HTML("Please arrange the covariates in order from 1 to 7, 
-                                 #       ensuring that all positions are filled consecutively without any skipped numbers. 
-                                 #       This sequential ordering is essential for the model to correctly interpret each covariate’s priority 
-                                 #       or influence in the analysis."),
-                               
-                                 
-                                 div(class = "cov-hint",
-                                     HTML("<i class='uil uil-info-circle'></i> 
+                                         tags$a("Help page", onclick = "customHref('Help')", class = "cursor_point"),
+                                         HTML(" for details.")
+                                     )
+                                   ),
+                                   # ==========================================================
+                                   
+                                   HTML("</br><h4><strong>3.2 Covariates</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
+                                   # HTML("Please arrange the covariates in order from 1 to 7, 
+                                   #       ensuring that all positions are filled consecutively without any skipped numbers. 
+                                   #       This sequential ordering is essential for the model to correctly interpret each covariate’s priority 
+                                   #       or influence in the analysis."),
+                                   
+                                   
+                                   div(class = "cov-hint",
+                                       HTML("<i class='uil uil-info-circle'></i> 
                                         Assign covariates <strong>in order from 1 onwards</strong>, 
                                         without skipping any numbers. 
                                         Leave unused slots as <strong>–</strong>.")
-                                 ),
-                                 
-                                 helpText("Select column(s):"),
-                                 fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
-                                          column(6, selectInput("columncov2indata", label = "covariate 2", choices = c(""), selected = ""))
-                                 ),
-                                 
-                                 fluidRow(column(6, selectInput("columncov3indata", label = "covariate 3", choices = c(""), selected = "")),
-                                          column(6, selectInput("columncov4indata", label = "covariate 4", choices = c(""), selected = ""))
-                                 ),
-                                 
-                                 fluidRow(column(6, selectInput("columncov5indata", label = "covariate 5", choices = c(""), selected = "")),
-                                          column(6, selectInput("columncov6indata", label = "covariate 6", choices = c(""), selected = ""))
-                                 ),
-                                 
-                                 fluidRow(column(6, selectInput("columncov7indata", label = "covariate 7", choices = c(""), selected = ""))
-                                 )
-                                 
-                          ), # จบ column(4) ของ Row 2
-                          
-                          column(7, 
-                                 # เพิ่ม min-height ป้องกันหน้าเว็บเด้งตอนเปลี่ยนสถานะ
-                                 div(style = "min-height: 600px; padding: 20px;  border-radius: 10px;",
-                                     HTML("<h3 style='margin-top: 0;'><i class='uil uil-clipboard-notes' style='color: #735DFB;'></i> Preview Data</h3>"),
-                                     
-                                     uiOutput('status_csv'),  
-                                     
-                                     # ซ่อนกรอบตารางไว้ จนกว่าผู้ใช้จะอัปโหลดไฟล์
-                                     conditionalPanel(
-                                       condition = "output.file1_uploaded",
+                                   ),
+                                   
+                                   helpText("Select column(s):"),
+                                   fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
+                                            column(6, selectInput("columncov2indata", label = "covariate 2", choices = c(""), selected = ""))
+                                   ),
+                                   
+                                   fluidRow(column(6, selectInput("columncov3indata", label = "covariate 3", choices = c(""), selected = "")),
+                                            column(6, selectInput("columncov4indata", label = "covariate 4", choices = c(""), selected = ""))
+                                   ),
+                                   
+                                   fluidRow(column(6, selectInput("columncov5indata", label = "covariate 5", choices = c(""), selected = "")),
+                                            column(6, selectInput("columncov6indata", label = "covariate 6", choices = c(""), selected = ""))
+                                   ),
+                                   
+                                   fluidRow(column(6, selectInput("columncov7indata", label = "covariate 7", choices = c(""), selected = ""))
+                                   )
+                                   
+                            ), # จบ column(4) ของ Row 2
+                            
+                            column(7, 
+                                   # เพิ่ม min-height ป้องกันหน้าเว็บเด้งตอนเปลี่ยนสถานะ
+                                   div(style = "min-height: 600px; padding: 20px;  border-radius: 10px;",
+                                       HTML("<h3 style='margin-top: 0;'><i class='uil uil-clipboard-notes' style='color: #735DFB;'></i> Preview Data</h3>"),
                                        
-                                       # กรอบ Data Table
-                                       div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 4px solid #735DFB;",
-                                           HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-table'></i> Data Table</h4>"),
-                                           DTOutput('uploaddatatable')
-                                       ),
+                                       uiOutput('status_csv'),  
                                        
-                                       # กรอบ Data Summary
-                                       div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #03989e;",
-                                           HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-analytics'></i> Data Summary</h4>"),
-                                           verbatimTextOutput("uploaddatasummary")
+                                       # ซ่อนกรอบตารางไว้ จนกว่าผู้ใช้จะอัปโหลดไฟล์
+                                       conditionalPanel(
+                                         condition = "output.file1_uploaded",
+                                         
+                                         # กรอบ Data Table
+                                         div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 4px solid #735DFB;",
+                                             HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-table'></i> Data Table</h4>"),
+                                             DTOutput('uploaddatatable')
+                                         ),
+                                         
+                                         # กรอบ Data Summary
+                                         div(style = "background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #03989e;",
+                                             HTML("<h4 style='margin-top: 0; color: #333;'><i class='uil uil-analytics'></i> Data Summary</h4>"),
+                                             tableOutput("uploaddatasummary")
+                                         )
                                        )
-                                     )
-                                 )
-                          ) # จบ column(7) ของ CSV
-                ), # จบ fluidRow
+                                   )
+                            ) # จบ column(7) ของ CSV
+                  ), # จบ fluidRow
+                ), # end conditionalPanel: STEP 2 + STEP 3 (only show after Data Source is chosen)
                 
                 # ==================================== Note ==================================== 
                 # fluidRow(
@@ -562,6 +751,7 @@ body <- dashboardBody(
                                       onclick = "location.reload();")
                   ),
                   column(2,
+                         
                          # ปุ่มที่ 1: ปุ่มหลอกสีเทา พร้อม CSS Tooltip ที่เราเพิ่งสร้าง
                          tags$div(id = "btn_disabled_wrapper", class = "my-custom-tooltip",
                                   actionButton("dummy_btn", 
@@ -736,7 +926,7 @@ body <- dashboardBody(
         tabName = "Analysis",
         HTML("
                   <div class = 'heading_container'>
-                     <h1>Spatiotemporal Epidemiological Analysis</h1>
+                     <h1>Spatial &amp; Spatio-Temporal Epidemiological Analysis</h1>
                    </div>"),
         
         tabBox(width=12,id="tabBox_next_previous",
@@ -858,8 +1048,20 @@ body <- dashboardBody(
                             div(class = 'error',
                                 verbatimTextOutput("messageCheckData_2")
                             ),
+                            
+                            
+                            # div(
+                            #   class = "box-white",
+                            #   HTML('<h4 style="display:inline-block; margin-right:6px;">Cluster Detection Results</h4>'),
+                            #   HTML('<p style="margin-top:8px; margin-bottom:8px; font-size:13px; color:#666;">Number of area/time observations classified as a hotspot (posterior probability of risk &gt; 1 exceeds 95%), out of the total number of observations, and how many distinct areas were flagged as a hotspot at least once.</p>'),
+                            #   DTOutput("cluster_summary_table")
+                            # ),
+                            
+                            
                             #verbatimTextOutput("status_map_cluster"),
                             #leafletOutput("map_cluster", height = "70vh")
+                            uiOutput("runtime_card_cluster"),
+                            uiOutput("map_cluster_title"),
                             addSpinner(
                               leafletOutput("map_cluster", height = "80vh"),
                               spin = "bounce", color = "#735DFB"
@@ -882,13 +1084,14 @@ body <- dashboardBody(
                #   sidebarPanel(
                # mainPanel
                tabPanel(HTML("<h4>Association with Risk Factors</h4>"),
-                        sidebarLayout(
-                          sidebarPanel(style = "height: 80vh; overflow-y: auto;",
-                                       fluidRow(
-                                         column(12,
-                                                div(
-                                                  class = "box-white",
-                                                  HTML("
+                        div(class = "equal-height-row",
+                            sidebarLayout(
+                              sidebarPanel(style = "overflow-y: auto;",
+                                           fluidRow(
+                                             column(12,
+                                                    div(
+                                                      class = "box-white",
+                                                      HTML("
                                             <img align='left' width='52px' height='52px' src='risk.png' style='margin-top: 10px; margin-right: 10px' >
                                             <h4>Association with Risk Factors</h4>
                                             
@@ -898,28 +1101,28 @@ body <- dashboardBody(
                                              Users can adjust the view using filters for specific risk factors and color schemes. 
                                              For more information on the model and interpretation of values, please refer to the 
                                                   "),
-                                                  
-                                                  tags$a("Help page.", onclick="customHref('Help')",  class = "cursor_point"),
-                                                  br(),br(),
-                                                  actionButton("interpret_asso_risk", class="btn btn-outline-primary2", "Examples of Interpretation")
-                                                ),
-                                                
-                                                div(
-                                                  class = "box-white",
-                                                  HTML("<h4>Filter</h4>"),
-                                                  selectInput("risk_factor_filter", label = "Risk factor:", choices = c(""), selected = ""),
-                                                  
-                                                  # เลือกสีแมพ
-                                                  selectInput("color_asso", label = "Color Scheme:", 
-                                                              choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
-                                                                             "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
-                                                  
-                                                  
-                                                ),
-                                                
-                                                div(
-                                                  class = "box-white",
-                                                  HTML("<h4>Export Result</h4>
+                                                      
+                                                      tags$a("Help page.", onclick="customHref('Help')",  class = "cursor_point"),
+                                                      br(),br(),
+                                                      actionButton("interpret_asso_risk", class="btn btn-outline-primary2", "Examples of Interpretation")
+                                                    ),
+                                                    
+                                                    div(
+                                                      class = "box-white",
+                                                      HTML("<h4>Filter</h4>"),
+                                                      selectInput("risk_factor_filter", label = "Risk factor:", choices = c(""), selected = ""),
+                                                      
+                                                      # เลือกสีแมพ
+                                                      selectInput("color_asso", label = "Color Scheme:", 
+                                                                  choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
+                                                                                 "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
+                                                      
+                                                      
+                                                    ),
+                                                    
+                                                    div(
+                                                      class = "box-white",
+                                                      HTML("<h4>Export Result</h4>
                                             <p>
                                             This presents detailed data from the risk factor association analysis, including area names, 
                                             the calculated percentage increase for each risk factor, along with lower and upper bounds, 
@@ -927,18 +1130,18 @@ body <- dashboardBody(
                                             Users can choose to display additional details such as the lower bound, upper bound, and significance indicators.                                           </p>
                                                   
                                                   "),
-                                                  
-                                                  checkboxGroupInput('asso_select_column', 'Column', inline=TRUE, 
-                                                                     c("lower bound %95" = "lowerbound", 'upper bound' = 'upperbound', 'significance' = 'significance'),
-                                                                     selected = c("lowerbound", 'upperbound', 'significance' )),
-                                                  
-                                                  
-                                                  downloadButton("downloadData_asso_risk", "Download (.csv)", 
-                                                                 class="btn btn-outline-primary2",
-                                                                 style = "border-radius: 100px;"),
-                                                  
-                                                  
-                                                  HTML('</br>
+                                                      
+                                                      checkboxGroupInput('asso_select_column', 'Column', inline=TRUE, 
+                                                                         c("lower bound %95" = "lowerbound", 'upper bound' = 'upperbound', 'significance' = 'significance'),
+                                                                         selected = c("lowerbound", 'upperbound', 'significance' )),
+                                                      
+                                                      
+                                                      downloadButton("downloadData_asso_risk", "Download (.csv)", 
+                                                                     class="btn btn-outline-primary2",
+                                                                     style = "border-radius: 100px;"),
+                                                      
+                                                      
+                                                      HTML('</br>
                                             </br>
                                             <h4>
                                               Capture screenshot
@@ -947,76 +1150,122 @@ body <- dashboardBody(
                                             Take a screenshot of map. The captured image is downloaded as a PNG image.
                                             </p>
                                            '),
-                                                  
-                                                  capture(
-                                                    class="btn btn-outline-primary2",
-                                                    selector = "#map_risk_fac",
-                                                    filename = paste("map_risk_fac-", Sys.Date(), ".png", sep=""),
-                                                    icon("camera"), "Screenshot Map",
-                                                    scale = 3, # bigger scale
-                                                    options=list(backgroundColor = "white"),
-                                                    style = "border-radius: 100px;"
-                                                  )
-                                                  
-                                                  
-                                                ),
-                                                
-                                                #     div(
-                                                #       class = "box-purple",
-                                                #       HTML("<h4>Examples of interpretation (from sample data)</h4>
-                                                # • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
-                                                #   &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
-                                                #   the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
-                                                # 
-                                                # </br></br> 
-                                                # • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
-                                                #   &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
-                                                #   the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
-                                                # 
-                                                # </br></br>     
-                                                # •If the significance is <strong>not significant</strong>: </br>  
-                                                #   &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
-                                                # 
-                                                # </br></br>   
-                                                #   For other examples of interpretation, please refer to the
-                                                #  "),
-                                                #       tags$a("Manual page.", onclick="customHref('Manual')")
-                                                #       
-                                                #     )
-                                                
-                                                
-                                         )
-                                         
-                                         
-                                         
-                                         
-                                       )
-                          ),
-                          
-                          mainPanel(
-                            uiOutput("assocError"),
-                            uiOutput("status_risk_fac"),
-                            div(class = 'error',
-                                verbatimTextOutput("messageCheckData_3")
-                            ),  
-                            #verbatimTextOutput("status_map_asso"),
-                            div(class = 'warning',
-                                verbatimTextOutput("status_risk_fac_nocova")
-                            ),
-                            addSpinner(
-                              leafletOutput("map_risk_fac", height = "80vh"),
-                              spin = "bounce", color = "#735DFB"
-                            ),
-                            HTML('<p class = "mapNote"> 
+                                                      
+                                                      capture(
+                                                        class="btn btn-outline-primary2",
+                                                        selector = "#map_risk_fac",
+                                                        filename = paste("map_risk_fac-", Sys.Date(), ".png", sep=""),
+                                                        icon("camera"), "Screenshot Map",
+                                                        scale = 3, # bigger scale
+                                                        options=list(backgroundColor = "white"),
+                                                        style = "border-radius: 100px;"
+                                                      )
+                                                      
+                                                      
+                                                    ),
+                                                    
+                                                    #     div(
+                                                    #       class = "box-purple",
+                                                    #       HTML("<h4>Examples of interpretation (from sample data)</h4>
+                                                    # • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
+                                                    #   &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
+                                                    #   the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
+                                                    # 
+                                                    # </br></br> 
+                                                    # • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
+                                                    #   &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
+                                                    #   the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
+                                                    # 
+                                                    # </br></br>     
+                                                    # •If the significance is <strong>not significant</strong>: </br>  
+                                                    #   &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
+                                                    # 
+                                                    # </br></br>   
+                                                    #   For other examples of interpretation, please refer to the
+                                                    #  "),
+                                                    #       tags$a("Manual page.", onclick="customHref('Manual')")
+                                                    #       
+                                                    #     )
+                                                    
+                                                    
+                                             )
+                                             
+                                             
+                                             
+                                             
+                                           )
+                              ),
+                              
+                              mainPanel(
+                                uiOutput("assocError"),
+                                uiOutput("status_risk_fac"),
+                                div(class = 'error',
+                                    verbatimTextOutput("messageCheckData_3")
+                                ),  
+                                #verbatimTextOutput("status_map_asso"),
+                                div(class = 'warning',
+                                    verbatimTextOutput("status_risk_fac_nocova")
+                                ),
+                                div(
+                                  class = "box-white rr-model-results",
+                                  tags$style(HTML('
+                                .rr-model-results .nav-tabs > li {
+                                  margin-right: 14px;
+                                }
+                              ')),
+                                  HTML('<h4 style="display:inline-block; margin-right:6px;">Model Results</h4>'),
+                                  uiOutput("model_type_badge", inline = TRUE),
+                                  uiOutput("runtime_card_asso"),
+                                  # ==================================================================
+                                  # ปิดไว้ชั่วคราว (Overall RR / Model Fit / Hyperparameters tabs)
+                                  # รอปรึกษาอาจารย์ก่อนว่าจะใช้แนวทาง fixed effect หรือไม่ - ดูโค้ดเดิมด้านล่างนี้
+                                  # ==================================================================
+                                  # tabsetPanel(
+                                  #   tabPanel(
+                                  #     HTML('Overall RR <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i><span class="mr-tip-text">Overall (region-wide) relative risk for each risk factor, estimated as a fixed effect. This is the value directly comparable to region-wide results reported in reference papers such as CARBayesST. The area-by-area map below shows how each area deviates from this overall value; the map significance status tests whether that deviation (not the overall effect) differs from zero, so a risk factor with a fairly uniform effect region-wide may show few or zero significant areas even though its overall effect above is clearly significant.</span></span>'),
+                                  #     br(),
+                                  #     tableOutput("overall_rr_table")
+                                  #   ),
+                                  #   tabPanel(
+                                  #     HTML('Model Fit <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i><span class="mr-tip-text">Overall model diagnostics (DIC, WAIC, LMPL, effective number of parameters), comparable to the Results table in the CARBayesST vignette. Lower DIC/WAIC and higher LMPL indicate better fit; only meaningful when comparing models fitted to the same data.</span></span>'),
+                                  #     br(),
+                                  #     tableOutput("model_fit_table")
+                                  #   ),
+                                  #   tabPanel(
+                                  #     HTML('Hyperparameters <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i><span class="mr-tip-text">Posterior estimates of the variance/precision parameters controlling how much spatial and temporal autocorrelation remains in the data, comparable to (tau2, rho.S, rho.T) in the CARBayesST vignette Results table.</span></span>'),
+                                  #     br(),
+                                  #     tableOutput("hyperpar_table")
+                                  #   )
+                                  # )
+                                  
+                                  # ตารางใหม่แบบง่าย: covariate ไหน significant กี่พื้นที่จากทั้งหมด
+                                  HTML('<p style="margin-top:8px; margin-bottom:8px; font-size:13px; color:#666;">Number of areas where each risk factor shows a statistically significant local deviation, out of the total number of areas.</p>'),
+                                  DTOutput("significance_summary_table")
+                                ),
+                                # ชื่อแผนที่ + คำอธิบายกรอบดำ (significant areas) - ก่อนหน้านี้แผนที่ไม่มีชื่อ/คำอธิบายเลย
+                                uiOutput("map_risk_fac_title"),
+                                HTML('<p style="margin:4px 0 10px 0; font-size:13px; color:#555;">
+                                  <span style="display:inline-block; width:22px; height:0; border-top:4px solid black; vertical-align:middle; margin-right:6px;"></span>
+                                  Thick black outline = <strong>significant</strong> area (the local deviation for this risk factor differs from zero at the 95% level)
+                                  &emsp;
+                                  <span style="display:inline-block; width:22px; height:0; border-top:1px solid grey; vertical-align:middle; margin-right:6px;"></span>
+                                  Thin grey outline = not significant
+                                </p>'),
+                                addSpinner(
+                                  leafletOutput("map_risk_fac", height = "80vh"),
+                                  spin = "bounce", color = "#735DFB"
+                                ),
+                                HTML('<p class = "mapNote"> 
                               If the map on this page takes more than 5 minutes to load, please check the uploaded data again.
           
                            </p>')
-                            
-                            
-                          )
-                          
-                          
-                        )
+                                
+                                
+                              )
+                              
+                              
+                            )
+                        ) # end div.equal-height-row (Association tab)
                         
                         
                )
@@ -1070,6 +1319,223 @@ shinyApp(
   server <- function(input, output, session) { 
     
     # ====================================
+    # ดึง fixed effect (ภาพรวมทั้ง region) จากโมเดล INLA มาแปลงเป็น Relative Risk
+    # เทียบได้กับตาราง RR.summary ในเปเปอร์ CARBayesST (Section 5.3)
+    # ====================================
+    # ====================================
+    # ตรวจสอบว่า area id ใน Shapefile กับ CSV Data ตรงกันกี่พื้นที่ ก่อนไปหน้า Map Distribution / Analysis
+    # ====================================
+    # ====================================
+    # สรุปว่า covariate แต่ละตัว significant กี่พื้นที่ จากทั้งหมดกี่พื้นที่ (แบบง่าย ไม่ต้อง fixed effect)
+    # ====================================
+    compute_significance_summary <- function(association_wsf_df) {
+      if (is.null(association_wsf_df)) return(NULL)
+      df <- tryCatch(sf::st_drop_geometry(association_wsf_df), error = function(e) as.data.frame(association_wsf_df))
+      
+      sig_cols <- grep("_significance$", names(df), value = TRUE)
+      if (length(sig_cols) == 0) return(NULL)
+      
+      total_areas <- nrow(df)
+      n_sig <- vapply(sig_cols, function(cl) sum(df[[cl]] == "significant", na.rm = TRUE), integer(1))
+      
+      out <- data.frame(
+        `Risk factor`        = sub("_significance$", "", sig_cols),
+        `Significant areas`  = as.integer(n_sig),
+        `Total areas`        = as.integer(total_areas),
+        `% significant`      = round(n_sig / total_areas * 100, 1),
+        check.names = FALSE,
+        stringsAsFactors = FALSE
+      )
+      # เรียงจาก risk factor ที่ significant มากที่สุดไปน้อยที่สุด ให้เห็นตัวสำคัญก่อนทันที
+      out <- out[order(-out$`% significant`), ]
+      rownames(out) <- NULL
+      out
+    }
+    
+    # ====================================
+    # สรุปผล Cluster Detection: hotspot กี่ area-time / กี่พื้นที่ จากทั้งหมด
+    # ====================================
+    compute_cluster_summary <- function(data, area_id_col) {
+      if (is.null(data) || !("hotspot label" %in% names(data)) || is.null(area_id_col) || !(area_id_col %in% names(data))) {
+        return(NULL)
+      }
+      
+      total_obs   <- nrow(data)
+      n_hot_obs   <- sum(data[["hotspot label"]] == "hotspot", na.rm = TRUE)
+      
+      total_areas <- length(unique(data[[area_id_col]]))
+      hot_areas   <- length(unique(data[[area_id_col]][data[["hotspot label"]] == "hotspot"]))
+      
+      data.frame(
+        Metric = c("Area-time observations flagged as hotspot", "Distinct areas flagged as hotspot (at least once)"),
+        Count  = c(n_hot_obs, hot_areas),
+        Total  = c(total_obs, total_areas),
+        `% of total` = round(c(n_hot_obs / total_obs, hot_areas / total_areas) * 100, 1),
+        check.names = FALSE,
+        stringsAsFactors = FALSE
+      )
+    }
+    
+    check_area_match <- function(map, data, map_id_col, data_id_col) {
+      if (is.null(map) || is.null(data) || is.null(map_id_col) || is.null(data_id_col) ||
+          map_id_col == "" || data_id_col == "" ||
+          !(map_id_col %in% names(map)) || !(data_id_col %in% names(data))) {
+        return(NULL)
+      }
+      map_ids  <- unique(trimws(as.character(map[[map_id_col]])))
+      data_ids <- unique(trimws(as.character(data[[data_id_col]])))
+      matched  <- intersect(map_ids, data_ids)
+      
+      list(
+        n_map     = length(map_ids),
+        n_data    = length(data_ids),
+        n_matched = length(matched),
+        pct_matched = if (length(data_ids) > 0) round(length(matched) / length(data_ids) * 100, 1) else 0,
+        unmatched_data_ids = setdiff(data_ids, map_ids)
+      )
+    }
+    
+    # เรียกใช้ตรวจสอบ + แจ้งเตือน/บล็อกการไปหน้าถัดไป คืนค่า TRUE ถ้าโอเคให้ไปต่อได้, FALSE ถ้าต้องหยุด
+    validate_shapefile_data_match <- function() {
+      # Sample Data เป็นไฟล์ที่มาพร้อมแอปและตรวจสอบไว้แล้ว ไม่ต้องเช็คซ้ำ
+      # (การเช็คนี้มีไว้สำหรับกรณีผู้ใช้อัปโหลดไฟล์เองเท่านั้น)
+      if (input$data_source_type == "sample") return(TRUE)
+      
+      chk <- check_area_match(rv$map, rv$datosOriginal, input$columnidareainmap, input$columnidareaindata)
+      if (is.null(chk)) return(TRUE)  # ยังไม่มีข้อมูลพอจะเช็ค ปล่อยผ่าน (จะถูกเช็ค null ที่อื่นอยู่แล้ว)
+      
+      if (chk$n_matched == 0) {
+        showModal(modalDialog(
+          title = "Shapefile and Data File Do Not Match",
+          HTML(paste0(
+            "<p>None of the area id values in your <b>shapefile</b> (", chk$n_map, " areas) match the area id values ",
+            "in your <b>CSV/Excel data</b> (", chk$n_data, " areas).</p>",
+            "<p>Please check that:</p>",
+            "<ul><li>You selected the correct <b>area id</b> column on both the Upload Shapefile page and the Upload CSV Data File page</li>",
+            "<li>The values are formatted the same way on both sides (e.g. same capitalisation, no extra spaces, same code system)</li></ul>"
+          )),
+          easyClose = TRUE, footer = modalButton("OK")
+        ))
+        return(FALSE)
+      } else if (chk$pct_matched < 90) {
+        showNotification(
+          paste0("Warning: only ", chk$n_matched, " of ", chk$n_data, " areas (", chk$pct_matched,
+                 "%) in your data were found in the shapefile. Some areas may be missing from the map or cause errors in the model. ",
+                 "Please double check the 'area id' column selections if this is unexpected."),
+          type = "warning", duration = 12
+        )
+        return(TRUE)
+      }
+      return(TRUE)
+    }
+    
+    # ใช้ชื่อไฟล์ Data File ที่ผู้ใช้อัปโหลด (หรือชื่อ sample dataset ถ้าใช้ sample data) มาเป็นคำนำหน้า
+    # ชื่อไฟล์ที่ดาวน์โหลดออกไป เช่น อัปโหลด "PollutionHealthData.csv" -> "PollutionHealthData_result-....csv"
+    data_file_base_name <- function() {
+      if (input$data_source_type == "sample") {
+        switch(input$sample_dataset_choice,
+               "thailand"       = "ThailandSuicideMortality",
+               "pollution"      = "PollutionHealthData",
+               "pollution_2007" = "PollutionHealthData2007",
+               "SampleData")
+      } else {
+        req(input$file1)
+        nm <- tools::file_path_sans_ext(input$file1$name)
+        gsub("[^A-Za-z0-9_-]", "_", nm)  # กันชื่อไฟล์เดิมมีช่องว่าง/อักขระที่ใช้ในชื่อไฟล์ไม่ได้
+      }
+    }
+    
+    
+    compute_overall_rr <- function(model, cov_names) {
+      fx <- model$summary.fixed
+      # ตัด "(Intercept)" ออก เอาไว้เฉพาะแถวของ covariate (x1, x2, ...)
+      cov_rows <- rownames(fx)[rownames(fx) != "(Intercept)"]
+      fx_cov <- fx[cov_rows, , drop = FALSE]
+      
+      out <- data.frame(
+        covariate = if (!is.null(cov_names) && length(cov_names) == nrow(fx_cov)) cov_names else cov_rows,
+        RR_mean   = exp(fx_cov[, "mean"]),
+        RR_lower  = exp(fx_cov[, "0.025quant"]),
+        RR_upper  = exp(fx_cov[, "0.975quant"]),
+        stringsAsFactors = FALSE
+      )
+      rownames(out) <- NULL
+      out
+    }
+    
+    # สรุปตัวชี้วัดความเหมาะสมของโมเดล (model fit) เทียบเคียงกับตาราง Results ในเปเปอร์ CARBayesST
+    # (DIC, WAIC, effective no. of parameters, LMPL) รวมถึงค่า Intercept
+    compute_model_fit_summary <- function(model) {
+      intercept_mean <- tryCatch(model$summary.fixed["(Intercept)", "mean"], error = function(e) NA)
+      lmpl_val <- tryCatch(sum(log(model$cpo$cpo), na.rm = TRUE), error = function(e) NA)
+      
+      data.frame(
+        Metric = c("Intercept (RR)", "DIC", "WAIC", "Effective no. of parameters (pD)", "LMPL (sum log CPO)"),
+        Value  = c(
+          round(exp(intercept_mean), 3),
+          round(model$dic$dic, 1),
+          round(model$waic$waic, 1),
+          round(model$dic$p.eff, 1),
+          round(lmpl_val, 1)
+        ),
+        stringsAsFactors = FALSE
+      )
+    }
+    
+    # สรุป hyperparameter (ความแปรผันเชิงพื้นที่ / เวลา / ระหว่างจังหวัด) เทียบเคียงกับ tau2, rho ในเปเปอร์
+    # และแปลงชื่อ parameter จากภายในของ INLA (เช่น "Precision for data|S|x1_id") ให้อ่านเข้าใจง่ายขึ้น
+    rename_hyperpar_label <- function(raw_name, cov_names) {
+      # กรณี "Precision for data|S|x{N}_id" -> ชื่อ covariate จริง (เช่น pm10 - พื้นที่)
+      m <- regmatches_helper(raw_name, "^Precision for data\\|S\\|x([0-9]+)_id$")
+      if (!is.null(m)) {
+        n <- as.integer(m)
+        cov_label <- if (!is.null(cov_names) && n <= length(cov_names)) cov_names[n] else paste0("covariate ", n)
+        return(paste0(cov_label, " \u2013 area-level deviation (random slope)"))
+      }
+      
+      if (grepl("^Precision for data\\[\\[area_id_col\\]\\] \\(iid component\\)$", raw_name)) {
+        return("Area-level unstructured variation (IID)")
+      }
+      if (grepl("^Precision for data\\[\\[area_id_col\\]\\] \\(spatial component\\)$", raw_name)) {
+        return("Area-level spatial autocorrelation (BYM / CAR)")
+      }
+      if (grepl("^Precision for data\\[, ?input\\|S\\|columndateindata\\]$", raw_name)) {
+        return("Temporal autocorrelation (year-to-year, RW1)")
+      }
+      if (grepl("^Precision for province_int$", raw_name)) {
+        return("Extra unstructured variation (unexplained)")
+      }
+      
+      # ไม่ตรงกับ pattern ที่รู้จัก คืนชื่อเดิม
+      raw_name
+    }
+    
+    # helper เล็ก ๆ สำหรับดึงกลุ่ม regex กลุ่มแรก คืน NULL ถ้าไม่ match
+    regmatches_helper <- function(x, pattern) {
+      m <- regmatches(x, regexec(pattern, x))[[1]]
+      if (length(m) < 2) return(NULL)
+      m[2]
+    }
+    
+    compute_hyperpar_summary <- function(model, cov_names = NULL) {
+      hp <- model$summary.hyperpar
+      if (is.null(hp) || nrow(hp) == 0) return(NULL)
+      
+      friendly_names <- vapply(rownames(hp), rename_hyperpar_label, character(1), cov_names = cov_names)
+      
+      out <- data.frame(
+        Parameter = friendly_names,
+        Mean      = round(hp[, "mean"], 4),
+        `2.5%`    = round(hp[, "0.025quant"], 4),
+        `97.5%`   = round(hp[, "0.975quant"], 4),
+        check.names = FALSE,
+        stringsAsFactors = FALSE
+      )
+      rownames(out) <- NULL
+      out
+    }
+    
+    # ====================================
     # ควบคุมการสลับปุ่ม Next
     # ====================================
     observe({
@@ -1107,7 +1573,7 @@ shinyApp(
         }
       }
     })
-
+    
     #observe(print(input$columnexpvalueindata))
     
     # message menu
@@ -1376,6 +1842,98 @@ shinyApp(
     
     
     # ========================= Modal สำหรับตัวอย่างแปลผล ================================ 
+    # ==================================== Data Dictionary (Sample Data) ==================================== 
+    
+    dict_thailand <- data.frame(
+      Column      = c("province_id", "province", "year", "suicide", "population",
+                      "expected.value", "debt", "income", "poverty", "expenditure",
+                      "homicide.crime", "property.crime", "shocking.crime"),
+      Role        = c("area id", "area name", "time point", "cases", "population",
+                      "expected value", "covariate", "covariate", "covariate", "covariate",
+                      "covariate", "covariate", "covariate"),
+      Description = c(
+        "Unique code identifying each of the 77 provinces.",
+        "Province name (one of Thailand's 77 provinces), used as the display label on the maps.",
+        "Year of observation.",
+        "Number of suicide deaths recorded in the province and year, sourced from the Center for Suicide Prevention, Khon Kaen Rajanagarindra Psychiatric Hospital.",
+        "Mid-year population of the province in that year, sourced from the National Statistics Office of Thailand.",
+        "Pre-calculated expected number of suicide cases (E) for the province and year, used as the baseline in the Poisson model (cases ~ Poisson(E x relative risk)).",
+        "Average amount of debt per household in the province, sourced from the National Statistics Office of Thailand.",
+        "Average monthly income per household in the province, sourced from the National Statistics Office of Thailand.",
+        "Proportion of poverty (based on household expense) in the province, sourced from the National Statistics Office of Thailand.",
+        "Average monthly expenses per household in the province, sourced from the National Statistics Office of Thailand.",
+        "Reported cases/arrests for homicide, bodily harm and sexual assault offences in the province, sourced from the National Statistics Office of Thailand.",
+        "Reported cases/arrests for theft and robbery offences in the province, sourced from the National Statistics Office of Thailand.",
+        "Reported cases/arrests for violent crime offences in the province, sourced from the National Statistics Office of Thailand."
+      ),
+      stringsAsFactors = FALSE
+    )
+    
+    dict_pollution <- data.frame(
+      Column      = c("IZ", "name", "year", "observed", "expected", "pm10", "jsa", "price"),
+      Role        = c("area id", "area name", "time point", "cases", "population",
+                      "covariate", "covariate", "covariate"),
+      Description = c(
+        "Unique code for each Intermediate Zone (IZ) in the Greater Glasgow and Clyde health board (271 areas).",
+        "Descriptive name of the Intermediate Zone, used as the display label on the maps.",
+        "Year of observation (2007-2011).",
+        "Observed number of respiratory-related hospital admissions in the area and year.",
+        "Expected number of hospital admissions (age/sex standardised), used in place of a raw population count.",
+        "Yearly average concentration of particulate matter under 10 microns (PM10), a measure of air pollution.",
+        "Proportion of the working-age population receiving Job Seekers Allowance (JSA), a deprivation indicator.",
+        "Average property price in the area (hundreds of thousands), a deprivation/affluence indicator."
+      ),
+      stringsAsFactors = FALSE
+    )
+    
+    output$dict_table_thailand <- renderDT({
+      datatable(dict_thailand, rownames = FALSE,
+                options = list(dom = "t", paging = FALSE, ordering = FALSE, scrollX = TRUE),
+                class = "stripe hover")
+    })
+    
+    output$dict_table_pollution <- renderDT({
+      datatable(dict_pollution, rownames = FALSE,
+                options = list(dom = "t", paging = FALSE, ordering = FALSE, scrollX = TRUE),
+                class = "stripe hover")
+    })
+    
+    observeEvent(input$view_data_dictionary, {
+      showModal(
+        modalDialog(
+          title = HTML('<div class = "modal__header">
+                          <i class="uil uil-clipboard-notes modalicon"></i>
+                          <div>
+                            <h4 class = "modaltitle">Sample Data Dictionary</h4>
+                            <span class = "modalsubtitle">Column names and descriptions for each sample dataset.</span>
+                          </div>
+                        </div>
+                       '),
+          tabsetPanel(
+            tabPanel("Thailand Suicide Mortality 2011–2021",
+                     br(),
+                     HTML("<p>77 provinces x 11 years (2011-2021).</p>"),
+                     DTOutput("dict_table_thailand")
+            ),
+            tabPanel("Pollution & Health Data (CARBayesST)",
+                     br(),
+                     HTML("<p>271 Intermediate Zones (Greater Glasgow & Clyde) × 5 years (2007-2011). 
+                          Source: <em>CARBayesST</em> R package vignette (Lee, Rushworth, Napier & Pettersson).</p>
+                          <p><span class='sample-badge badge-s'>Spatial only</span> A single-year (2007-only) 
+                          version of this same dataset is also available in the dropdown, for testing spatial-only 
+                          models. It uses the exact same columns as below (just one year of rows instead of five) 
+                          and the same GGHB.IZ shapefile.</p>"),
+                     DTOutput("dict_table_pollution")
+            )
+          ),
+          easyClose = TRUE,
+          footer = modalButton("Close"),
+          size = "l"
+        )
+      )
+    })
+    
+    
     observeEvent(input$interpret_cluster, {
       showModal(
         modalDialog(
@@ -1383,7 +1941,7 @@ shinyApp(
                           <i class="uil uil-clipboard-notes modalicon"></i>
                           <div>
                             <h4 class = "modaltitle">Examples of interpretation</h4>
-                            <span class = "modalsubtitle">From sample data, Thailand suicide mortality and risk factors 2011-2021.</span>
+                            <span class = "modalsubtitle">Illustrative example using the Thailand suicide mortality sample data - the same interpretation rule below applies to any dataset you load, including the Pollution &amp; Health Data samples.</span>
 
                           </div>
                         </div>
@@ -1396,6 +1954,7 @@ shinyApp(
               <div class = 'modal__body'>
                 <span class = 'modal__bodytitle'>If the area has a <strong>hotspot</strong>: </br></span>
                 &emsp;In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides). 
+                For a different dataset (e.g. the pollution &amp; health data), the same rule applies to whichever case count column you selected - a hotspot means that area/time point has a higher case count than the baseline threshold.
               </div>"),
           
           easyClose = TRUE,
@@ -1413,7 +1972,7 @@ shinyApp(
                           <i class="uil uil-clipboard-notes modalicon"></i>
                           <div>
                             <h4 class = "modaltitle">Examples of interpretation</h4>
-                            <span class = "modalsubtitle">From sample data, Thailand suicide mortality and risk factors 2011-2021.</span>
+                            <span class = "modalsubtitle">Illustrative example using the Thailand suicide mortality sample data - the same interpretation rules below apply to any dataset you load, including the Pollution &amp; Health Data samples (just replace "suicide risk" with whatever case outcome your data measures).</span>
 
                           </div>
                         </div>
@@ -1486,15 +2045,30 @@ shinyApp(
     # ======================================================================== 
     
     
-    observe({
-      xd <- names(rv$datosOriginal)
-      if (is.null(xd)) {
-        xd <- character(0)
-      }
+    # อัปเดตตัวเลือกใน Dropdown ต่างๆ ทันทีเมื่ออัปโหลดไฟล์เสร็จสิ้น
+    observeEvent(rv$csvData, {
+      xd <- names(rv$csvData)
+      if (is.null(xd) || length(xd) == 0) return()
       xd2 <- c("-", xd)
       
-      if (input$data_source_type == "sample" && length(xd) > 0) {
-        # **รบกวนแก้ชื่อ string สีเขียวด้านล่างนี้ ให้ตรงกับคอลัมน์จริงในไฟล์ suicide_th_data_sample ของคุณ**
+      if (input$data_source_type == "sample" && input$sample_dataset_choice %in% c("pollution", "pollution_2007")) {
+        # Sample Data: Pollution & Health Data (CARBayesST) - full or 2007-only, same column layout
+        updateSelectInput(session, "columnidareaindata", choices = xd, selected = "IZ")
+        updateSelectInput(session, "columnidareanamedata", choices = xd, selected = "name")
+        updateSelectInput(session, "columndateindata", choices = xd, selected = "year")
+        updateSelectInput(session, "columncasesindata", choices = xd, selected = "observed")
+        updateSelectInput(session, "columnpopindata", choices = xd, selected = "expected")
+        updateSelectInput(session, "columnexpvalueindata", choices = c("", xd), selected = "")
+        
+        updateSelectInput(session, "columncov1indata", choices = xd2, selected = "pm10")
+        updateSelectInput(session, "columncov2indata", choices = xd2, selected = "jsa")
+        updateSelectInput(session, "columncov3indata", choices = xd2, selected = "price")
+        updateSelectInput(session, "columncov4indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov5indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov6indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov7indata", choices = xd2, selected = "-")
+      } else if (input$data_source_type == "sample") {
+        # Sample Data: Thailand Suicide Mortality
         updateSelectInput(session, "columnidareaindata", choices = xd, selected = "province_id")
         updateSelectInput(session, "columnidareanamedata", choices = xd, selected = "province")
         updateSelectInput(session, "columndateindata", choices = xd, selected = "year")
@@ -1502,25 +2076,21 @@ shinyApp(
         updateSelectInput(session, "columnpopindata", choices = xd, selected = "population")
         updateSelectInput(session, "columnexpvalueindata", choices = xd, selected = "expected.value")
         
-        # ตั้งค่า Covariates อัตโนมัติสำหรับ Sample Data (ถ้ามี)
         updateSelectInput(session, "columncov1indata", choices = xd2, selected = "debt")
         updateSelectInput(session, "columncov2indata", choices = xd2, selected = "income")
-        
-        # อันที่ไม่ได้ใช้ให้เป็น "-"
         updateSelectInput(session, "columncov3indata", choices = xd2, selected = "poverty")
         updateSelectInput(session, "columncov4indata", choices = xd2, selected = "expenditure")
         updateSelectInput(session, "columncov5indata", choices = xd2, selected = "homicide.crime")
         updateSelectInput(session, "columncov6indata", choices = xd2, selected = "property.crime")
         updateSelectInput(session, "columncov7indata", choices = xd2, selected = "shocking.crime")
-        
       } else {
-        # กรณีอัปโหลดเอง ให้ default เป็นคอลัมน์แรก
-        updateSelectInput(session, "columnidareaindata", choices = xd, selected = head(xd, 1))
-        updateSelectInput(session, "columnidareanamedata", choices = xd, selected = head(xd, 1))
-        updateSelectInput(session, "columndateindata", choices = xd, selected = head(xd, 1))
-        updateSelectInput(session, "columnexpvalueindata", choices = xd, selected = head(xd, 1))
-        updateSelectInput(session, "columncasesindata", choices = xd, selected = head(xd, 1))
-        updateSelectInput(session, "columnpopindata", choices = xd, selected = head(xd, 1))
+        # สำหรับกรณีอัปโหลดเอง
+        updateSelectInput(session, "columnidareaindata", choices = c("", xd), selected = "")
+        updateSelectInput(session, "columnidareanamedata", choices = c("", xd), selected = "")
+        updateSelectInput(session, "columnexpvalueindata", choices = c("", xd), selected = "")
+        updateSelectInput(session, "columncasesindata", choices = c("", xd), selected = "")
+        updateSelectInput(session, "columnpopindata", choices = c("", xd), selected = "")
+        updateSelectInput(session, "columndateindata", choices = c("", xd), selected = "")
         
         updateSelectInput(session, "columncov1indata", choices = xd2, selected = "-")
         updateSelectInput(session, "columncov2indata", choices = xd2, selected = "-")
@@ -1532,13 +2102,81 @@ shinyApp(
       }
     })
     
+    # ประมวลผลสร้างคอลัมน์และเลือกคอลัมน์ให้อัตโนมัติ (Automation Section)
+    observe({
+      req(rv$csvData)
+      df <- rv$csvData
+      selected_col <- input$columnidareanamedata
+      
+      # ตรวจสอบความถูกต้องของคอลัมน์ Area Name
+      if (!is.null(selected_col) && selected_col != "" && selected_col %in% names(df)) {
+        
+        # สร้างคอลัมน์ ID อัตโนมัติจาก Area Name บน Memory (ไม่ต้องอ่านไฟล์ซ้ำ)
+        area_name_col <- df[[selected_col]]
+        df[["__areaID_auto__"]] <- as.integer(factor(area_name_col))
+        
+        # ส่งค่าเข้าสู่ข้อมูลหลักที่จะใช้คำนวณหลังบ้าน
+        rv$datosOriginal <- df
+        
+        # [จุดสำคัญ]: สั่งล็อกการเลือกค่าในช่อง Area ID ให้เป็นตัวที่สร้างขึ้นมาทันที!
+        if (input$data_source_type == "upload") {
+          xd_updated <- names(df)
+          # ถ้าผู้ใช้เลือก area id เอง (เช่น IZ) อยู่แล้ว ไม่ต้อง override ทับ
+          current_id <- isolate(input$columnidareaindata)
+          if (is.null(current_id) || current_id == "" || !(current_id %in% xd_updated)) {
+            updateSelectInput(session, "columnidareaindata", choices = xd_updated, selected = "__areaID_auto__")
+          } else {
+            updateSelectInput(session, "columnidareaindata", choices = xd_updated, selected = current_id)
+          }
+        }
+      } else {
+        rv$datosOriginal <- df
+      }
+    })
+    
     
     # อัปเดต Radio Buttons อัตโนมัติเมื่อเลือก Sample Data
-    observeEvent(input$data_source_type, {
+    observeEvent(list(input$data_source_type, input$sample_dataset_choice), {
       if (input$data_source_type == "sample") {
-        updateRadioButtons(session, "shapefile_from_thailand", selected = "yes")
-        updateRadioButtons(session, "Expected_Value_from_csv", selected = "yes")
+        if (input$sample_dataset_choice %in% c("pollution", "pollution_2007")) {
+          # Pollution health data (full or 2007-only): not Thailand provinces, no pre-computed expected value column
+          updateRadioButtons(session, "shapefile_from_thailand", selected = "no")
+          updateRadioButtons(session, "Expected_Value_from_csv", selected = "no")
+        } else {
+          updateRadioButtons(session, "shapefile_from_thailand", selected = "yes")
+          updateRadioButtons(session, "Expected_Value_from_csv", selected = "yes")
+        }
       }
+    }, ignoreNULL = FALSE)
+    
+    
+    # กล่องคำอธิบายสั้นๆ ใต้ dropdown บอกว่าชุดข้อมูลที่เลือกอยู่รองรับ Spatial หรือ Spatial-Temporal
+    output$sample_dataset_info <- renderUI({
+      req(input$data_source_type == "sample")
+      
+      info <- switch(input$sample_dataset_choice,
+                     "thailand" = list(
+                       badge = "Spatial-Temporal", cls = "badge-st",
+                       text = "77 provinces x 11 years (2011-2021). Supports both spatial-only and spatial-temporal models."
+                     ),
+                     "pollution" = list(
+                       badge = "Spatial-Temporal", cls = "badge-st",
+                       text = "271 areas x 5 years (2007-2011). Supports both spatial-only and spatial-temporal models."
+                     ),
+                     "pollution_2007" = list(
+                       badge = "Spatial only", cls = "badge-s",
+                       text = "271 areas, single year (2007) only. This dataset has no time dimension, so it is intended for testing spatial-only models (spatial-temporal models require more than one time point)."
+                     ),
+                     list(badge = "", cls = "", text = "")
+      )
+      
+      div(class = "info-note", style = "margin-top: 10px;",
+          HTML(paste0(
+            "<i class='uil uil-info-circle'></i> ",
+            if (nzchar(info$badge)) paste0("<span class='sample-badge ", info$cls, "'>", info$badge, "</span> ") else "",
+            info$text
+          ))
+      )
     })
     
     
@@ -1550,8 +2188,13 @@ shinyApp(
       }
       
       if (input$data_source_type == "sample" && length(x) > 0) {
-        # **แก้ไขชื่อ "NAME_1" ให้ตรงกับชื่อคอลัมน์จังหวัดในไฟล์ gadm40_THA_1 ของคุณ**
-        updateSelectInput(session, "columnidareainmap", choices = x, selected = "NAME_1")
+        if (input$sample_dataset_choice %in% c("pollution", "pollution_2007")) {
+          # Pollution health data sample (full or 2007-only): GGHB.IZ shapefile - match on IZ column
+          updateSelectInput(session, "columnidareainmap", choices = x, selected = "IZ")
+        } else {
+          # **แก้ไขชื่อ "NAME_1" ให้ตรงกับชื่อคอลัมน์จังหวัดในไฟล์ gadm40_THA_1 ของคุณ**
+          updateSelectInput(session, "columnidareainmap", choices = x, selected = "NAME_1")
+        }
         
       } else {
         # กรณีอัปโหลดเอง ให้ default เป็นคอลัมน์แรก
@@ -1561,6 +2204,11 @@ shinyApp(
     
     
     rv <- reactiveValues(
+      overall_rr_df=NULL,
+      model_fit_df=NULL,
+      hyperpar_df=NULL,
+      has_time_dimension=NULL,
+      runtime_cluster=NULL, runtime_asso=NULL, runtime_total=NULL,  # เวลาที่ใช้คำนวณโมเดล (วินาที) เอาไปโชว์เป็น card
       columnidareainmap=NULL,  columnnameareainmap=NULL, #columnnamesuperareainmap=NULL,
       idpolyhighlighted = NULL, posinmapFilteredIdpolyhighlighted=NULL, colores=NULL,
       minrisk=0, maxrisk=1,
@@ -1590,14 +2238,51 @@ shinyApp(
     
     output$uploadmapmap <- renderPlot({
       if (!is.null(rv$map))
-        plot(rv$map)
+        plot(sf::st_geometry(rv$map), col = "#e8e4ff", border = "#735DFB", main = NULL)
     })
     
-    output$uploadmapsummary <- renderPrint({
+    # ====================================
+    # สรุปข้อมูลแบบง่าย อ่านเข้าใจได้เร็ว แทน summary() ดิบๆ ของ R
+    # ====================================
+    friendly_summary <- function(df) {
+      if (is.null(df) || ncol(df) == 0) return(NULL)
+      
+      rows <- lapply(names(df), function(col) {
+        x <- df[[col]]
+        n_missing <- sum(is.na(x))
+        
+        if (is.numeric(x)) {
+          info <- sprintf("min %s  |  mean %s  |  max %s",
+                          format(round(min(x, na.rm = TRUE), 2), big.mark = ","),
+                          format(round(mean(x, na.rm = TRUE), 2), big.mark = ","),
+                          format(round(max(x, na.rm = TRUE), 2), big.mark = ","))
+          type <- "number"
+        } else {
+          uq <- unique(x[!is.na(x)])
+          sample_vals <- paste(utils::head(uq, 3), collapse = ", ")
+          info <- sprintf("%d unique value(s)  (e.g. %s)", length(uq), sample_vals)
+          type <- "text"
+        }
+        
+        data.frame(
+          Column  = col,
+          Type    = type,
+          Summary = info,
+          Missing = n_missing,
+          stringsAsFactors = FALSE
+        )
+      })
+      
+      out <- do.call(rbind, rows)
+      rownames(out) <- NULL
+      out
+    }
+    
+    output$uploadmapsummary <- renderTable({
       # req(rv$map) คือการบอกว่าถ้ายังไม่มีข้อมูลไม่ต้องรันต่อ เพื่อกัน Error
       req(rv$map)
-      print(summary(st_drop_geometry(rv$map)))
-    })
+      friendly_summary(st_drop_geometry(rv$map))
+    }, striped = TRUE, bordered = TRUE, spacing = "s")
     
     output$uploadmaptable  <- renderDT({
       req(rv$map)
@@ -1606,10 +2291,10 @@ shinyApp(
     } , options = list(scrollX = TRUE, pageLength = 5))
     
     
-    output$uploaddatasummary <- renderPrint({
+    output$uploaddatasummary <- renderTable({
       req(rv$datosOriginal)
-      print(summary(rv$datosOriginal))
-    })
+      friendly_summary(rv$datosOriginal)
+    }, striped = TRUE, bordered = TRUE, spacing = "s")
     
     output$uploaddatatable  <- renderDT({
       req(rv$datosOriginal)
@@ -1635,8 +2320,11 @@ shinyApp(
         
         shp_file <- file.path(uploaddirectory, shpdf$name[grep("\\.shp$", shpdf$name)])
         
+      } else if (input$sample_dataset_choice %in% c("pollution", "pollution_2007")) {
+        # Sample Data: pollution health data (CARBayesST), full or 2007-only -> same GGHB.IZ shapefile
+        shp_file <- "sample data/GGHB_IZ.shp"
       } else {
-        # ถ้าผู้ใช้เลือก Sample Data ให้ชี้ไปที่โฟลเดอร์ตรงๆ
+        # ถ้าผู้ใช้เลือก Sample Data (Thailand Suicide) ให้ชี้ไปที่โฟลเดอร์ตรงๆ
         shp_file <- "sample data/gadm40_THA_1.shp"
       }
       
@@ -1650,30 +2338,56 @@ shinyApp(
       })
     })
     
-    # Upload data
+    # 1. โหลดไฟล์ CSV พร้อมระบบทำความสะอาดข้อมูลอัตโนมัติ (Data Cleaning Automation)
     observe({
       if (input$data_source_type == "upload") {
         inFile <- input$file1
         if (is.null(inFile)) return(invisible())
         path <- inFile$datapath
+      } else if (input$sample_dataset_choice == "pollution") {
+        path <- "sample data/pollution_health_data.csv"
+      } else if (input$sample_dataset_choice == "pollution_2007") {
+        path <- "sample data/pollution_health_data_2007.csv"
       } else {
-        # ถ้าผู้ใช้เลือก Sample Data ให้ชี้ไปที่ไฟล์ CSV ในโฟลเดอร์ตรงๆ
         path <- "sample data/suicide_th_data_sample_have_e_value.csv"
       }
       
       tryCatch({
-        rv$datosOriginal <- read.csv(path)
+        # อ่านไฟล์โดยแปลงช่องว่างและสัญลักษณ์แปลกๆ ให้เป็น NA ก่อน
+        # รองรับทั้ง CSV และ Excel (.xlsx / .xls) โดยเช็คจากนามสกุลไฟล์
+        file_ext <- tolower(tools::file_ext(path))
+        if (file_ext %in% c("xlsx", "xls")) {
+          df <- as.data.frame(readxl::read_excel(path))
+          # แปลงค่าที่เป็น string ว่าง/สัญลักษณ์แปลก ๆ ให้เป็น NA เหมือนตอนอ่าน CSV
+          df[df == "" | df == " " | df == "NA" | df == "na" | df == "-" | df == "."] <- NA
+        } else {
+          df <- read.csv(path, na.strings = c("", " ", "NA", "na", "-", "."))
+        }
+        
+        # [จุดสำคัญ 1]: ตัดแถวที่เป็นค่าว่าง (NA) ทั้งบรรทัดทิ้ง (ป้องกันบรรทัดว่างท้ายไฟล์ CSV)
+        df <- df[rowSums(is.na(df)) != ncol(df), ]
+        
+        # [จุดสำคัญ 2]: ถ้าระบบรู้แล้วว่าคอลัมน์ชื่อพื้นที่คืออะไร ให้ตัดแถวที่ไม่มีชื่อพื้นที่ (เช่น แถว Total/Summary) ทิ้งทันที
+        selected_name_col <- input$columnidareanamedata
+        if (!is.null(selected_name_col) && selected_name_col != "" && selected_name_col %in% names(df)) {
+          df <- df[!is.na(df[[selected_name_col]]), ]
+        }
+        
+        rv$csvData <- df
       }, error = function(e) {
         showNotification(paste("Error reading CSV:", e$message), type = "error")
       })
     })
     
     
-
+    
     # ==================================== ปุ่ม preview map dis ==================================== 
     observeEvent(input$Preview_Map_Distribution , {
       # ย้ำเงื่อนไขอีกรอบ ป้องกันการถูกคลิกตอนที่ข้อมูลยังไม่มี
       if (is.null(rv$datosOriginal)| is.null(rv$map)) return(NULL)
+      
+      # 0. เช็คว่า area id ของ shapefile กับ csv ตรงกันก่อนไปหน้า Map Distribution
+      if (!validate_shapefile_data_match()) return(NULL)
       
       # 1. เลื่อนไปหน้า Map Distribution ทันที
       shinyjs::runjs("$('.sidebar-menu a[data-value=Map_Distribution]').click();")
@@ -1699,15 +2413,20 @@ shinyApp(
       if (is.null(rv$datosOriginal) | is.null(rv$map))
         return(NULL)
       
+      # เช็คว่า area id ของ shapefile กับ csv ตรงกันก่อนไปคำนวณ Cluster / Association
+      if (!validate_shapefile_data_match()) return(NULL)
+      
       
       if(input$tabs == "Analysis"){
         data <- rv$datosOriginal
+        total_start_time <- Sys.time()  # จับเวลารวมทั้ง Cluster + Association เพราะหน้าเว็บจะไม่อัปเดตจนกว่าทั้ง 2 จะเสร็จ
         
         #updateSliderInput(session, "time_point_filter_cluster", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
         
         
         
         ######################### คำนวณ cluster ###################################
+        cluster_start_time <- Sys.time()  # เริ่มจับเวลาคำนวณ Cluster Detection
         tryCatch({
           rv$errorMessageCluster <- NULL  # ล้างข้อความ Error หากไม่มีปัญหา
           
@@ -1759,7 +2478,22 @@ shinyApp(
           # ---------------------------
           
           # area id (data$province)
-          data[,input$columnidareaindata] <- as.numeric(data[,input$columnidareaindata]) # id of province 1-77
+          # เดิม (crash ถ้า IZ เป็น text)
+          # data[,input$columnidareaindata] <- as.numeric(data[,input$columnidareaindata]) # id of province 1-77
+          
+          # ใหม่: ถ้าแปลงเป็น numeric ไม่ได้ ให้ auto-rank แทน
+          raw_id <- data[, input$columnidareaindata]
+          numeric_id <- suppressWarnings(as.numeric(raw_id))
+          
+          if (any(is.na(numeric_id))) {
+            # กรณี area id เป็น text เช่น "S02000260" → แปลงเป็น integer rank
+            data[["__areaID_auto__"]] <- as.integer(factor(raw_id))
+            area_id_col <- "__areaID_auto__"
+          } else {
+            data[, input$columnidareaindata] <- numeric_id
+            area_id_col <- input$columnidareaindata
+          }
+          
           
           # # year data$year
           data[,input$columndateindata] <- as.numeric(data[,input$columndateindata]) # id of year 1-11 (?)
@@ -1770,6 +2504,11 @@ shinyApp(
           # # interaction id
           province_int <- data[,input$columnidareaindata]
           year_int <- data[,input$columndateindata]
+          
+          # รองรับกรณีข้อมูลเป็น Spatial อย่างเดียว (มี time point แค่ค่าเดียว หรือไม่มี variation ตามเวลา)
+          # ถ้ามีเวลาแค่ 1 จุด จะไม่ใส่ f(..., model = "rw1") ในสูตรโมเดล เพราะ RW1 ต้องมีอย่างน้อย 2 จุดเวลา
+          has_time_dimension <- length(unique(data[,input$columndateindata])) > 1
+          rv$has_time_dimension <- has_time_dimension
           
           
           
@@ -1805,7 +2544,7 @@ shinyApp(
           #     f(data$x5_id, x5, model = "iid") +
           #     f(data$x6_id, x6, model = "iid") +
           #     f(data$x7_id, x7, model = "iid") +
-          #   f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
+          #   f(data[[area_id_col]], model = "bym", graph = tha_adj) +
           #   f(data[,input$columndateindata], model = "rw1") +
           #   f(province_int, model = "iid")
           
@@ -1814,10 +2553,16 @@ shinyApp(
           
           
           
-          formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
-            f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-            f(data[,input$columndateindata], model = "rw1") +
-            f(province_int, model = "iid")
+          if (has_time_dimension) {
+            formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
+              f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+              f(data[,input$columndateindata], model = "rw1") +
+              f(province_int, model = "iid")
+          } else {
+            formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
+              f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+              f(province_int, model = "iid")
+          }
           
           # computing part
           model_Cluter <- inla(
@@ -1854,6 +2599,7 @@ shinyApp(
             sep = ""
           )
         })
+        rv$runtime_cluster <- as.numeric(difftime(Sys.time(), cluster_start_time, units = "secs"))  # เก็บเวลาที่ใช้คำนวณ
         # model2 <- rv$model
         
         print("===================== rv$errorMessageCluster =====================")
@@ -1863,6 +2609,7 @@ shinyApp(
         ####################################################
         
         
+        assoc_start_time <- Sys.time()  # เริ่มจับเวลาคำนวณ Association with Risk Factors
         tryCatch({
           rv$errorMessageAssoc  <- NULL  # ล้างข้อความ Error หากไม่มีปัญหา
           ####################  คำนวณ asso   #################### 
@@ -1901,18 +2648,27 @@ shinyApp(
             data$x1_id <- data[,input$columnidareaindata]
             
             
-            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-              f(data$x1_id, x1, model = "iid") +
-              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-              f(data[,input$columndateindata], model = "rw1") +
-              f(province_int, model = "iid")
+            if (has_time_dimension) {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
             
             # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
               data = data,
-              E = data[,input$columnpopindata],
+              E = data[, 'expected_value'],
               control.predictor = list(compute = TRUE),
               control.compute = list(
                 dic = TRUE,
@@ -1926,10 +2682,14 @@ shinyApp(
             
             
             rv$model <- model
+            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata))
+            rv$model_fit_df <- compute_model_fit_summary(model)
+            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata))
             
             
             model2 <- rv$model
             
+            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean))
             ) )
@@ -1980,19 +2740,29 @@ shinyApp(
             data$x2_id <- data[,input$columnidareaindata]
             
             
-            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-              f(data$x1_id, x1, model = "iid") +
-              f(data$x2_id, x2, model = "iid") +
-              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-              f(data[,input$columndateindata], model = "rw1") +
-              f(province_int, model = "iid")
+            if (has_time_dimension) {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
             
             # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
               data = data,
-              E = data[,input$columnpopindata],
+              E = data[, 'expected_value'],
               control.predictor = list(compute = TRUE),
               control.compute = list(
                 dic = TRUE,
@@ -2003,10 +2773,14 @@ shinyApp(
             
             
             rv$model <- model
+            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata))
+            rv$model_fit_df <- compute_model_fit_summary(model)
+            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata))
             
             
             model2 <- rv$model
             
+            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean))
@@ -2062,20 +2836,31 @@ shinyApp(
             data$x3_id <- data[,input$columnidareaindata]
             
             
-            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-              f(data$x1_id, x1, model = "iid") +
-              f(data$x2_id, x2, model = "iid") +
-              f(data$x3_id, x3, model = "iid") +
-              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-              f(data[,input$columndateindata], model = "rw1") +
-              f(province_int, model = "iid")
+            if (has_time_dimension) {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
             
             # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
               data = data,
-              E = data[,input$columnpopindata],
+              E = data[, 'expected_value'],
               control.predictor = list(compute = TRUE),
               control.compute = list(
                 dic = TRUE,
@@ -2086,10 +2871,14 @@ shinyApp(
             
             
             rv$model <- model
+            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata))
+            rv$model_fit_df <- compute_model_fit_summary(model)
+            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata))
             
             
             model2 <- rv$model
             
+            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -2156,21 +2945,33 @@ shinyApp(
             data$x4_id <- data[,input$columnidareaindata]
             
             
-            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-              f(data$x1_id, x1, model = "iid") +
-              f(data$x2_id, x2, model = "iid") +
-              f(data$x3_id, x3, model = "iid") +
-              f(data$x4_id, x4, model = "iid") +
-              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-              f(data[,input$columndateindata], model = "rw1") +
-              f(province_int, model = "iid")
+            if (has_time_dimension) {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 + x4 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data$x4_id, x4, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 + x4 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data$x4_id, x4, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
             
             # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
               data = data,
-              E = data[,input$columnpopindata],
+              E = data[, 'expected_value'],
               control.predictor = list(compute = TRUE),
               control.compute = list(
                 dic = TRUE,
@@ -2181,10 +2982,14 @@ shinyApp(
             
             
             rv$model <- model
+            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata))
+            rv$model_fit_df <- compute_model_fit_summary(model)
+            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata))
             
             
             model2 <- rv$model
             
+            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -2261,22 +3066,35 @@ shinyApp(
             data$x5_id <- data[,input$columnidareaindata]
             
             
-            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-              f(data$x1_id, x1, model = "iid") +
-              f(data$x2_id, x2, model = "iid") +
-              f(data$x3_id, x3, model = "iid") +
-              f(data$x4_id, x4, model = "iid") +
-              f(data$x5_id, x5, model = "iid") +
-              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-              f(data[,input$columndateindata], model = "rw1") +
-              f(province_int, model = "iid")
+            if (has_time_dimension) {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 + x4 + x5 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data$x4_id, x4, model = "iid") +
+                f(data$x5_id, x5, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 + x4 + x5 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data$x4_id, x4, model = "iid") +
+                f(data$x5_id, x5, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
             
             # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
               data = data,
-              E = data[,input$columnpopindata],
+              E = data[, 'expected_value'],
               control.predictor = list(compute = TRUE),
               control.compute = list(
                 dic = TRUE,
@@ -2286,10 +3104,14 @@ shinyApp(
             
             
             rv$model <- model
+            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata))
+            rv$model_fit_df <- compute_model_fit_summary(model)
+            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata))
             
             
             model2 <- rv$model
             
+            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -2377,23 +3199,37 @@ shinyApp(
             data$x6_id <- data[,input$columnidareaindata]
             
             
-            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-              f(data$x1_id, x1, model = "iid") +
-              f(data$x2_id, x2, model = "iid") +
-              f(data$x3_id, x3, model = "iid") +
-              f(data$x4_id, x4, model = "iid") +
-              f(data$x5_id, x5, model = "iid") +
-              f(data$x6_id, x6, model = "iid") +
-              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-              f(data[,input$columndateindata], model = "rw1") +
-              f(province_int, model = "iid")
+            if (has_time_dimension) {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 + x4 + x5 + x6 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data$x4_id, x4, model = "iid") +
+                f(data$x5_id, x5, model = "iid") +
+                f(data$x6_id, x6, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 + x4 + x5 + x6 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data$x4_id, x4, model = "iid") +
+                f(data$x5_id, x5, model = "iid") +
+                f(data$x6_id, x6, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
             
             # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
               data = data,
-              E = data[,input$columnpopindata],
+              E = data[, 'expected_value'],
               control.predictor = list(compute = TRUE),
               control.compute = list(
                 dic = TRUE,
@@ -2403,10 +3239,14 @@ shinyApp(
             
             
             rv$model <- model
+            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata))
+            rv$model_fit_df <- compute_model_fit_summary(model)
+            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata))
             
             
             model2 <- rv$model
             
+            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -2507,24 +3347,39 @@ shinyApp(
             data$x7_id <- data[,input$columnidareaindata]
             
             
-            formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-              f(data$x1_id, x1, model = "iid") +
-              f(data$x2_id, x2, model = "iid") +
-              f(data$x3_id, x3, model = "iid") +
-              f(data$x4_id, x4, model = "iid") +
-              f(data$x5_id, x5, model = "iid") +
-              f(data$x6_id, x6, model = "iid") +
-              f(data$x7_id, x7, model = "iid") +
-              f(data[,input$columnidareaindata], model = "bym", graph = tha_adj) +
-              f(data[,input$columndateindata], model = "rw1") +
-              f(province_int, model = "iid")
+            if (has_time_dimension) {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 + x4 + x5 + x6 + x7 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data$x4_id, x4, model = "iid") +
+                f(data$x5_id, x5, model = "iid") +
+                f(data$x6_id, x6, model = "iid") +
+                f(data$x7_id, x7, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
+                # x1 + x2 + x3 + x4 + x5 + x6 + x7 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
+                f(data$x1_id, x1, model = "iid") +
+                f(data$x2_id, x2, model = "iid") +
+                f(data$x3_id, x3, model = "iid") +
+                f(data$x4_id, x4, model = "iid") +
+                f(data$x5_id, x5, model = "iid") +
+                f(data$x6_id, x6, model = "iid") +
+                f(data$x7_id, x7, model = "iid") +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
             
             # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
               data = data,
-              E = data[,input$columnpopindata],
+              E = data[, 'expected_value'],
               control.predictor = list(compute = TRUE),
               control.compute = list(
                 dic = TRUE,
@@ -2535,10 +3390,14 @@ shinyApp(
             
             
             rv$model <- model
+            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata, input$columncov7indata))
+            rv$model_fit_df <- compute_model_fit_summary(model)
+            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata, input$columncov7indata))
             
             
             model2 <- rv$model
             
+            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -2639,6 +3498,8 @@ shinyApp(
             sep = ""
           )
         })
+        rv$runtime_asso <- as.numeric(difftime(Sys.time(), assoc_start_time, units = "secs"))  # เก็บเวลาที่ใช้คำนวณ
+        rv$runtime_total <- as.numeric(difftime(Sys.time(), total_start_time, units = "secs"))  # เวลารวมทั้งหมด ตรงกับที่ผู้ใช้จับเองหลังกด Next
         # model2 <- rv$model
         
         print("===================== rv$errorMessageAssoc =====================")
@@ -2885,7 +3746,11 @@ shinyApp(
       # map@data <- datafiltered[ordercounties, ]
       
       datafiltered <- data
-      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[input$columnidareanamedata]])
+      # Sample Data (Thailand) shapefile only has province NAME_1 (text), no numeric id that matches
+      # "province_id", so keep name-based matching for it (safe: Thai province names have no duplicates).
+      # For uploaded data, match by area id (unique code) to avoid problems with duplicate area names.
+      match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
+      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[match_key_data]])
       
       # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
       temp_geom <- st_geometry(map)
@@ -3136,7 +4001,11 @@ shinyApp(
       }
       
       datafiltered <- data
-      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[input$columnidareanamedata]])
+      # Sample Data (Thailand) shapefile only has province NAME_1 (text), no numeric id that matches
+      # "province_id", so keep name-based matching for it (safe: Thai province names have no duplicates).
+      # For uploaded data, match by area id (unique code) to avoid problems with duplicate area names.
+      match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
+      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[match_key_data]])
       
       # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
       temp_geom <- st_geometry(map)
@@ -3219,7 +4088,11 @@ shinyApp(
         
         
         datafiltered <- data2
-        ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[input$columnidareanamedata]])
+        # Sample Data (Thailand) shapefile only has province NAME_1 (text), no numeric id that matches
+        # "province_id", so keep name-based matching for it (safe: Thai province names have no duplicates).
+        # For uploaded data, match by area id (unique code) to avoid problems with duplicate area names.
+        match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
+        ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[match_key_data]])
         
         # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
         temp_geom <- st_geometry(map)
@@ -3367,6 +4240,157 @@ shinyApp(
     # 
     
     
+    output$model_type_badge <- renderUI({
+      if (is.null(rv$has_time_dimension)) return(NULL)
+      
+      if (isTRUE(rv$has_time_dimension)) {
+        label <- "Spatio-Temporal model"
+        tip   <- "The uploaded data has more than one time point, so the model includes a temporal (RW1) random effect in addition to the spatial (BYM) random effect."
+        bg    <- "#735DFB"
+      } else {
+        label <- "Spatial model"
+        tip   <- "The uploaded data has only one time point, so the model includes only the spatial (BYM) random effect, with no temporal (RW1) term."
+        bg    <- "#999999"
+      }
+      
+      HTML(paste0(
+        '<span style="display:inline-block; background:', bg, '; color:white; padding:2px 10px; ',
+        'border-radius:100px; font-size:12px; vertical-align:middle;">', label, '</span>',
+        '<span class="mr-tip">',
+        '<i class="fa fa-info-circle mr-tip-icon"></i>',
+        '<span class="mr-tip-text">', tip, '</span></span>'
+      ))
+    })
+    
+    
+    # ====================================
+    # ตารางแบบเรียบง่าย ไม่มีแถบสี (เพื่อไม่ให้ตีความสัดส่วนผิด เพราะค่า % มักเล็กมาก)
+    # ====================================
+    render_bar_table <- function(df, pct_col, bold_col = NULL) {
+      dt <- datatable(
+        df,
+        rownames = FALSE,
+        options = list(dom = "t", paging = FALSE, ordering = FALSE),
+        class = "stripe hover"
+      )
+      
+      if (!is.null(bold_col)) {
+        dt <- dt %>% formatStyle(bold_col, fontWeight = "bold")
+      }
+      dt
+    }
+    
+    # Cluster Detection Results section is disabled for now (UI hidden above) -
+    # commenting out this server output too so it doesn't run in the background.
+    # output$cluster_summary_table <- renderDT({
+    #   if (is.null(rv$data)) return(NULL)
+    #   df <- compute_cluster_summary(rv$data, input$columnidareaindata)
+    #   if (is.null(df)) return(NULL)
+    #   render_bar_table(df, "% of total", bold_col = "Metric")
+    # })
+    
+    
+    output$significance_summary_table <- renderDT({
+      if (is.null(rv$association_wsf_df)) return(NULL)
+      df <- compute_significance_summary(rv$association_wsf_df)
+      if (is.null(df)) return(NULL)
+      render_bar_table(df, "% significant", bold_col = "Risk factor")
+    })
+    
+    
+    output$overall_rr_table <- renderTable({
+      if (is.null(rv$overall_rr_df)) return(NULL)
+      
+      df <- rv$overall_rr_df
+      out <- data.frame(
+        `Risk factor` = df$covariate,
+        `RR (mean)` = round(df$RR_mean, 3),
+        `95% CI lower` = round(df$RR_lower, 3),
+        `95% CI upper` = round(df$RR_upper, 3),
+        check.names = FALSE
+      )
+      out
+    }, striped = TRUE, bordered = TRUE, spacing = "s")
+    
+    
+    output$model_fit_table <- renderTable({
+      if (is.null(rv$model_fit_df)) return(NULL)
+      rv$model_fit_df
+    }, striped = TRUE, bordered = TRUE, spacing = "s")
+    
+    
+    output$hyperpar_table <- renderTable({
+      if (is.null(rv$hyperpar_df)) return(NULL)
+      rv$hyperpar_df
+    }, striped = TRUE, bordered = TRUE, spacing = "s")
+    
+    
+    # ชื่อแผนที่ของหน้า Cluster Detection - บอกว่าแผนที่นี้สื่อถึงอะไร (hotspot ของ case count คอลัมน์ไหน)
+    # จัดรูปแบบเวลาที่ใช้คำนวณโมเดลให้อ่านง่าย (วินาที -> "Xs" หรือ "X min Y sec")
+    format_runtime <- function(secs) {
+      if (is.null(secs) || is.na(secs)) return(NULL)
+      if (secs < 60) {
+        sprintf("%.1f seconds", secs)
+      } else {
+        m <- floor(secs / 60)
+        s <- round(secs %% 60)
+        sprintf("%d min %d sec", m, s)
+      }
+    }
+    
+    # การ์ดเดียวใช้ร่วมกันทั้ง 2 หน้า ให้หน้าตาเหมือนกันทุกจุด
+    # โชว์ทั้งเวลาของโมเดลนี้ และเวลารวมทั้งหมด (เพราะหน้าเว็บจะไม่อัปเดตจนกว่า Cluster+Association จะเสร็จทั้งคู่
+    # ผู้ใช้ที่จับเวลาเองตั้งแต่กดปุ่ม Next จะเห็นเป็นเวลารวมนี้ ไม่ใช่แค่เวลาของโมเดลเดียว)
+    runtime_card_ui <- function(secs, total_secs = NULL) {
+      req(secs)
+      total_html <- if (!is.null(total_secs) && !is.na(total_secs)) {
+        paste0(" &nbsp;·&nbsp; Total analysis time (Cluster + Association): <strong>",
+               format_runtime(total_secs), "</strong>")
+      } else {
+        ""
+      }
+      div(class = "box-white", style = "display:inline-block; padding:8px 16px; margin: 6px 0 10px 0;",
+          HTML(paste0("<i class='uil uil-clock'></i> This model computed in <strong>",
+                      format_runtime(secs), "</strong>", total_html))
+      )
+    }
+    
+    # Card แสดงเวลาที่ใช้คำนวณโมเดล Cluster Detection
+    output$runtime_card_cluster <- renderUI({
+      runtime_card_ui(rv$runtime_cluster, rv$runtime_total)
+    })
+    
+    # Card แสดงเวลาที่ใช้คำนวณโมเดล Association with Risk Factors
+    output$runtime_card_asso <- renderUI({
+      runtime_card_ui(rv$runtime_asso, rv$runtime_total)
+    })
+    
+    
+    output$map_cluster_title <- renderUI({
+      req(input$columncasesindata)
+      HTML(paste0(
+        '<h4 style="margin-bottom:2px;">Hotspot Map: ',
+        '<span style="display:inline-block; background:#735DFB; color:white; padding:2px 12px; ',
+        'border-radius:100px; font-size:15px; font-weight:600; vertical-align:middle;">',
+        input$columncasesindata, '</span></h4>',
+        '<p style="margin-top:6px; font-size:13px; color:#666;">Areas classified as a <strong>hotspot</strong> have a case count above the baseline threshold for the selected time point(s). See legend on the map for colors.</p>'
+      ))
+    })
+    
+    
+    # ชื่อแผนที่ของหน้า Association with Risk Factors - บอกว่าแผนที่นี้สื่อถึงอะไร (RR ของ risk factor ไหน)
+    output$map_risk_fac_title <- renderUI({
+      req(input$risk_factor_filter)
+      HTML(paste0(
+        '<h4 style="margin-bottom:2px;">Relative Risk (RR) Map: ',
+        '<span style="display:inline-block; background:#735DFB; color:white; padding:2px 12px; ',
+        'border-radius:100px; font-size:15px; font-weight:600; vertical-align:middle;">',
+        input$risk_factor_filter, '</span></h4>',
+        '<p style="margin-top:6px; font-size:13px; color:#666;">Estimated relative risk (RR) of this risk factor for each area.</p>'
+      ))
+    })
+    
+    
     output$map_risk_fac <- renderLeaflet({
       
       if (is.null(rv$datosOriginal) | is.null(rv$map) | is.null(rv$association_wsf_df))
@@ -3382,6 +4406,12 @@ shinyApp(
       cols_to_join <- c(area_col, cols_to_join)
       map <- merge(map, association_wsf_df[, cols_to_join, drop = FALSE],
                    by = area_col, all.x = TRUE)
+      
+      # เพิ่มชื่อพื้นที่ (area name) เข้ามาด้วย เพราะ map เดิมมีแต่รหัสพื้นที่ (area id) จาก shapefile เท่านั้น
+      match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
+      name_lookup <- unique(rv$data[, c(match_key_data, input$columnidareanamedata)])
+      names(name_lookup) <- c(area_col, "area_display_name")
+      map <- merge(map, name_lookup, by = area_col, all.x = TRUE)
       
       sig_col <- NULL
       
@@ -3411,7 +4441,7 @@ shinyApp(
       l <- leaflet(map) %>% addTiles()
       pal <- colorNumeric(palette = input$color_asso, domain = map[[input$risk_factor_filter]])
       labels <- sprintf("<strong> %s </strong> <br/>  %s : %s <br/> Significance: %s",
-                        map[[input$columnidareainmap]] , input$risk_factor_filter, map[[input$risk_factor_filter]] , sig_col
+                        map[["area_display_name"]] , input$risk_factor_filter, map[[input$risk_factor_filter]] , sig_col
       ) %>%
         lapply(htmltools::HTML)
       
@@ -3478,9 +4508,27 @@ shinyApp(
     
     
     
+    # ปุ่ม Download sample data (.csv) - โหลดไฟล์ตัวอย่างดิบ (ไม่ผ่านโมเดล) ตาม dataset ที่เลือกในการ์ด Use Sample Data
+    output$download_sample_csv <- downloadHandler(
+      filename = function() {
+        switch(input$sample_dataset_choice,
+               "pollution"      = "pollution_health_data.csv",
+               "pollution_2007" = "pollution_health_data_2007.csv",
+               "suicide_th_data_sample_have_e_value.csv")
+      },
+      content = function(file) {
+        src <- switch(input$sample_dataset_choice,
+                      "pollution"      = "sample data/pollution_health_data.csv",
+                      "pollution_2007" = "sample data/pollution_health_data_2007.csv",
+                      "sample data/suicide_th_data_sample_have_e_value.csv")
+        file.copy(src, file)
+      }
+    )
+    
+    
     output$downloadData_cluster <- downloadHandler(
       filename = function() {
-        paste("result-cluster-detection-", Sys.Date(), ".csv", sep="")
+        paste0(data_file_base_name(), "_result-cluster-detection_", Sys.Date(), ".csv")
       },
       content = function(file) {
         write.csv(dataresult_cluster(), file)
@@ -3491,7 +4539,7 @@ shinyApp(
     dataresult_asso_risk <- reactive({
       req(rv$association_wsf_df)
       
-      not_empty <- function(x) x != "" & x != "-"  # ← เพิ่ม
+      not_empty <- function(x) x != "" & x != "-"
       
       covs <- list(x1 = input$columncov1indata,
                    x2 = input$columncov2indata,
@@ -3500,29 +4548,47 @@ shinyApp(
                    x5 = input$columncov5indata,
                    x6 = input$columncov6indata,
                    x7 = input$columncov7indata)
+      active_covs <- Filter(not_empty, unlist(covs))
       
       has_lower <- "lowerbound" %in% input$asso_select_column
       has_upper <- "upperbound" %in% input$asso_select_column
       has_sig   <- "significance" %in% input$asso_select_column
       
-      col_order <- input$columnidareainmap
+      area_col <- input$columnidareainmap
+      df_wide <- tryCatch(sf::st_drop_geometry(rv$association_wsf_df),
+                          error = function(e) as.data.frame(rv$association_wsf_df))
       
-      for (cov_name in Filter(not_empty, unlist(covs))) {  # ← เปลี่ยน function(x) x != "" เป็น not_empty
-        col_order <- c(col_order, paste0(cov_name, "_RR"))
-        if (has_lower) col_order <- c(col_order, paste0(cov_name, "_lowerbound"))
-        if (has_upper) col_order <- c(col_order, paste0(cov_name, "_upperbound"))
-        if (has_sig)   col_order <- c(col_order, paste0(cov_name, "_significance"))
-      }
+      # เพิ่มชื่อพื้นที่ (area name) เข้ามาด้วย ไม่ใช่แค่รหัสพื้นที่ (area id) เหมือนที่แก้ในแผนที่ด้านบน
+      match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
+      name_lookup <- unique(rv$data[, c(match_key_data, input$columnidareanamedata)])
+      names(name_lookup) <- c(area_col, "area_name")
+      df_wide <- merge(df_wide, name_lookup, by = area_col, all.x = TRUE)
       
-      col_order <- col_order[col_order %in% names(rv$association_wsf_df)]
-      df2 <- rv$association_wsf_df[, col_order]
-      df2
+      # จัดเป็น long/tidy format: 1 แถวต่อ (พื้นที่ x risk factor) แทนที่จะเป็น 1 แถวต่อพื้นที่ 
+      # แล้วมีคอลัมน์เพิ่มไปเรื่อยๆ ตามจำนวน risk factor ที่เลือก (คอลัมน์คงที่เสมอไม่ว่าจะเลือกกี่ตัวแปร)
+      long_list <- lapply(active_covs, function(cov_name) {
+        out <- data.frame(
+          area_id     = df_wide[[area_col]],
+          area_name   = df_wide[["area_name"]],
+          risk_factor = cov_name,
+          RR          = df_wide[[paste0(cov_name, "_RR")]],
+          stringsAsFactors = FALSE
+        )
+        if (has_lower) out$lower_bound_95 <- df_wide[[paste0(cov_name, "_lowerbound")]]
+        if (has_upper) out$upper_bound_95 <- df_wide[[paste0(cov_name, "_upperbound")]]
+        if (has_sig)   out$significance   <- df_wide[[paste0(cov_name, "_significance")]]
+        out
+      })
+      
+      df_long <- do.call(rbind, long_list)
+      rownames(df_long) <- NULL
+      df_long
     })
     
     
     output$downloadData_asso_risk <- downloadHandler(
       filename = function() {
-        paste("result-association-risk-factor-", Sys.Date(), ".csv", sep="")
+        paste0(data_file_base_name(), "_result-association-risk-factor_", Sys.Date(), ".csv")
       },
       content = function(file) {
         write.csv(dataresult_asso_risk(), file)
@@ -3547,9 +4613,3 @@ shinyApp(
 ##------------------------------Run Shiny App--------------------------------##
 
 shinyApp(ui = ui, server = server)
-
-
-
-
-
-
