@@ -7,6 +7,17 @@
 
 <div class='box-white'>
 
+- #### version 2.2
+    ##### 31 July 2026
+    - On the Spatiotemporal Epidemiological Analysis page, in the Association with Risk Factors tab:
+        - Added a second, separate **fixed-effect model**, computed alongside the existing per-area random-slope model, to estimate the **Overall (region-wide) relative risk** for each risk factor (a single RR shared across the whole study region, rather than one value per area).
+        - Added an **Overall RR** section showing a table with RR (mean), 95% CI lower/upper, a **Significant** column (Yes/No, based on whether the 95% CI excludes RR = 1), and an **Interpretation** column giving a plain-language percentage change in risk per unit increase in the risk factor.
+        - Added a "Model:" line above the Overall RR table stating which random effects the fixed-effect model is adjusted for; this now automatically reads "spatial & temporal random effects" or "spatial random effects" depending on whether the uploaded/selected dataset has a time dimension.
+        - Added a dedicated **Area-level Significance** heading above the existing per-area significance summary table, and an **Overall RR** heading above the new table, so it is clear which of the two tables comes from which model.
+        - Added tooltips explaining how the **Significant** and **Interpretation** columns are calculated, shown on hover next to each column header.
+        - Improved number formatting in the Overall RR table: the number of decimal places shown for RR/CI values, and for the percentage change in the Interpretation column, now adjusts automatically so very small effect sizes (e.g. risk factors measured in raw currency units, such as in the Thailand Suicide Mortality sample data) remain distinguishable instead of all rounding to 1.000 or displaying misleading values like "-0.0%".
+        - Fixed the sidebar panel not staying in view while scrolling through this tab: the sidebar (Filter/Export Result/Screenshot) is now sticky (stays pinned near the top of the screen), fixing an underlying CSS issue where shinydashboard/AdminLTE's default styling was silently blocking sticky positioning.
+
 - #### version 2.1
     ##### 18 July 2026
     - On the Upload Data page:

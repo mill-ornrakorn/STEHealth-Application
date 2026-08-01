@@ -1086,7 +1086,7 @@ body <- dashboardBody(
                tabPanel(HTML("<h4>Association with Risk Factors</h4>"),
                         div(class = "equal-height-row",
                             sidebarLayout(
-                              sidebarPanel(style = "overflow-y: auto;",
+                              sidebarPanel(
                                            fluidRow(
                                              column(12,
                                                     div(
@@ -1217,28 +1217,21 @@ body <- dashboardBody(
                                   uiOutput("model_type_badge", inline = TRUE),
                                   uiOutput("runtime_card_asso"),
                                   # ==================================================================
-                                  # ปิดไว้ชั่วคราว (Overall RR / Model Fit / Hyperparameters tabs)
-                                  # รอปรึกษาอาจารย์ก่อนว่าจะใช้แนวทาง fixed effect หรือไม่ - ดูโค้ดเดิมด้านล่างนี้
+                                  # เอาแท็บ Overall RR ออกแล้ว (ไม่ใช้ tabsetPanel อีกต่อไป เพราะเหลือแท็บเดียว)
+                                  # เอาตารางออกมาแสดงตรงๆ พร้อมหัวข้อ <h5> สไตล์เดียวกับ "Area-level Significance"
+                                  # ดึงค่าจาก model_fixed (โมเดลที่ 2 - fixed effect) ไม่ใช่ model เดิม (random slope รายพื้นที่)
+                                  # NOTE: ยังรอยืนยันกับอาจารย์เรื่องว่าจะตัด BYM/RW1/province_int ออกจาก
+                                  # formula_fixed_only ด้วยหรือไม่ (ดู TODO ใน server logic ของแต่ละ branch)
+                                  #
+                                  # Model Fit / Hyperparameters: ปิดไว้ก่อน (comment ออก) ตามที่ตกลงกันไว้
+                                  # ต้องการเปิดใหม่ในอนาคต ให้เขียน tabPanel/tabsetPanel กลับมาใหม่
                                   # ==================================================================
-                                  # tabsetPanel(
-                                  #   tabPanel(
-                                  #     HTML('Overall RR <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i><span class="mr-tip-text">Overall (region-wide) relative risk for each risk factor, estimated as a fixed effect. This is the value directly comparable to region-wide results reported in reference papers such as CARBayesST. The area-by-area map below shows how each area deviates from this overall value; the map significance status tests whether that deviation (not the overall effect) differs from zero, so a risk factor with a fairly uniform effect region-wide may show few or zero significant areas even though its overall effect above is clearly significant.</span></span>'),
-                                  #     br(),
-                                  #     tableOutput("overall_rr_table")
-                                  #   ),
-                                  #   tabPanel(
-                                  #     HTML('Model Fit <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i><span class="mr-tip-text">Overall model diagnostics (DIC, WAIC, LMPL, effective number of parameters), comparable to the Results table in the CARBayesST vignette. Lower DIC/WAIC and higher LMPL indicate better fit; only meaningful when comparing models fitted to the same data.</span></span>'),
-                                  #     br(),
-                                  #     tableOutput("model_fit_table")
-                                  #   ),
-                                  #   tabPanel(
-                                  #     HTML('Hyperparameters <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i><span class="mr-tip-text">Posterior estimates of the variance/precision parameters controlling how much spatial and temporal autocorrelation remains in the data, comparable to (tau2, rho.S, rho.T) in the CARBayesST vignette Results table.</span></span>'),
-                                  #     br(),
-                                  #     tableOutput("hyperpar_table")
-                                  #   )
-                                  # )
+                                  HTML('<h5 style="margin-top:8px; margin-bottom:2px;">Overall RR <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i><span class="mr-tip-text">Overall (region-wide) relative risk for each risk factor, estimated using a fixed-effect model (a single effect shared across the whole study region). This is a separate model from the area-by-area map below, which uses a random-slope model that lets the effect vary by area \u2014 a risk factor can therefore be significant overall while showing few or no significant areas on the map, or vice versa.</span></span></h5>'),
+                                  uiOutput("overall_rr_model_line"),
+                                  tableOutput("overall_rr_table"),
                                   
                                   # ตารางใหม่แบบง่าย: covariate ไหน significant กี่พื้นที่จากทั้งหมด
+                                  HTML('<h5 style="margin-top:20px; margin-bottom:2px;">Area-level Significance <span style="font-weight:400; font-size:13px; color:#666;">\u2014 random-slope model (per-area estimate)</span></h5>'),
                                   HTML('<p style="margin-top:8px; margin-bottom:8px; font-size:13px; color:#666;">Number of areas where each risk factor shows a statistically significant local deviation, out of the total number of areas.</p>'),
                                   DTOutput("significance_summary_table")
                                 ),
@@ -1459,6 +1452,28 @@ shinyApp(
         RR_upper  = exp(fx_cov[, "0.975quant"]),
         stringsAsFactors = FALSE
       )
+      
+      # Significant = 95% CI ไม่คร่อมค่า 1 (RR = 1 คือไม่มีความสัมพันธ์)
+      out$Significant <- ifelse(out$RR_lower > 1 | out$RR_upper < 1, "Yes", "No")
+      
+      # คำแปลผลสั้นๆ อ่านง่าย: % การเปลี่ยนแปลงความเสี่ยงต่อ 1 หน่วยที่เพิ่มขึ้นของตัวแปร (region-wide)
+      # ใช้ทศนิยมแบบไดนามิก เพื่อไม่ให้ค่าที่เล็กมากๆ (เช่นข้อมูล Thailand suicide) ถูก round จนโชว์เป็น "-0.0%"
+      pct_change <- (out$RR_mean - 1) * 100
+      format_pct_change <- function(p, max_digits = 4) {
+        if (p == 0) return("0.0")
+        d <- 1
+        while (d < max_digits && round(p, d) == 0) d <- d + 1
+        sprintf(paste0("%.", d, "f"), p)
+      }
+      pct_str <- vapply(pct_change, format_pct_change, character(1))
+      out$Interpretation <- ifelse(
+        out$Significant == "Yes",
+        ifelse(pct_change > 0,
+               paste0("+", pct_str, "% risk per unit (significant)"),
+               paste0(pct_str, "% risk per unit (significant)")),
+        "No significant association (95% CI includes RR = 1)"
+      )
+      
       rownames(out) <- NULL
       out
     }
@@ -2207,6 +2222,7 @@ shinyApp(
       overall_rr_df=NULL,
       model_fit_df=NULL,
       hyperpar_df=NULL,
+      model_fixed=NULL,
       has_time_dimension=NULL,
       runtime_cluster=NULL, runtime_asso=NULL, runtime_total=NULL,  # เวลาที่ใช้คำนวณโมเดล (วินาที) เอาไปโชว์เป็น card
       columnidareainmap=NULL,  columnnameareainmap=NULL, #columnnamesuperareainmap=NULL,
@@ -2682,9 +2698,42 @@ shinyApp(
             
             
             rv$model <- model
-            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata))
-            rv$model_fit_df <- compute_model_fit_summary(model)
-            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata))
+            
+            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
+            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
+            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 เป็น fixed effect แทน
+            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
+            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
+            if (has_time_dimension) {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
+            
+            model_fixed <- inla(
+              formula_fixed_only,
+              family = "poisson",
+              data = data,
+              E = data[, 'expected_value'],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            rv$model_fixed <- model_fixed
+            
+            rv$overall_rr_df <- compute_overall_rr(model_fixed, c(input$columncov1indata))
+            rv$model_fit_df <- compute_model_fit_summary(model_fixed)
+            rv$hyperpar_df <- compute_hyperpar_summary(model_fixed, c(input$columncov1indata))
             
             
             model2 <- rv$model
@@ -2773,9 +2822,42 @@ shinyApp(
             
             
             rv$model <- model
-            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata))
-            rv$model_fit_df <- compute_model_fit_summary(model)
-            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata))
+            
+            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
+            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
+            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 เป็น fixed effect แทน
+            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
+            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
+            if (has_time_dimension) {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
+            
+            model_fixed <- inla(
+              formula_fixed_only,
+              family = "poisson",
+              data = data,
+              E = data[, 'expected_value'],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            rv$model_fixed <- model_fixed
+            
+            rv$overall_rr_df <- compute_overall_rr(model_fixed, c(input$columncov1indata, input$columncov2indata))
+            rv$model_fit_df <- compute_model_fit_summary(model_fixed)
+            rv$hyperpar_df <- compute_hyperpar_summary(model_fixed, c(input$columncov1indata, input$columncov2indata))
             
             
             model2 <- rv$model
@@ -2871,9 +2953,42 @@ shinyApp(
             
             
             rv$model <- model
-            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata))
-            rv$model_fit_df <- compute_model_fit_summary(model)
-            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata))
+            
+            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
+            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
+            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 เป็น fixed effect แทน
+            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
+            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
+            if (has_time_dimension) {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
+            
+            model_fixed <- inla(
+              formula_fixed_only,
+              family = "poisson",
+              data = data,
+              E = data[, 'expected_value'],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            rv$model_fixed <- model_fixed
+            
+            rv$overall_rr_df <- compute_overall_rr(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata))
+            rv$model_fit_df <- compute_model_fit_summary(model_fixed)
+            rv$hyperpar_df <- compute_hyperpar_summary(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata))
             
             
             model2 <- rv$model
@@ -2982,9 +3097,42 @@ shinyApp(
             
             
             rv$model <- model
-            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata))
-            rv$model_fit_df <- compute_model_fit_summary(model)
-            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata))
+            
+            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
+            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
+            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 + x4 เป็น fixed effect แทน
+            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
+            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
+            if (has_time_dimension) {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 + x4 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 + x4 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
+            
+            model_fixed <- inla(
+              formula_fixed_only,
+              family = "poisson",
+              data = data,
+              E = data[, 'expected_value'],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            rv$model_fixed <- model_fixed
+            
+            rv$overall_rr_df <- compute_overall_rr(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata))
+            rv$model_fit_df <- compute_model_fit_summary(model_fixed)
+            rv$hyperpar_df <- compute_hyperpar_summary(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata))
             
             
             model2 <- rv$model
@@ -3104,9 +3252,42 @@ shinyApp(
             
             
             rv$model <- model
-            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata))
-            rv$model_fit_df <- compute_model_fit_summary(model)
-            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata))
+            
+            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
+            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
+            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 + x4 + x5 เป็น fixed effect แทน
+            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
+            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
+            if (has_time_dimension) {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 + x4 + x5 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 + x4 + x5 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
+            
+            model_fixed <- inla(
+              formula_fixed_only,
+              family = "poisson",
+              data = data,
+              E = data[, 'expected_value'],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            rv$model_fixed <- model_fixed
+            
+            rv$overall_rr_df <- compute_overall_rr(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata))
+            rv$model_fit_df <- compute_model_fit_summary(model_fixed)
+            rv$hyperpar_df <- compute_hyperpar_summary(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata))
             
             
             model2 <- rv$model
@@ -3239,9 +3420,42 @@ shinyApp(
             
             
             rv$model <- model
-            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata))
-            rv$model_fit_df <- compute_model_fit_summary(model)
-            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata))
+            
+            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
+            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
+            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 + x4 + x5 + x6 เป็น fixed effect แทน
+            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
+            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
+            if (has_time_dimension) {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 + x4 + x5 + x6 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 + x4 + x5 + x6 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
+            
+            model_fixed <- inla(
+              formula_fixed_only,
+              family = "poisson",
+              data = data,
+              E = data[, 'expected_value'],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            rv$model_fixed <- model_fixed
+            
+            rv$overall_rr_df <- compute_overall_rr(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata))
+            rv$model_fit_df <- compute_model_fit_summary(model_fixed)
+            rv$hyperpar_df <- compute_hyperpar_summary(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata))
             
             
             model2 <- rv$model
@@ -3390,9 +3604,42 @@ shinyApp(
             
             
             rv$model <- model
-            rv$overall_rr_df <- compute_overall_rr(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata, input$columncov7indata))
-            rv$model_fit_df <- compute_model_fit_summary(model)
-            rv$hyperpar_df <- compute_hyperpar_summary(model, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata, input$columncov7indata))
+            
+            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
+            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
+            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 + x4 + x5 + x6 + x7 เป็น fixed effect แทน
+            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
+            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
+            if (has_time_dimension) {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 + x4 + x5 + x6 + x7 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(data[,input$columndateindata], model = "rw1") +
+                f(province_int, model = "iid")
+            } else {
+              formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
+                x1 + x2 + x3 + x4 + x5 + x6 + x7 +
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
+                f(province_int, model = "iid")
+            }
+            
+            model_fixed <- inla(
+              formula_fixed_only,
+              family = "poisson",
+              data = data,
+              E = data[, 'expected_value'],
+              control.predictor = list(compute = TRUE),
+              control.compute = list(
+                dic = TRUE,
+                waic = TRUE,
+                cpo = TRUE,
+                return.marginals.predictor = TRUE))
+            
+            rv$model_fixed <- model_fixed
+            
+            rv$overall_rr_df <- compute_overall_rr(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata, input$columncov7indata))
+            rv$model_fit_df <- compute_model_fit_summary(model_fixed)
+            rv$hyperpar_df <- compute_hyperpar_summary(model_fixed, c(input$columncov1indata, input$columncov2indata, input$columncov3indata, input$columncov4indata, input$columncov5indata, input$columncov6indata, input$columncov7indata))
             
             
             model2 <- rv$model
@@ -4298,19 +4545,56 @@ shinyApp(
     })
     
     
+    output$overall_rr_model_line <- renderUI({
+      effects_txt <- if (isTRUE(rv$has_time_dimension)) {
+        "spatial &amp; temporal random effects"
+      } else {
+        "spatial random effects"
+      }
+      HTML(paste0(
+        '<p style="margin:0 0 8px 0; font-size:13px; color:#666;"><strong>Model:</strong> ',
+        'Fixed-effect model \u2014 one estimate for the whole region, adjusted for ', effects_txt, '.</p>'
+      ))
+    })
+    
+    
     output$overall_rr_table <- renderTable({
       if (is.null(rv$overall_rr_df)) return(NULL)
       
       df <- rv$overall_rr_df
+      
+      # เลือกจำนวนทศนิยมแบบไดนามิกทั้งตาราง (ใช้ค่าเดียวกันทุกแถวเพื่อให้คอลัมน์ตรงกัน)
+      # เพิ่มทศนิยมขึ้นเรื่อยๆ จนกว่า lower/upper ของทุกแถวจะแยกแยะออกจากกันได้ (ไม่ round จนเท่ากันหมดเป็น 1.000)
+      choose_decimals <- function(lower, upper, min_d = 3, max_d = 6) {
+        d <- min_d
+        while (d < max_d && any(round(lower, d) == round(upper, d))) d <- d + 1
+        d
+      }
+      dgt <- choose_decimals(df$RR_lower, df$RR_upper)
+      
       out <- data.frame(
         `Risk factor` = df$covariate,
-        `RR (mean)` = round(df$RR_mean, 3),
-        `95% CI lower` = round(df$RR_lower, 3),
-        `95% CI upper` = round(df$RR_upper, 3),
+        `RR (mean)` = formatC(df$RR_mean, format = "f", digits = dgt),
+        `95% CI lower` = formatC(df$RR_lower, format = "f", digits = dgt),
+        `95% CI upper` = formatC(df$RR_upper, format = "f", digits = dgt),
+        `Significant` = df$Significant,
+        `Interpretation` = df$Interpretation,
         check.names = FALSE
       )
+      # ใส่ tooltip อธิบายวิธีคิดคอลัมน์ Interpretation และเกณฑ์ significant ไว้ที่หัวตาราง
+      # (ต้องปิด sanitize เพื่อให้ HTML/tooltip แสดงผลได้)
+      colnames(out)[5] <- paste0(
+        'Significant <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i>',
+        '<span class="mr-tip-text">Yes if the 95% CI excludes RR = 1 (i.e. RR &gt; 1 or RR &lt; 1 throughout the interval); ',
+        'No if the interval still includes 1.</span></span>'
+      )
+      colnames(out)[6] <- paste0(
+        'Interpretation <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i>',
+        '<span class="mr-tip-text">Calculated as (RR mean \u2212 1) \u00d7 100%, i.e. the % change in risk per one-unit ',
+        'increase in the risk factor. Only labelled "significant" when the 95% CI excludes RR = 1.</span></span>'
+      )
       out
-    }, striped = TRUE, bordered = TRUE, spacing = "s")
+    }, striped = TRUE, bordered = TRUE, spacing = "s", sanitize.text.function = function(x) x)
     
     
     output$model_fit_table <- renderTable({

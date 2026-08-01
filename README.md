@@ -10,9 +10,9 @@ This application is part of **```Spatiotemporal analysis with application develo
 
 
 ### 💡Feature
-1. **```Upload data```** for analysis into the application.
+1. **```Upload data```** for analysis into the application — supports both **CSV and Excel (.xlsx/.xls)** files, or get started instantly with **built-in sample datasets** (Pollution & Health datasets from the CARBayesST R package).
 
-2. **```Analysis```** for spatial and spatiotemporal epidemiological studies, including **cluster detection** and **association with risk factors**.
+2. **```Analysis```** for spatial and spatiotemporal epidemiological studies, including **cluster detection** and **association with risk factors** — the latter reports both the **area-level relative risk** (how the effect varies by area) and the **Overall (region-wide) relative risk**, estimated as a fixed effect and directly comparable to region-wide results reported in reference papers such as CARBayesST.
 
 3. **```Download results```** of the analysis directly from the application.
 
@@ -69,39 +69,16 @@ Deploying STEHealth to the cloud involved addressing complex dependency challeng
 
 
 ## Sample Data 📁
-The [sample data](https://github.com/mill-ornrakorn/STEHealth-Application/tree/main/shiny/sample%20data) used for case study in this application consists of Thailand shapefile and csv file (Suicide Mortality and Risk Factors in Thailand from 2011 to 2021)
+The application includes **three ready-to-use sample datasets**, selectable directly in the app via the **Use Sample Data** dropdown on the Upload Data page — no need to download or upload anything to try the application. Each is labelled with a badge showing whether it supports **Spatial-Temporal** or **Spatial** models, and comes with a **View Data Dictionary** button describing its columns. The raw files are also available for download, both via the **Download sample data (.csv)** button in-app and here on [GitHub](https://github.com/mill-ornrakorn/STEHealth-Application/tree/main/shiny/sample%20data):
 
+### 1. Thailand Suicide Mortality 2011-2021 (used for case study in this project)
+Consists of a Thailand shapefile and a csv file (Suicide Mortality and Risk Factors in Thailand from 2011 to 2021).
 
+### 2. Pollution & Health Data 2007-2011 (from the CARBayesST R package)
+Covers the Greater Glasgow and Clyde health board in Scotland (271 Intermediate Zones). Contains `pm10`, `jsa` (Job Seekers Allowance proportion), and `price` (average property price) as covariates, with respiratory hospital admissions as the outcome. Supports **Spatial-Temporal** models (2007-2011).
 
-* **Thailand shapefile** contains 4 files that cannot be missing any of them due to their references to each other: shp, dbf, shx, and prj. These Shapefiles represent **provincial boundaries (Level 1)**.
-
-<p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/th_shapfile.jpg?raw=true" alt= “Thailand_shapefile” height="400">
-</br>
-Thailand shapefile
-</p> 
-
-
-
-* **csv file (Suicide Mortality and Risk Factors in Thailand from 2011 to 2021)** contains the following 12 columns: 
-
-    **1. province** refers to the administrative divisions in Thailand, of which there are a total of 77 provinces.
-
-    **2. province_id** is the number of province starting at from 1 to 77 .
-
-    **3. year** is the number of year from 2011 to 2021.
-
-    **4. suicide** is the number of suicides.
-
-    **5.Population** population in each area.
-
-    **6-12. 7 covariates:** debt, income, poverty, expenditure, homicide crime, property crime and shocking crime.
-    
-<p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/th_csv.jpg?raw=true" alt= “csv_file” height="300">
-</br>
-Suicide Mortality and Risk Factors in Thailand from 2011 to 2021
-</p> 
+### 3. Pollution & Health Data, 2007 Only
+The same dataset and shapefile as above, filtered to a single year (2007). Since it has no time dimension, this dataset is intended for testing the **Spatial** model.
 
 ## Manual📗
 🚧 Note: The manual is currently under revision to reflect the latest updates and the new Cloud Deployment on Hugging Face Spaces.
@@ -120,19 +97,28 @@ This manual includes step-by-step instructions on how to use each page of the ap
 | --- | --- |
 | [Hugging Face Spaces](https://huggingface.co/spaces) | Cloud platform for hosting the machine learning and Shiny web application. |
 | [Docker](https://www.docker.com/) | Containerization technology used to create a reproducible environment and manage complex spatial/system dependencies. |
-| [Posit Package Manager](https://packagemanager.posit.co/) | Time-locked repository snapshot (March 1, 2023) used for stable installation of classic spatial libraries (`rgdal`, `spdep`). |
 
 ### Software & R Packages
 | | |
 | --- | --- |
-| [R](https://cran.r-project.org/) | Language and environment for statistical computing and graphics (Version 4.2.2). |
+| [R](https://cran.r-project.org/) | Language and environment for statistical computing and graphics (Version 4.5+, see Deployment Architecture above). |
 | [shiny](https://cran.r-project.org/web/packages/shiny/index.html) | Makes it easy to build interactive web apps straight from R. |
 | [shinydashboard](https://cran.r-project.org/web/packages/shinydashboard/index.html)| Use with Shiny to create dashboards. |
+| [shinydashboardPlus](https://cran.r-project.org/web/packages/shinydashboardPlus/index.html)| Extend `shinydashboard` with `AdminLTE2` components. |
 | [shinyjs](https://cran.r-project.org/web/packages/shinyjs/index.html)| Perform common JavaScript operations in Shiny apps. |
+| [shinyBS](https://cran.r-project.org/web/packages/shinyBS/index.html)| Adds additional Twitter Bootstrap components to Shiny. |
+| [shinyWidgets](https://cran.r-project.org/web/packages/shinyWidgets/index.html) | Collection of custom input controls and UI components for Shiny applications. |
+| [bsplus](https://cran.rstudio.com/web/packages/bsplus/index.html) | Adds Bootstrap-powered JavaScript functionality (e.g. tooltips, popovers) to Shiny apps. |
+| [dplyr](https://cran.r-project.org/web/packages/dplyr/index.html) | A fast, consistent tool for working with data frame-like objects. |
+| [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html) | Creates elegant data visualisations using the grammar of graphics. |
 | [leaflet](https://cran.r-project.org/web/packages/leaflet/index.html) | Create Interactive Web Maps with the JavaScript 'Leaflet' Library. |
-| [R-INLA](https://www.r-inla.org/download-install) | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations (Version 22.05.07). |
-| [rgdal](https://cran.r-project.org/web/packages/rgdal/index.html) | Provides bindings to Geospatial Data Abstraction Library (GDAL). |
+| [leaflet.extras](https://cran.r-project.org/web/packages/leaflet.extras/index.html) | Adds extra functionality to `leaflet` via additional Leaflet plugins. |
+| [RColorBrewer](https://cran.r-project.org/web/packages/RColorBrewer/index.html) | Provides color schemes for maps and other graphics. |
+| [sf](https://cran.r-project.org/web/packages/sf/index.html) | Simple Features: modern support for spatial vector data, used for shapefile handling (replaces the legacy `rgdal`). |
 | [spdep](https://cran.r-project.org/web/packages/spdep/index.html)| Spatial Dependence: Weighting Schemes, Statistics. |
+| [R-INLA](https://www.r-inla.org/download-install) | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations. The app uses the **Testing Build**, kept compatible with the modern R/Ubuntu environment described above (see Deployment Architecture). |
+| [readxl](https://cran.r-project.org/web/packages/readxl/index.html) | Reads Excel (.xls/.xlsx) files, used for the Excel upload option on the Upload Data page. |
+| [DT](https://cran.r-project.org/web/packages/DT/index.html) | Renders interactive data tables (e.g. the area-level significance table on the Association with Risk Factors tab). |
 | [capture](https://github.com/dreamRs/capture) | Add a button in Shiny application to take a screenshot of a specified element. |
 
 
@@ -144,8 +130,11 @@ This manual includes step-by-step instructions on how to use each page of the ap
 
 
 ## References📖
-1. Paula Moraga (2017), SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. Spatial and Spatio-temporal Epidemiology, 23:47-57 DOI: https://doi.org/10.1016/j.sste.2017.08.001
+1. Moraga, P. (2017). SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. Spatial and Spatio-temporal Epidemiology, 23, 47–57. https://doi.org/10.1016/j.sste.2017.08.001
 
+2. Lee, D., Rushworth, A., & Napier, G. (2018). Spatio-Temporal Areal Unit Modeling in R with Conditional Autoregressive Priors Using the CARBayesST Package. Journal of Statistical Software, 84(9), 1–39. https://doi.org/10.18637/jss.v084.i09
+
+<!-- อ้างอิงรูปแบบ APA 7th --> 
 
 ## Credits Section📄
 * logo of STEHealth application was modified from <a href="https://www.canva.com/templates/EAE6wliCycg-green-tosca-simple-business-logo/">logo by Ally Hamid</a> on Canva 
@@ -160,4 +149,4 @@ This manual includes step-by-step instructions on how to use each page of the ap
 
 * Document icons in Spatiotemporal Epidemiological Analysis Result page <a href="https://www.flaticon.com/free-icons/document" title="document icons">created by smalllikeart</a> on Flaticon
 
-* Manual cover in STEHealth web application was modified from <a href="https://www.canva.com/p/templates/EAE9h5vtwXM-peach-modern-minimal-annual-report-cover/">report cover by Temptackle</a> on Canva 
+* Manual cover in STEHealth web application was modified from <a href="https://www.canva.com/p/templates/EAE9h5vtwXM-peach-modern-minimal-annual-report-cover/">report cover by Temptackle</a> on Canva

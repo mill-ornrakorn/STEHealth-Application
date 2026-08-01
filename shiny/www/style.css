@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&family=Prompt:wght@200;400&family=Sarabun:wght@300&display=swap');
 
 /*==================== VARIABLES CSS ====================*/
@@ -201,6 +200,17 @@ h5{
 .content-wrapper, .right-side {
           background-color: #ECF0F5;
         }
+
+/* ===== แก้ position:sticky ใน sidebarPanel ไม่ทำงาน =====
+   AdminLTE (มาพร้อม shinydashboard) ตั้งค่า overflow-x: hidden ไว้ที่ .content-wrapper
+   โดยไม่ได้ตั้ง overflow-y คู่กัน ซึ่งตาม CSS spec เบราว์เซอร์จะคำนวณ overflow-y เป็น
+   "auto" โดยปริยาย ทำให้ .content-wrapper กลายเป็น scroll container ที่ไม่ได้ตั้งใจ
+   และไปขวาง position:sticky ของ elements ที่อยู่ข้างใน (เช่น sidebarPanel ในหน้า
+   Association with Risk Factors) ไม่ให้ค้างอยู่กับหน้าจอตามที่ควรจะเป็น
+   แก้โดยประกาศ overflow-y แบบ explicit ให้กลับไปเป็น visible เหมือนปกติ */
+.content-wrapper, .right-side, .wrapper {
+  overflow-y: visible !important;
+}
 
 /* tabPanel */
 .nav-tabs-custom .nav-tabs li.active {
