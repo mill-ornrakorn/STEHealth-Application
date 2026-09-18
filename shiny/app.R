@@ -1,7 +1,5 @@
 # ================================================================
-
 # @29-apr-26
-
 # ================================================================
 
 # ==================================== Check packages  ==================================== 
@@ -418,6 +416,7 @@ body <- dashboardBody(
                                                          label = "Choose a sample dataset:",
                                                          choices = c(
                                                            "Thailand Suicide Mortality 2011–2021 (77 provinces)" = "thailand",
+                                                           "Thailand Suicide Attempt (77 provinces)" = "suicide_attempt",
                                                            "Pollution & Health Data, 2007–2011 (CARBayesST)" = "pollution",
                                                            "Pollution & Health Data, 2007 Only (CARBayesST)" = "pollution_2007"
                                                          ),
@@ -430,6 +429,7 @@ body <- dashboardBody(
                                                         option: function(item, escape) {
                                                           var meta = {
                                                             thailand: {badge:'Spatial-Temporal', cls:'badge-st'},
+                                                            suicide_attempt: {badge:'Spatial-Temporal', cls:'badge-st'},
                                                             pollution: {badge:'Spatial-Temporal', cls:'badge-st'},
                                                             pollution_2007: {badge:'Spatial', cls:'badge-s'}
                                                           };
@@ -444,6 +444,7 @@ body <- dashboardBody(
                                                         item: function(item, escape) {
                                                           var meta = {
                                                             thailand: {badge:'Spatial-Temporal', cls:'badge-st'},
+                                                            suicide_attempt: {badge:'Spatial-Temporal', cls:'badge-st'},
                                                             pollution: {badge:'Spatial-Temporal', cls:'badge-st'},
                                                             pollution_2007: {badge:'Spatial only', cls:'badge-s'}
                                                           };
@@ -525,10 +526,10 @@ body <- dashboardBody(
                                    HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile components at once:</font></strong> shp, dbf, shx and prj."),
                                    fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
                                    
-                                   helpText("Select the column that matches the area id in the CSV file (e.g. a unique code such as IZ). Do NOT use a descriptive name column here if it contains duplicate values."),
+                                   helpText("Select the column that matches the area id in the CSV file. This can be a unique code (e.g. IZ) OR a name column (e.g. province name) - as long as its values are unique and are spelled exactly the same way as in the CSV file's area id column."),
                                    fluidRow(
                                      column(12, selectInput("columnidareainmap",   
-                                                            label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">This column is used to match each shapefile polygon to a row in the CSV. It must contain a value that uniquely identifies each area (e.g. an area code like "IZ"), matched against the "area id" column selected on the data page. Do not use a descriptive name column here if names can repeat.</span></div>'),   
+                                                            label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">This column is used to match each shapefile polygon to a row in the CSV. It must contain a value that uniquely identifies each area, matched against the "area id" column selected on the data page. This can be a code (e.g. "IZ") or a name (e.g. a province name) - either works, as long as the values are unique here and are spelled identically (same capitalisation, no extra spaces) to the values in the CSV\'s "area id" column.</span></div>'),   
                                                             choices = c(""), selected = "")
                                      )),
                                    
@@ -602,7 +603,7 @@ body <- dashboardBody(
                                    # area id (unique code, e.g. IZ) and area name (display label) on the same row
                                    fluidRow(
                                      column(6, selectInput("columnidareaindata", 
-                                                           label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">A column with a UNIQUE code for each area (e.g. "IZ"). This is used to match rows to the shapefile ("area id" selected on the Upload Shapefile page) and to run the statistical model. Do not select a descriptive name column here if its values can repeat.</span></div>'), 
+                                                           label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">A column that uniquely identifies each area - a code (e.g. "IZ") or a name column, as long as its values are unique here and are spelled exactly the same way as the shapefile\'s "area id" column ("area id" selected on the Upload Shapefile page). This is used to match rows to the shapefile and to run the statistical model.</span></div>'), 
                                                            choices = c(""), selected = "")
                                      ),
                                      column(6, selectInput("columnidareanamedata", 
@@ -848,17 +849,6 @@ body <- dashboardBody(
                       
                     ),
                     
-                    # mainPanel(uiOutput("status_map_dis"),
-                    #           #leafletOutput("map_distribution", height = "70vh")
-                    #           div(class = 'error',
-                    #           verbatimTextOutput("messageCheckData_1")
-                    #             ),
-                    #           addSpinner(
-                    #             leafletOutput("map_distribution", height = "75vh"),
-                    #             spin = "bounce", color = "#735DFB")
-                    #           
-                    # )
-                    
                     mainPanel(
                       # uiOutput("status_map_dis"),
                       div(class = 'error',
@@ -1016,25 +1006,9 @@ body <- dashboardBody(
                                        )
                                        
                                        
-                                     ),
+                                     )
                                      
-                                     
-                                     # div(
-                                     #   class = "box-purple",
-                                     #   HTML("<h4></h4>
-                                     #        • If the area has a <strong>hotspot</strong>: </br>
-                                     #          &emsp;In Kanchanaburi, has a hotspot, meaning that Kanchanaburi has a higher number of suicides than the specified threshold (the base line of our work is defined as the average number of suicides). 
-                                     #          
-                                     #          </br></br>
-                                     #          For other examples of interpretation, please refer to the
-                                     #        "
-                                     #   ),
-                                     #   tags$a("Manual page.", onclick="customHref('Manual')")
-                                     # )
-                                     
-                                     
-                                     
-                              ),
+                              )
                               
                               
                               
@@ -1049,17 +1023,6 @@ body <- dashboardBody(
                                 verbatimTextOutput("messageCheckData_2")
                             ),
                             
-                            
-                            # div(
-                            #   class = "box-white",
-                            #   HTML('<h4 style="display:inline-block; margin-right:6px;">Cluster Detection Results</h4>'),
-                            #   HTML('<p style="margin-top:8px; margin-bottom:8px; font-size:13px; color:#666;">Number of area/time observations classified as a hotspot (posterior probability of risk &gt; 1 exceeds 95%), out of the total number of observations, and how many distinct areas were flagged as a hotspot at least once.</p>'),
-                            #   DTOutput("cluster_summary_table")
-                            # ),
-                            
-                            
-                            #verbatimTextOutput("status_map_cluster"),
-                            #leafletOutput("map_cluster", height = "70vh")
                             uiOutput("runtime_card_cluster"),
                             uiOutput("map_cluster_title"),
                             addSpinner(
@@ -1079,19 +1042,15 @@ body <- dashboardBody(
                ),
                
                # ==================================== Association with Risk Factors ==================================== 
-               # sidebarLayout(
-               #   
-               #   sidebarPanel(
-               # mainPanel
                tabPanel(HTML("<h4>Association with Risk Factors</h4>"),
                         div(class = "equal-height-row",
                             sidebarLayout(
                               sidebarPanel(
-                                           fluidRow(
-                                             column(12,
-                                                    div(
-                                                      class = "box-white",
-                                                      HTML("
+                                fluidRow(
+                                  column(12,
+                                         div(
+                                           class = "box-white",
+                                           HTML("
                                             <img align='left' width='52px' height='52px' src='risk.png' style='margin-top: 10px; margin-right: 10px' >
                                             <h4>Association with Risk Factors</h4>
                                             
@@ -1101,28 +1060,28 @@ body <- dashboardBody(
                                              Users can adjust the view using filters for specific risk factors and color schemes. 
                                              For more information on the model and interpretation of values, please refer to the 
                                                   "),
-                                                      
-                                                      tags$a("Help page.", onclick="customHref('Help')",  class = "cursor_point"),
-                                                      br(),br(),
-                                                      actionButton("interpret_asso_risk", class="btn btn-outline-primary2", "Examples of Interpretation")
-                                                    ),
-                                                    
-                                                    div(
-                                                      class = "box-white",
-                                                      HTML("<h4>Filter</h4>"),
-                                                      selectInput("risk_factor_filter", label = "Risk factor:", choices = c(""), selected = ""),
-                                                      
-                                                      # เลือกสีแมพ
-                                                      selectInput("color_asso", label = "Color Scheme:", 
-                                                                  choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
-                                                                                 "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
-                                                      
-                                                      
-                                                    ),
-                                                    
-                                                    div(
-                                                      class = "box-white",
-                                                      HTML("<h4>Export Result</h4>
+                                           
+                                           tags$a("Help page.", onclick="customHref('Help')",  class = "cursor_point"),
+                                           br(),br(),
+                                           actionButton("interpret_asso_risk", class="btn btn-outline-primary2", "Examples of Interpretation")
+                                         ),
+                                         
+                                         div(
+                                           class = "box-white",
+                                           HTML("<h4>Filter</h4>"),
+                                           selectInput("risk_factor_filter", label = "Risk factor:", choices = c(""), selected = ""),
+                                           
+                                           # เลือกสีแมพ
+                                           selectInput("color_asso", label = "Color Scheme:", 
+                                                       choices = list("Red" = "YlOrRd",  "Pink" = "RdPu", "Green" = "YlGnBu",
+                                                                      "Red and Blue" = "RdYlBu", "Purple" = "BuPu" ,"Gray" = "Greys"))
+                                           
+                                           
+                                         ),
+                                         
+                                         div(
+                                           class = "box-white",
+                                           HTML("<h4>Export Result</h4>
                                             <p>
                                             This presents detailed data from the risk factor association analysis, including area names, 
                                             the calculated percentage increase for each risk factor, along with lower and upper bounds, 
@@ -1130,18 +1089,18 @@ body <- dashboardBody(
                                             Users can choose to display additional details such as the lower bound, upper bound, and significance indicators.                                           </p>
                                                   
                                                   "),
-                                                      
-                                                      checkboxGroupInput('asso_select_column', 'Column', inline=TRUE, 
-                                                                         c("lower bound %95" = "lowerbound", 'upper bound' = 'upperbound', 'significance' = 'significance'),
-                                                                         selected = c("lowerbound", 'upperbound', 'significance' )),
-                                                      
-                                                      
-                                                      downloadButton("downloadData_asso_risk", "Download (.csv)", 
-                                                                     class="btn btn-outline-primary2",
-                                                                     style = "border-radius: 100px;"),
-                                                      
-                                                      
-                                                      HTML('</br>
+                                           
+                                           checkboxGroupInput('asso_select_column', 'Column', inline=TRUE, 
+                                                              c("lower bound %95" = "lowerbound", 'upper bound' = 'upperbound', 'significance' = 'significance'),
+                                                              selected = c("lowerbound", 'upperbound', 'significance' )),
+                                           
+                                           
+                                           downloadButton("downloadData_asso_risk", "Download (.csv)", 
+                                                          class="btn btn-outline-primary2",
+                                                          style = "border-radius: 100px;"),
+                                           
+                                           
+                                           HTML('</br>
                                             </br>
                                             <h4>
                                               Capture screenshot
@@ -1150,50 +1109,26 @@ body <- dashboardBody(
                                             Take a screenshot of map. The captured image is downloaded as a PNG image.
                                             </p>
                                            '),
-                                                      
-                                                      capture(
-                                                        class="btn btn-outline-primary2",
-                                                        selector = "#map_risk_fac",
-                                                        filename = paste("map_risk_fac-", Sys.Date(), ".png", sep=""),
-                                                        icon("camera"), "Screenshot Map",
-                                                        scale = 3, # bigger scale
-                                                        options=list(backgroundColor = "white"),
-                                                        style = "border-radius: 100px;"
-                                                      )
-                                                      
-                                                      
-                                                    ),
-                                                    
-                                                    #     div(
-                                                    #       class = "box-purple",
-                                                    #       HTML("<h4>Examples of interpretation (from sample data)</h4>
-                                                    # • If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
-                                                    #   &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
-                                                    #   the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
-                                                    # 
-                                                    # </br></br> 
-                                                    # • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
-                                                    #   &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
-                                                    #   the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
-                                                    # 
-                                                    # </br></br>     
-                                                    # •If the significance is <strong>not significant</strong>: </br>  
-                                                    #   &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
-                                                    # 
-                                                    # </br></br>   
-                                                    #   For other examples of interpretation, please refer to the
-                                                    #  "),
-                                                    #       tags$a("Manual page.", onclick="customHref('Manual')")
-                                                    #       
-                                                    #     )
-                                                    
-                                                    
-                                             )
-                                             
-                                             
-                                             
-                                             
+                                           
+                                           capture(
+                                             class="btn btn-outline-primary2",
+                                             selector = "#map_risk_fac",
+                                             filename = paste("map_risk_fac-", Sys.Date(), ".png", sep=""),
+                                             icon("camera"), "Screenshot Map",
+                                             scale = 3, # bigger scale
+                                             options=list(backgroundColor = "white"),
+                                             style = "border-radius: 100px;"
                                            )
+                                           
+                                           
+                                         )
+                                         
+                                  )
+                                  
+                                  
+                                  
+                                  
+                                )
                               ),
                               
                               mainPanel(
@@ -1202,7 +1137,6 @@ body <- dashboardBody(
                                 div(class = 'error',
                                     verbatimTextOutput("messageCheckData_3")
                                 ),  
-                                #verbatimTextOutput("status_map_asso"),
                                 div(class = 'warning',
                                     verbatimTextOutput("status_risk_fac_nocova")
                                 ),
@@ -1216,26 +1150,14 @@ body <- dashboardBody(
                                   HTML('<h4 style="display:inline-block; margin-right:6px;">Model Results</h4>'),
                                   uiOutput("model_type_badge", inline = TRUE),
                                   uiOutput("runtime_card_asso"),
-                                  # ==================================================================
-                                  # เอาแท็บ Overall RR ออกแล้ว (ไม่ใช้ tabsetPanel อีกต่อไป เพราะเหลือแท็บเดียว)
-                                  # เอาตารางออกมาแสดงตรงๆ พร้อมหัวข้อ <h5> สไตล์เดียวกับ "Area-level Significance"
-                                  # ดึงค่าจาก model_fixed (โมเดลที่ 2 - fixed effect) ไม่ใช่ model เดิม (random slope รายพื้นที่)
-                                  # NOTE: ยังรอยืนยันกับอาจารย์เรื่องว่าจะตัด BYM/RW1/province_int ออกจาก
-                                  # formula_fixed_only ด้วยหรือไม่ (ดู TODO ใน server logic ของแต่ละ branch)
-                                  #
-                                  # Model Fit / Hyperparameters: ปิดไว้ก่อน (comment ออก) ตามที่ตกลงกันไว้
-                                  # ต้องการเปิดใหม่ในอนาคต ให้เขียน tabPanel/tabsetPanel กลับมาใหม่
-                                  # ==================================================================
                                   HTML('<h5 style="margin-top:8px; margin-bottom:2px;">Overall RR <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i><span class="mr-tip-text">Overall (region-wide) relative risk for each risk factor, estimated using a fixed-effect model (a single effect shared across the whole study region). This is a separate model from the area-by-area map below, which uses a random-slope model that lets the effect vary by area \u2014 a risk factor can therefore be significant overall while showing few or no significant areas on the map, or vice versa.</span></span></h5>'),
                                   uiOutput("overall_rr_model_line"),
                                   tableOutput("overall_rr_table"),
                                   
-                                  # ตารางใหม่แบบง่าย: covariate ไหน significant กี่พื้นที่จากทั้งหมด
                                   HTML('<h5 style="margin-top:20px; margin-bottom:2px;">Area-level Significance <span style="font-weight:400; font-size:13px; color:#666;">\u2014 random-slope model (per-area estimate)</span></h5>'),
                                   HTML('<p style="margin-top:8px; margin-bottom:8px; font-size:13px; color:#666;">Number of areas where each risk factor shows a statistically significant local deviation, out of the total number of areas.</p>'),
                                   DTOutput("significance_summary_table")
                                 ),
-                                # ชื่อแผนที่ + คำอธิบายกรอบดำ (significant areas) - ก่อนหน้านี้แผนที่ไม่มีชื่อ/คำอธิบายเลย
                                 uiOutput("map_risk_fac_title"),
                                 HTML('<p style="margin:4px 0 10px 0; font-size:13px; color:#555;">
                                   <span style="display:inline-block; width:22px; height:0; border-top:4px solid black; vertical-align:middle; margin-right:6px;"></span>
@@ -1313,8 +1235,33 @@ shinyApp(
     
     # ====================================
     # ดึง fixed effect (ภาพรวมทั้ง region) จากโมเดล INLA มาแปลงเป็น Relative Risk
-    # เทียบได้กับตาราง RR.summary ในเปเปอร์ CARBayesST (Section 5.3)
     # ====================================
+    
+    # ====================================
+    # [FIX] ฟังก์ชันกลาง: หาว่าควร match shapefile <-> CSV ด้วยคอลัมน์ id หรือ name
+    # แก้จากเดิมที่ hardcode เช็คเฉพาะ sample_dataset_choice == "thailand" เท่านั้น
+    # ตอนนี้จะตรวจสอบจริงว่า matching ด้วย id หรือ name แล้วได้จำนวนพื้นที่ที่ match กันมากกว่ากัน
+    # แล้วใช้ตัวนั้น ไม่ว่าจะเป็น sample data หรือไฟล์ที่ผู้ใช้อัปโหลดเอง
+    # ====================================
+    resolve_match_key <- function(map, data, id_col_map, id_col_data, name_col_data) {
+      if (is.null(map) || is.null(data) || is.null(id_col_map) || is.null(id_col_data) ||
+          id_col_map == "" || id_col_data == "" || !(id_col_map %in% names(map))) {
+        return(id_col_data)
+      }
+      
+      map_ids <- trimws(as.character(map[[id_col_map]]))
+      
+      by_id <- if (id_col_data %in% names(data)) {
+        length(intersect(map_ids, trimws(as.character(data[[id_col_data]]))))
+      } else 0
+      
+      by_name <- if (!is.null(name_col_data) && name_col_data != "" && name_col_data %in% names(data)) {
+        length(intersect(map_ids, trimws(as.character(data[[name_col_data]]))))
+      } else 0
+      
+      if (by_name > by_id) name_col_data else id_col_data
+    }
+    
     # ====================================
     # ตรวจสอบว่า area id ใน Shapefile กับ CSV Data ตรงกันกี่พื้นที่ ก่อนไปหน้า Map Distribution / Analysis
     # ====================================
@@ -1339,7 +1286,6 @@ shinyApp(
         check.names = FALSE,
         stringsAsFactors = FALSE
       )
-      # เรียงจาก risk factor ที่ significant มากที่สุดไปน้อยที่สุด ให้เห็นตัวสำคัญก่อนทันที
       out <- out[order(-out$`% significant`), ]
       rownames(out) <- NULL
       out
@@ -1389,22 +1335,23 @@ shinyApp(
     }
     
     # เรียกใช้ตรวจสอบ + แจ้งเตือน/บล็อกการไปหน้าถัดไป คืนค่า TRUE ถ้าโอเคให้ไปต่อได้, FALSE ถ้าต้องหยุด
+    # [FIX] เดิมมี `if (input$data_source_type == "sample") return(TRUE)` ซึ่งข้าม validation ทั้งหมดสำหรับ sample data
+    # ตอนนี้ validation ทำงานสำหรับทุกกรณีเหมือนกัน โดยใช้ resolve_match_key() หา key ที่แม็ตช์ได้จริงก่อนเช็ค
     validate_shapefile_data_match <- function() {
-      # Sample Data เป็นไฟล์ที่มาพร้อมแอปและตรวจสอบไว้แล้ว ไม่ต้องเช็คซ้ำ
-      # (การเช็คนี้มีไว้สำหรับกรณีผู้ใช้อัปโหลดไฟล์เองเท่านั้น)
-      if (input$data_source_type == "sample") return(TRUE)
+      match_key <- resolve_match_key(rv$map, rv$datosOriginal, input$columnidareainmap,
+                                     input$columnidareaindata, input$columnidareanamedata)
       
-      chk <- check_area_match(rv$map, rv$datosOriginal, input$columnidareainmap, input$columnidareaindata)
+      chk <- check_area_match(rv$map, rv$datosOriginal, input$columnidareainmap, match_key)
       if (is.null(chk)) return(TRUE)  # ยังไม่มีข้อมูลพอจะเช็ค ปล่อยผ่าน (จะถูกเช็ค null ที่อื่นอยู่แล้ว)
       
       if (chk$n_matched == 0) {
         showModal(modalDialog(
           title = "Shapefile and Data File Do Not Match",
           HTML(paste0(
-            "<p>None of the area id values in your <b>shapefile</b> (", chk$n_map, " areas) match the area id values ",
-            "in your <b>CSV/Excel data</b> (", chk$n_data, " areas).</p>",
+            "<p>None of the area values in your <b>shapefile</b> (", chk$n_map, " areas) match the area values ",
+            "in your <b>CSV/Excel data</b> (", chk$n_data, " areas), whether matching by area id or by area name.</p>",
             "<p>Please check that:</p>",
-            "<ul><li>You selected the correct <b>area id</b> column on both the Upload Shapefile page and the Upload CSV Data File page</li>",
+            "<ul><li>You selected the correct <b>area id</b> / <b>area name</b> columns on both the Upload Shapefile page and the Upload CSV Data File page</li>",
             "<li>The values are formatted the same way on both sides (e.g. same capitalisation, no extra spaces, same code system)</li></ul>"
           )),
           easyClose = TRUE, footer = modalButton("OK")
@@ -1414,7 +1361,7 @@ shinyApp(
         showNotification(
           paste0("Warning: only ", chk$n_matched, " of ", chk$n_data, " areas (", chk$pct_matched,
                  "%) in your data were found in the shapefile. Some areas may be missing from the map or cause errors in the model. ",
-                 "Please double check the 'area id' column selections if this is unexpected."),
+                 "Please double check the 'area id' / 'area name' column selections if this is unexpected."),
           type = "warning", duration = 12
         )
         return(TRUE)
@@ -1423,25 +1370,24 @@ shinyApp(
     }
     
     # ใช้ชื่อไฟล์ Data File ที่ผู้ใช้อัปโหลด (หรือชื่อ sample dataset ถ้าใช้ sample data) มาเป็นคำนำหน้า
-    # ชื่อไฟล์ที่ดาวน์โหลดออกไป เช่น อัปโหลด "PollutionHealthData.csv" -> "PollutionHealthData_result-....csv"
     data_file_base_name <- function() {
       if (input$data_source_type == "sample") {
         switch(input$sample_dataset_choice,
                "thailand"       = "ThailandSuicideMortality",
+               "suicide_attempt" = "ThailandSuicideAttempt",
                "pollution"      = "PollutionHealthData",
                "pollution_2007" = "PollutionHealthData2007",
                "SampleData")
       } else {
         req(input$file1)
         nm <- tools::file_path_sans_ext(input$file1$name)
-        gsub("[^A-Za-z0-9_-]", "_", nm)  # กันชื่อไฟล์เดิมมีช่องว่าง/อักขระที่ใช้ในชื่อไฟล์ไม่ได้
+        gsub("[^A-Za-z0-9_-]", "_", nm)
       }
     }
     
     
     compute_overall_rr <- function(model, cov_names) {
       fx <- model$summary.fixed
-      # ตัด "(Intercept)" ออก เอาไว้เฉพาะแถวของ covariate (x1, x2, ...)
       cov_rows <- rownames(fx)[rownames(fx) != "(Intercept)"]
       fx_cov <- fx[cov_rows, , drop = FALSE]
       
@@ -1453,11 +1399,8 @@ shinyApp(
         stringsAsFactors = FALSE
       )
       
-      # Significant = 95% CI ไม่คร่อมค่า 1 (RR = 1 คือไม่มีความสัมพันธ์)
       out$Significant <- ifelse(out$RR_lower > 1 | out$RR_upper < 1, "Yes", "No")
       
-      # คำแปลผลสั้นๆ อ่านง่าย: % การเปลี่ยนแปลงความเสี่ยงต่อ 1 หน่วยที่เพิ่มขึ้นของตัวแปร (region-wide)
-      # ใช้ทศนิยมแบบไดนามิก เพื่อไม่ให้ค่าที่เล็กมากๆ (เช่นข้อมูล Thailand suicide) ถูก round จนโชว์เป็น "-0.0%"
       pct_change <- (out$RR_mean - 1) * 100
       format_pct_change <- function(p, max_digits = 4) {
         if (p == 0) return("0.0")
@@ -1478,8 +1421,6 @@ shinyApp(
       out
     }
     
-    # สรุปตัวชี้วัดความเหมาะสมของโมเดล (model fit) เทียบเคียงกับตาราง Results ในเปเปอร์ CARBayesST
-    # (DIC, WAIC, effective no. of parameters, LMPL) รวมถึงค่า Intercept
     compute_model_fit_summary <- function(model) {
       intercept_mean <- tryCatch(model$summary.fixed["(Intercept)", "mean"], error = function(e) NA)
       lmpl_val <- tryCatch(sum(log(model$cpo$cpo), na.rm = TRUE), error = function(e) NA)
@@ -1497,10 +1438,7 @@ shinyApp(
       )
     }
     
-    # สรุป hyperparameter (ความแปรผันเชิงพื้นที่ / เวลา / ระหว่างจังหวัด) เทียบเคียงกับ tau2, rho ในเปเปอร์
-    # และแปลงชื่อ parameter จากภายในของ INLA (เช่น "Precision for data|S|x1_id") ให้อ่านเข้าใจง่ายขึ้น
     rename_hyperpar_label <- function(raw_name, cov_names) {
-      # กรณี "Precision for data|S|x{N}_id" -> ชื่อ covariate จริง (เช่น pm10 - พื้นที่)
       m <- regmatches_helper(raw_name, "^Precision for data\\|S\\|x([0-9]+)_id$")
       if (!is.null(m)) {
         n <- as.integer(m)
@@ -1521,11 +1459,9 @@ shinyApp(
         return("Extra unstructured variation (unexplained)")
       }
       
-      # ไม่ตรงกับ pattern ที่รู้จัก คืนชื่อเดิม
       raw_name
     }
     
-    # helper เล็ก ๆ สำหรับดึงกลุ่ม regex กลุ่มแรก คืน NULL ถ้าไม่ match
     regmatches_helper <- function(x, pattern) {
       m <- regmatches(x, regexec(pattern, x))[[1]]
       if (length(m) < 2) return(NULL)
@@ -1557,11 +1493,9 @@ shinyApp(
       is_ready <- !is.null(rv$map) && !is.null(rv$datosOriginal)
       
       if (is_ready) {
-        # ข้อมูลครบ: ซ่อนปุ่มหลอก โชว์ปุ่มจริง
         shinyjs::hide("btn_disabled_wrapper")
         shinyjs::show("Preview_Map_Distribution")
       } else {
-        # ข้อมูลไม่ครบ: โชว์ปุ่มหลอก ซ่อนปุ่มจริง
         shinyjs::show("btn_disabled_wrapper")
         shinyjs::hide("Preview_Map_Distribution")
       }
@@ -1575,13 +1509,11 @@ shinyApp(
       is_ready <- !is.null(rv$map) && !is.null(rv$datosOriginal)
       
       if (is_ready) {
-        # ---- เมื่อข้อมูลพร้อม (ปลดล็อก) ----
         for(tab in target_tabs) {
           shinyjs::removeClass(selector = paste0("a[data-value='", tab, "']"), class = "locked-menu")
           shinyjs::runjs(sprintf("$('a[data-value=\"%s\"]').attr('data-toggle', 'tab');", tab))
         }
       } else {
-        # ---- เมื่อข้อมูลยังไม่มี (ล็อก) ----
         for(tab in target_tabs) {
           shinyjs::addClass(selector = paste0("a[data-value='", tab, "']"), class = "locked-menu")
           shinyjs::runjs(sprintf("$('a[data-value=\"%s\"]').removeAttr('data-toggle');", tab))
@@ -1589,22 +1521,17 @@ shinyApp(
       }
     })
     
-    #observe(print(input$columnexpvalueindata))
-    
-    # message menu
     output$messageMenu <- renderMenu({
       dropdownMenu(type = "messages", 
                    messageItem(
                      from = "Project in Github", 
                      message = "Documentation, Source, Citation",
                      icon = icon("github", style = 'color: #5c5c68;'),
-                     # ใช้ JavaScript บังคับเปิดลิงก์ในแท็บใหม่ เพื่อหลบข้อจำกัด iframe ของ Hugging Face
                      href = "javascript:window.open('https://github.com/mill-ornrakorn/STEHealth-Application', '_blank');"
                    ),
                    
                    badgeStatus = NULL,
                    icon = tags$i(tags$img(src='info.png', height='16', width='16')),
-                   #icon = icon("circle-info", style = 'color: #5c5c68;'),
                    headerText = "App Information"
       )
     })
@@ -1615,21 +1542,16 @@ shinyApp(
     # ====================================
     shinyjs::addClass(selector = "a[data-value='Analysis']", class = "locked-menu")
     
-    # ตรวจสอบสถานะข้อมูลเพื่อปลดล็อก
     observe({
-      # ถ้ามีข้อมูลครบทั้ง แผนที่ และ ข้อมูล
       if (!is.null(rv$map) && !is.null(rv$datosOriginal)) {
-        # สั่งปลดล็อก (ลบคลาสสีเทาออก)
         shinyjs::removeClass(selector = "a[data-value='Analysis']", class = "locked-menu")
       } else {
-        # ถ้าข้อมูลหายไป ให้กลับมาล็อกใหม่
         shinyjs::addClass(selector = "a[data-value='Analysis']", class = "locked-menu")
       }
     })
     
     
     
-    # รูป nodata สำหรับฝั่ง Shapefile
     output$status_map <- renderUI({
       if (is.null(rv$map)) { 
         HTML("<p style='margin-top: 60px; margin-bottom: 40px; text-align:center;'> 
@@ -1637,29 +1559,12 @@ shinyApp(
       } 
     })
     
-    # แบบ text
-    # output$status_csv <- renderPrint({
-    #   if (is.null(input$file1)) { 
-    #     return(HTML('Please upload "csv file" to preview data.'))
-    #   } 
-    # })
-    
-    
-    # รูป nodata สำหรับฝั่ง CSV Data
     output$status_csv <- renderUI({
       if (is.null(rv$datosOriginal)) { 
         HTML("<p style='text-align:center; margin-top: 60px; margin-bottom: 40px; '> 
          <img src='nodata.png', alt='nodata', height  = '300px', width = '400px'>")
       } 
     })
-    
-    # แบบ text
-    # output$status_map_dis <- renderPrint({
-    #   if (is.null(input$filemap) &  is.null(input$file1)) { 
-    #     return(HTML('Please upload data in "Upload Data" page to display map distribution.'))
-    #   } 
-    #   
-    # })
     
     output$status_map_dis <- renderUI({
       if (is.null(rv$map) & is.null(rv$datosOriginal)) { 
@@ -1668,40 +1573,12 @@ shinyApp(
       } 
     })
     
-    
-    # แบบ text
-    # output$status_cluster <- renderPrint({
-    #   if (is.null(input$filemap) &  is.null(input$file1)) { 
-    #     return(HTML('Please upload data in "Upload Data" page to display cluster detection.'))
-    #   } 
-    #   
-    # })
-    
     output$status_cluster <- renderUI({
       if (is.null(rv$map) & is.null(rv$datosOriginal)) {
         HTML("<p style='margin-top: 15%; left: 15%; position:absolute;'>
          <img src='undraw_location_search_re.svg',  height  = '450px', width = '600px'>")
       }
     })
-    
-    # แบบรูป position:absolute
-    # output$status_cluster <- renderUI({
-    #   if (is.null(input$filemap) &  is.null(input$file1)) { 
-    #     #HTML("<p style='margin-top: 20px; left: 20%; position:absolute;'> 
-    #     HTML("<p style='text-align:center; margin-top: 70px; margin-bottom: 80px;'> 
-    #      <img src='undraw_location_search_re.svg',  height  = '400px', width = '600px'>")
-    #     
-    #   } 
-    # })
-    
-    # แบบ text
-    # output$status_risk_fac <- renderPrint({
-    #   if (is.null(input$filemap) & is.null(input$file1)) { 
-    #     return(HTML('Please upload data in "Upload Data" page to display association with risk factors.'))
-    #   } 
-    #   
-    # })
-    
     
     output$status_risk_fac <- renderUI({
       if (is.null(rv$map) & is.null(rv$datosOriginal)) { 
@@ -1710,7 +1587,6 @@ shinyApp(
       } 
     })
     
-    # สร้างตัวแปรเช็กสถานะการอัปโหลดไฟล์ หรือ เลือก Sample Data
     output$filemap_uploaded <- reactive({ 
       !is.null(input$filemap) || input$data_source_type == "sample" 
     })
@@ -1746,7 +1622,6 @@ shinyApp(
       paste(rv$messageCheckDataText_1)
     )
     
-    #observeEvent(input$Preview_Map_Distribution | input$tabs == "Map_Distribution", {
     observeEvent(input$Preview_Map_Distribution , {
       
       if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
@@ -1783,7 +1658,6 @@ shinyApp(
       paste(rv$messageCheckDataText_3)
     )
     
-    #observeEvent(input$nextpage | input$tabs == "Analysis", {
     observeEvent(input$nextpage , {
       
       if (is.null(rv$map) &  is.null(rv$datosOriginal) ){
@@ -1994,7 +1868,6 @@ shinyApp(
                         
                        '),
           
-          # แบบที่ 1
           tags$img(src="example_asso-risk_result_1.png",
                    class = "modal__img"),
           
@@ -2008,7 +1881,6 @@ shinyApp(
               </div>
               <hr>"),
           
-          # แบบที่ 2
           tags$img(src="example_asso-risk_result_2.png",
                    class = "modal__img"),
           
@@ -2022,7 +1894,6 @@ shinyApp(
               </div>
               <hr>"),
           
-          # แบบที่ 3
           tags$img(src="example_asso-risk_result_3.png",
                    class = "modal__img"),
           
@@ -2042,20 +1913,6 @@ shinyApp(
       )
     })
     
-    # If the significance is <strong>significant</strong> and risk factor value is <strong>positive (+)</strong>: </br>
-    #   &emsp;In Lamphun, the percent increase in expenditure is 0.15, which means if expenditure increases by 1 baht (THB), 
-    # the suicide risk will <u>increase</u> by 0.15%, or every 100 baht (THB) increase in expenditure increases the suicide risk by 15%.
-    # 
-    # </br></br> 
-    #   • If the significance is <strong>significant</strong> and risk factor value is <strong>negative (-)</strong>: </br>
-    #   &emsp;In Samuut Prakan, the percent increase in expenditure is -0.15, which means if expenditure increases by 1 baht (THB), 
-    # the suicide risk will <u>decrease</u> by 0.15%, or every 100 baht (THB) increase in expenditure decrease the suicide risk by 15%.
-    # 
-    # </br></br>     
-    #   •If the significance is <strong>not significant</strong>: </br>  
-    #   &emsp;When the value of significance is not significant, it means that this risk factor and the outcome <u>do not have significant relationships</u>.
-    # 
-    
     
     # ======================================================================== 
     
@@ -2067,7 +1924,6 @@ shinyApp(
       xd2 <- c("-", xd)
       
       if (input$data_source_type == "sample" && input$sample_dataset_choice %in% c("pollution", "pollution_2007")) {
-        # Sample Data: Pollution & Health Data (CARBayesST) - full or 2007-only, same column layout
         updateSelectInput(session, "columnidareaindata", choices = xd, selected = "IZ")
         updateSelectInput(session, "columnidareanamedata", choices = xd, selected = "name")
         updateSelectInput(session, "columndateindata", choices = xd, selected = "year")
@@ -2082,8 +1938,23 @@ shinyApp(
         updateSelectInput(session, "columncov5indata", choices = xd2, selected = "-")
         updateSelectInput(session, "columncov6indata", choices = xd2, selected = "-")
         updateSelectInput(session, "columncov7indata", choices = xd2, selected = "-")
+      } else if (input$data_source_type == "sample" && input$sample_dataset_choice == "suicide_attempt") {
+        # Sample Data: Thailand Suicide Attempt - uses same gadm40_THA_1 shapefile, matched by province name
+        updateSelectInput(session, "columnidareaindata", choices = xd, selected = "province")
+        updateSelectInput(session, "columnidareanamedata", choices = xd, selected = "province")
+        updateSelectInput(session, "columndateindata", choices = xd, selected = "year_index")
+        updateSelectInput(session, "columncasesindata", choices = xd, selected = "observed")
+        updateSelectInput(session, "columnpopindata", choices = xd, selected = "E")
+        updateSelectInput(session, "columnexpvalueindata", choices = c("", xd), selected = "")
+        
+        updateSelectInput(session, "columncov1indata", choices = xd2, selected = "lai_hv")
+        updateSelectInput(session, "columncov2indata", choices = xd2, selected = "lai_lv")
+        updateSelectInput(session, "columncov3indata", choices = xd2, selected = "ndvi_mean_scaled")
+        updateSelectInput(session, "columncov4indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov5indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov6indata", choices = xd2, selected = "-")
+        updateSelectInput(session, "columncov7indata", choices = xd2, selected = "-")
       } else if (input$data_source_type == "sample") {
-        # Sample Data: Thailand Suicide Mortality
         updateSelectInput(session, "columnidareaindata", choices = xd, selected = "province_id")
         updateSelectInput(session, "columnidareanamedata", choices = xd, selected = "province")
         updateSelectInput(session, "columndateindata", choices = xd, selected = "year")
@@ -2099,7 +1970,6 @@ shinyApp(
         updateSelectInput(session, "columncov6indata", choices = xd2, selected = "property.crime")
         updateSelectInput(session, "columncov7indata", choices = xd2, selected = "shocking.crime")
       } else {
-        # สำหรับกรณีอัปโหลดเอง
         updateSelectInput(session, "columnidareaindata", choices = c("", xd), selected = "")
         updateSelectInput(session, "columnidareanamedata", choices = c("", xd), selected = "")
         updateSelectInput(session, "columnexpvalueindata", choices = c("", xd), selected = "")
@@ -2123,20 +1993,15 @@ shinyApp(
       df <- rv$csvData
       selected_col <- input$columnidareanamedata
       
-      # ตรวจสอบความถูกต้องของคอลัมน์ Area Name
       if (!is.null(selected_col) && selected_col != "" && selected_col %in% names(df)) {
         
-        # สร้างคอลัมน์ ID อัตโนมัติจาก Area Name บน Memory (ไม่ต้องอ่านไฟล์ซ้ำ)
         area_name_col <- df[[selected_col]]
         df[["__areaID_auto__"]] <- as.integer(factor(area_name_col))
         
-        # ส่งค่าเข้าสู่ข้อมูลหลักที่จะใช้คำนวณหลังบ้าน
         rv$datosOriginal <- df
         
-        # [จุดสำคัญ]: สั่งล็อกการเลือกค่าในช่อง Area ID ให้เป็นตัวที่สร้างขึ้นมาทันที!
         if (input$data_source_type == "upload") {
           xd_updated <- names(df)
-          # ถ้าผู้ใช้เลือก area id เอง (เช่น IZ) อยู่แล้ว ไม่ต้อง override ทับ
           current_id <- isolate(input$columnidareaindata)
           if (is.null(current_id) || current_id == "" || !(current_id %in% xd_updated)) {
             updateSelectInput(session, "columnidareaindata", choices = xd_updated, selected = "__areaID_auto__")
@@ -2154,8 +2019,12 @@ shinyApp(
     observeEvent(list(input$data_source_type, input$sample_dataset_choice), {
       if (input$data_source_type == "sample") {
         if (input$sample_dataset_choice %in% c("pollution", "pollution_2007")) {
-          # Pollution health data (full or 2007-only): not Thailand provinces, no pre-computed expected value column
           updateRadioButtons(session, "shapefile_from_thailand", selected = "no")
+          updateRadioButtons(session, "Expected_Value_from_csv", selected = "no")
+        } else if (input$sample_dataset_choice == "suicide_attempt") {
+          # ใช้ shapefile ไทย 77 จังหวัดเหมือน "thailand" แต่คอลัมน์ E เป็นค่าประมาณ expected value
+          # (เช่นเดียวกับ pollution dataset) จึงให้คำนวณ expected value อัตโนมัติแทนดึงจากคอลัมน์ตรงๆ
+          updateRadioButtons(session, "shapefile_from_thailand", selected = "yes")
           updateRadioButtons(session, "Expected_Value_from_csv", selected = "no")
         } else {
           updateRadioButtons(session, "shapefile_from_thailand", selected = "yes")
@@ -2165,7 +2034,6 @@ shinyApp(
     }, ignoreNULL = FALSE)
     
     
-    # กล่องคำอธิบายสั้นๆ ใต้ dropdown บอกว่าชุดข้อมูลที่เลือกอยู่รองรับ Spatial หรือ Spatial-Temporal
     output$sample_dataset_info <- renderUI({
       req(input$data_source_type == "sample")
       
@@ -2173,6 +2041,10 @@ shinyApp(
                      "thailand" = list(
                        badge = "Spatial-Temporal", cls = "badge-st",
                        text = "77 provinces x 11 years (2011-2021). Supports both spatial-only and spatial-temporal models."
+                     ),
+                     "suicide_attempt" = list(
+                       badge = "Spatial-Temporal", cls = "badge-st",
+                       text = "77 provinces, spatio-temporal. Suicide attempt data with risk factors (employee injury count, drug-related cases)."
                      ),
                      "pollution" = list(
                        badge = "Spatial-Temporal", cls = "badge-st",
@@ -2204,15 +2076,12 @@ shinyApp(
       
       if (input$data_source_type == "sample" && length(x) > 0) {
         if (input$sample_dataset_choice %in% c("pollution", "pollution_2007")) {
-          # Pollution health data sample (full or 2007-only): GGHB.IZ shapefile - match on IZ column
           updateSelectInput(session, "columnidareainmap", choices = x, selected = "IZ")
         } else {
-          # **แก้ไขชื่อ "NAME_1" ให้ตรงกับชื่อคอลัมน์จังหวัดในไฟล์ gadm40_THA_1 ของคุณ**
           updateSelectInput(session, "columnidareainmap", choices = x, selected = "NAME_1")
         }
         
       } else {
-        # กรณีอัปโหลดเอง ให้ default เป็นคอลัมน์แรก
         updateSelectInput(session, "columnidareainmap", choices = x, selected = head(x, 1))
       }
     })
@@ -2224,8 +2093,8 @@ shinyApp(
       hyperpar_df=NULL,
       model_fixed=NULL,
       has_time_dimension=NULL,
-      runtime_cluster=NULL, runtime_asso=NULL, runtime_total=NULL,  # เวลาที่ใช้คำนวณโมเดล (วินาที) เอาไปโชว์เป็น card
-      columnidareainmap=NULL,  columnnameareainmap=NULL, #columnnamesuperareainmap=NULL,
+      runtime_cluster=NULL, runtime_asso=NULL, runtime_total=NULL,
+      columnidareainmap=NULL,  columnnameareainmap=NULL,
       idpolyhighlighted = NULL, posinmapFilteredIdpolyhighlighted=NULL, colores=NULL,
       minrisk=0, maxrisk=1,
       vblePintar="Risk", textareareactive="NULL",messageCheckDataText_1="", messageCheckDataText_2="", messageCheckDataText_3="",
@@ -2242,15 +2111,6 @@ shinyApp(
       errorMessageAssoc = NULL     
     )
     
-    
-    
-    
-    
-    # output$uploadmapmap <- renderPlot({
-    #   if (is.null(rv$map))
-    #     return(NULL)
-    #   plot(rv$map)
-    # })
     
     output$uploadmapmap <- renderPlot({
       if (!is.null(rv$map))
@@ -2295,14 +2155,12 @@ shinyApp(
     }
     
     output$uploadmapsummary <- renderTable({
-      # req(rv$map) คือการบอกว่าถ้ายังไม่มีข้อมูลไม่ต้องรันต่อ เพื่อกัน Error
       req(rv$map)
       friendly_summary(st_drop_geometry(rv$map))
     }, striped = TRUE, bordered = TRUE, spacing = "s")
     
     output$uploadmaptable  <- renderDT({
       req(rv$map)
-      # ใช้ st_drop_geometry เพราะ DT ไม่สามารถแสดงคอลัมน์ที่เป็นพิกัดแผนที่ได้
       st_drop_geometry(rv$map)
     } , options = list(scrollX = TRUE, pageLength = 5))
     
@@ -2337,14 +2195,11 @@ shinyApp(
         shp_file <- file.path(uploaddirectory, shpdf$name[grep("\\.shp$", shpdf$name)])
         
       } else if (input$sample_dataset_choice %in% c("pollution", "pollution_2007")) {
-        # Sample Data: pollution health data (CARBayesST), full or 2007-only -> same GGHB.IZ shapefile
         shp_file <- "sample data/GGHB_IZ.shp"
       } else {
-        # ถ้าผู้ใช้เลือก Sample Data (Thailand Suicide) ให้ชี้ไปที่โฟลเดอร์ตรงๆ
         shp_file <- "sample data/gadm40_THA_1.shp"
       }
       
-      # โหลดแผนที่ด้วย sf (ใช้ร่วมกันทั้งแบบ Upload และ Sample)
       tryCatch({
         map <- st_read(shp_file, quiet = TRUE, options = "ENCODING=UTF-8")
         map <- st_transform(map, crs = 4326)
@@ -2364,26 +2219,23 @@ shinyApp(
         path <- "sample data/pollution_health_data.csv"
       } else if (input$sample_dataset_choice == "pollution_2007") {
         path <- "sample data/pollution_health_data_2007.csv"
+      } else if (input$sample_dataset_choice == "suicide_attempt") {
+        path <- "sample data/suicide_attempt_model_with_risk_factors.csv"
       } else {
         path <- "sample data/suicide_th_data_sample_have_e_value.csv"
       }
       
       tryCatch({
-        # อ่านไฟล์โดยแปลงช่องว่างและสัญลักษณ์แปลกๆ ให้เป็น NA ก่อน
-        # รองรับทั้ง CSV และ Excel (.xlsx / .xls) โดยเช็คจากนามสกุลไฟล์
         file_ext <- tolower(tools::file_ext(path))
         if (file_ext %in% c("xlsx", "xls")) {
           df <- as.data.frame(readxl::read_excel(path))
-          # แปลงค่าที่เป็น string ว่าง/สัญลักษณ์แปลก ๆ ให้เป็น NA เหมือนตอนอ่าน CSV
           df[df == "" | df == " " | df == "NA" | df == "na" | df == "-" | df == "."] <- NA
         } else {
           df <- read.csv(path, na.strings = c("", " ", "NA", "na", "-", "."))
         }
         
-        # [จุดสำคัญ 1]: ตัดแถวที่เป็นค่าว่าง (NA) ทั้งบรรทัดทิ้ง (ป้องกันบรรทัดว่างท้ายไฟล์ CSV)
         df <- df[rowSums(is.na(df)) != ncol(df), ]
         
-        # [จุดสำคัญ 2]: ถ้าระบบรู้แล้วว่าคอลัมน์ชื่อพื้นที่คืออะไร ให้ตัดแถวที่ไม่มีชื่อพื้นที่ (เช่น แถว Total/Summary) ทิ้งทันที
         selected_name_col <- input$columnidareanamedata
         if (!is.null(selected_name_col) && selected_name_col != "" && selected_name_col %in% names(df)) {
           df <- df[!is.na(df[[selected_name_col]]), ]
@@ -2399,16 +2251,12 @@ shinyApp(
     
     # ==================================== ปุ่ม preview map dis ==================================== 
     observeEvent(input$Preview_Map_Distribution , {
-      # ย้ำเงื่อนไขอีกรอบ ป้องกันการถูกคลิกตอนที่ข้อมูลยังไม่มี
       if (is.null(rv$datosOriginal)| is.null(rv$map)) return(NULL)
       
-      # 0. เช็คว่า area id ของ shapefile กับ csv ตรงกันก่อนไปหน้า Map Distribution
       if (!validate_shapefile_data_match()) return(NULL)
       
-      # 1. เลื่อนไปหน้า Map Distribution ทันที
       shinyjs::runjs("$('.sidebar-menu a[data-value=Map_Distribution]').click();")
       
-      # 2. จัดการข้อมูล dropdown (โค้ดเดิมของคุณ Mill)
       data <- rv$datosOriginal
       
       updateSelectInput(session, "time_point_filter", choices = data[,input$columndateindata],  selected = head(data[,input$columndateindata], 1))
@@ -2417,51 +2265,31 @@ shinyApp(
     })
     
     
-    
-    
-    
-    
-    
-    # ==================================== ปุ่ม action input$nextpage ==================================== 
-    #observeEvent(input$nextpage | input$tabs == "Analysis", {
+    # ==================================== ปุุ่ม action input$nextpage ==================================== 
     observeEvent(input$nextpage , {
       
       if (is.null(rv$datosOriginal) | is.null(rv$map))
         return(NULL)
       
-      # เช็คว่า area id ของ shapefile กับ csv ตรงกันก่อนไปคำนวณ Cluster / Association
       if (!validate_shapefile_data_match()) return(NULL)
       
       
       if(input$tabs == "Analysis"){
         data <- rv$datosOriginal
-        total_start_time <- Sys.time()  # จับเวลารวมทั้ง Cluster + Association เพราะหน้าเว็บจะไม่อัปเดตจนกว่าทั้ง 2 จะเสร็จ
-        
-        #updateSliderInput(session, "time_point_filter_cluster", min = min(data[,input$columndateindata]), max = max(data[,input$columndateindata]) )
-        
+        total_start_time <- Sys.time()
         
         
         ######################### คำนวณ cluster ###################################
-        cluster_start_time <- Sys.time()  # เริ่มจับเวลาคำนวณ Cluster Detection
+        cluster_start_time <- Sys.time()
         tryCatch({
-          rv$errorMessageCluster <- NULL  # ล้างข้อความ Error หากไม่มีปัญหา
+          rv$errorMessageCluster <- NULL
           
           map <- rv$map
-          #data <- rv$datosOriginal
           
-          
-          
-          # y (case)
           data[,input$columncasesindata] <- as.numeric(data[,input$columncasesindata])
           
           
           ########################## --- คำนวน expected value ---- ######################### 
-          
-          # # ของเก่า: ค่า E ที่ให้ user ใส่มาเอง
-          # data[,input$columnexpvalueindata] <- as.numeric(data[,input$columnexpvalueindata])
-          
-          
-          
           
           if(input$Expected_Value_from_csv == "yes" ){
             if(input$columnexpvalueindata != "" ){
@@ -2473,8 +2301,6 @@ shinyApp(
           }else if (input$Expected_Value_from_csv == "no" ){
             print("Check: ...this csv doesn't have expected value...")
             
-            # คิด (sum(case) / (pop))*population
-            # sum case กับ pop ทั้งหมด เอามาหารกัน แล้วคูณด้วย pop ของจังหวัด,ปี นั้นๆ
             sum_case <- sum(data[,input$columncasesindata])
             sum_pop <- sum(data[,input$columnpopindata])
             
@@ -2484,45 +2310,47 @@ shinyApp(
             expected_value <- data[,input$columnpopindata] * divide_case_pop
             
             
-            # Add a Column to a Data Frame
             data['expected_value'] <- expected_value
             
           }
           
           
-          
           # ---------------------------
           
           # area id (data$province)
-          # เดิม (crash ถ้า IZ เป็น text)
-          # data[,input$columnidareaindata] <- as.numeric(data[,input$columnidareaindata]) # id of province 1-77
-          
-          # ใหม่: ถ้าแปลงเป็น numeric ไม่ได้ ให้ auto-rank แทน
+          # [FIX] เดิม: data[["__areaID_auto__"]] <- as.integer(factor(raw_id))
+          # ปัญหา: factor() เรียง id ตามลำดับตัวอักษรของค่าที่มีใน CSV ซึ่งไม่จำเป็นต้องตรงกับลำดับแถวของ shapefile
+          # ที่ nb2mat(poly2nb(map)) ใช้สร้าง adjacency matrix (tha_adj) เลย ทำให้พื้นที่ที่ id ไม่ตรงลำดับ
+          # ถูกจับคู่กับ adjacency ของพื้นที่อื่นแบบเงียบๆ โดยไม่มี error ใดๆ ขึ้นเตือน
+          # แก้ใหม่: ใช้ match() กับลำดับแถวของ shapefile (map) โดยตรง เพื่อให้ id อ้างอิงตำแหน่งแถวใน 
+          # adjacency matrix ได้ถูกต้องเสมอ ไม่ว่าค่า area id/name จะเรียงตามตัวอักษรหรือไม่ก็ตาม
           raw_id <- data[, input$columnidareaindata]
           numeric_id <- suppressWarnings(as.numeric(raw_id))
           
           if (any(is.na(numeric_id))) {
-            # กรณี area id เป็น text เช่น "S02000260" → แปลงเป็น integer rank
-            data[["__areaID_auto__"]] <- as.integer(factor(raw_id))
+            # กรณี area id เป็น text เช่น "S02000260" หรือชื่อพื้นที่ -> จับคู่กับลำดับแถวของ shapefile โดยตรง
+            data[["__areaID_auto__"]] <- match(trimws(as.character(raw_id)),
+                                               trimws(as.character(map[[input$columnidareainmap]])))
             area_id_col <- "__areaID_auto__"
+            
+            if (any(is.na(data[["__areaID_auto__"]]))) {
+              n_missing <- sum(is.na(data[["__areaID_auto__"]]))
+              stop(paste0(n_missing, " row(s) in the CSV data could not be matched to any area in the shapefile. ",
+                          "Please check that the selected 'area id' column matches the shapefile's area id/name exactly."))
+            }
           } else {
             data[, input$columnidareaindata] <- numeric_id
             area_id_col <- input$columnidareaindata
           }
           
           
-          # # year data$year
-          data[,input$columndateindata] <- as.numeric(data[,input$columndateindata]) # id of year 1-11 (?)
+          data[,input$columndateindata] <- as.numeric(data[,input$columndateindata])
           
-          # # data$province_year <- seq(1, 1064) # id of province-year interaction
-          data$province_year <- seq(1, nrow(data)) # id of year 1-11 (?)
+          data$province_year <- seq(1, nrow(data))
           
-          # # interaction id
           province_int <- data[,input$columnidareaindata]
           year_int <- data[,input$columndateindata]
           
-          # รองรับกรณีข้อมูลเป็น Spatial อย่างเดียว (มี time point แค่ค่าเดียว หรือไม่มี variation ตามเวลา)
-          # ถ้ามีเวลาแค่ 1 จุด จะไม่ใส่ f(..., model = "rw1") ในสูตรโมเดล เพราะ RW1 ต้องมีอย่างน้อย 2 จุดเวลา
           has_time_dimension <- length(unique(data[,input$columndateindata])) > 1
           rv$has_time_dimension <- has_time_dimension
           
@@ -2531,38 +2359,22 @@ shinyApp(
           
           if(input$shapefile_from_thailand == "yes" ){
             
-            # build adj matrix from shape file
             tha_adj <- nb2mat(
               poly2nb(map),
               style = "B",
               zero.policy = TRUE)
             
-            # add path between Phuket and Pang nga (?)
             tha_adj[38, 47] <- 1
             tha_adj[47, 38] <- 1
             
           }else if (input$shapefile_from_thailand == "no" ){
             
-            # build adj matrix from shape file
             tha_adj <- nb2mat(
               poly2nb(map),
               style = "B",
               zero.policy = TRUE)
             
           }
-          
-          # อันใหม่เด้อ
-          # formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-          #     f(data$x1_id, x1, model = "iid") +
-          #     f(data$x2_id, x2, model = "iid") +
-          #     f(data$x3_id, x3, model = "iid") +
-          #     f(data$x4_id, x4, model = "iid") +
-          #     f(data$x5_id, x5, model = "iid") +
-          #     f(data$x6_id, x6, model = "iid") +
-          #     f(data$x7_id, x7, model = "iid") +
-          #   f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-          #   f(data[,input$columndateindata], model = "rw1") +
-          #   f(province_int, model = "iid")
           
           
           ####################   Cluster   #################### 
@@ -2572,20 +2384,16 @@ shinyApp(
           if (has_time_dimension) {
             formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
               f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-              f(data[,input$columndateindata], model = "rw1") +
-              f(province_int, model = "iid")
+              f(data[,input$columndateindata], model = "rw1") 
           } else {
             formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
-              f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-              f(province_int, model = "iid")
+              f(data[[area_id_col]], model = "bym", graph = tha_adj) 
           }
           
-          # computing part
           model_Cluter <- inla(
             formula_1_bym_rw1_Cluter,
             family = "poisson",
             data = data,
-            #E = data[,input$columnexpvalueindata],
             E = data[, 'expected_value'],
             control.predictor = list(compute = TRUE),
             control.compute = list(
@@ -2615,8 +2423,7 @@ shinyApp(
             sep = ""
           )
         })
-        rv$runtime_cluster <- as.numeric(difftime(Sys.time(), cluster_start_time, units = "secs"))  # เก็บเวลาที่ใช้คำนวณ
-        # model2 <- rv$model
+        rv$runtime_cluster <- as.numeric(difftime(Sys.time(), cluster_start_time, units = "secs"))
         
         print("===================== rv$errorMessageCluster =====================")
         print(rv$errorMessageCluster)
@@ -2625,9 +2432,9 @@ shinyApp(
         ####################################################
         
         
-        assoc_start_time <- Sys.time()  # เริ่มจับเวลาคำนวณ Association with Risk Factors
+        assoc_start_time <- Sys.time()
         tryCatch({
-          rv$errorMessageAssoc  <- NULL  # ล้างข้อความ Error หากไม่มีปัญหา
+          rv$errorMessageAssoc  <- NULL
           ####################  คำนวณ asso   #################### 
           
           
@@ -2642,44 +2449,32 @@ shinyApp(
           x6 <- input$columncov6indata
           x7 <- input$columncov7indata
           
-          # ← เพิ่ม print นี้
           print(paste("DEBUG covariates:", x1, x2, x3, x4, x5, x6, x7))
           
           if (!not_empty(x1) & !not_empty(x2) & !not_empty(x3) & !not_empty(x4) & !not_empty(x5) & !not_empty(x6) & !not_empty(x7)) {
             
             print("Check: ...all null...")
             
-            
-            
-            
-            
           }else if (not_empty(x1) & !not_empty(x2) & !not_empty(x3) & !not_empty(x4) & !not_empty(x5) & !not_empty(x6) & !not_empty(x7)) {
             
             print("Check: ...1 not null...")
             x1 <- data[,input$columncov1indata]
             
-            
-            
-            # id for association each province
             data$x1_id <- data[,input$columnidareaindata]
             
             
             if (has_time_dimension) {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
+                
             } else {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
-            # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
@@ -2699,22 +2494,15 @@ shinyApp(
             
             rv$model <- model
             
-            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
-            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
-            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 เป็น fixed effect แทน
-            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
-            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
             if (has_time_dimension) {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
             model_fixed <- inla(
@@ -2738,7 +2526,6 @@ shinyApp(
             
             model2 <- rv$model
             
-            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean))
             ) )
@@ -2753,15 +2540,10 @@ shinyApp(
             association_wsf_df <- data.frame(association_wsf)
             
             
-            #rv$association_wsf_df <- association_wsf_df
-            
-            
             ad <- names(association_df)
             updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
             
             
-            # ค่า sig
-            # x1
             association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
             association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
             
@@ -2769,7 +2551,6 @@ shinyApp(
             association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
             
             
-            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
             print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             
             rv$association_wsf_df <- association_wsf_df
@@ -2782,31 +2563,25 @@ shinyApp(
             x1 <- data[,input$columncov1indata]
             x2 <- data[,input$columncov2indata]
             
-            
-            
-            # id for association each province
             data$x1_id <- data[,input$columnidareaindata]
             data$x2_id <- data[,input$columnidareaindata]
             
             
             if (has_time_dimension) {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
+                
             } else {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
+                
             }
             
-            # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
@@ -2823,22 +2598,15 @@ shinyApp(
             
             rv$model <- model
             
-            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
-            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
-            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 เป็น fixed effect แทน
-            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
-            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
             if (has_time_dimension) {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
             model_fixed <- inla(
@@ -2862,7 +2630,6 @@ shinyApp(
             
             model2 <- rv$model
             
-            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean))
@@ -2881,8 +2648,6 @@ shinyApp(
             updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
             
             
-            # ค่า sig
-            # x1
             association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
             association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
             
@@ -2890,14 +2655,12 @@ shinyApp(
             association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
             
             
-            # x2
             association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
             association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
             
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
             
-            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
             print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
@@ -2910,9 +2673,6 @@ shinyApp(
             x2 <- data[,input$columncov2indata]
             x3 <- data[,input$columncov3indata]
             
-            
-            
-            # id for association each province
             data$x1_id <- data[,input$columnidareaindata]
             data$x2_id <- data[,input$columnidareaindata]
             data$x3_id <- data[,input$columnidareaindata]
@@ -2920,24 +2680,19 @@ shinyApp(
             
             if (has_time_dimension) {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
-            # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
@@ -2954,22 +2709,15 @@ shinyApp(
             
             rv$model <- model
             
-            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
-            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
-            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 เป็น fixed effect แทน
-            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
-            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
             if (has_time_dimension) {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
             model_fixed <- inla(
@@ -2993,7 +2741,6 @@ shinyApp(
             
             model2 <- rv$model
             
-            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -3013,8 +2760,6 @@ shinyApp(
             ad <- names(association_df)
             updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
             
-            # ค่า sig
-            # x1
             association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
             association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
             
@@ -3022,21 +2767,18 @@ shinyApp(
             association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
             
             
-            # x2
             association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
             association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
             
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
             
-            # x3
             association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
             association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
             
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
             
-            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
             print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
@@ -3051,9 +2793,6 @@ shinyApp(
             x3 <- data[,input$columncov3indata]
             x4 <- data[,input$columncov4indata]
             
-            
-            
-            # id for association each province
             data$x1_id <- data[,input$columnidareaindata]
             data$x2_id <- data[,input$columnidareaindata]
             data$x3_id <- data[,input$columnidareaindata]
@@ -3062,26 +2801,21 @@ shinyApp(
             
             if (has_time_dimension) {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 + x4 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
                 f(data$x4_id, x4, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 + x4 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
                 f(data$x4_id, x4, model = "iid") +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
-            # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
@@ -3098,22 +2832,15 @@ shinyApp(
             
             rv$model <- model
             
-            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
-            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
-            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 + x4 เป็น fixed effect แทน
-            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
-            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
             if (has_time_dimension) {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 + x4 +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 + x4 +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
             model_fixed <- inla(
@@ -3137,7 +2864,6 @@ shinyApp(
             
             model2 <- rv$model
             
-            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -3160,8 +2886,6 @@ shinyApp(
             updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
             
             
-            # ค่า sig
-            # x1
             association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
             association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
             
@@ -3169,28 +2893,24 @@ shinyApp(
             association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
             
             
-            # x2
             association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
             association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
             
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
             
-            # x3
             association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
             association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
             
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
             
-            # x4
             association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
             association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
             
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
             
-            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
             print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
@@ -3204,9 +2924,6 @@ shinyApp(
             x4 <- data[,input$columncov4indata]
             x5 <- data[,input$columncov5indata]
             
-            
-            
-            # id for association each province
             data$x1_id <- data[,input$columnidareaindata]
             data$x2_id <- data[,input$columnidareaindata]
             data$x3_id <- data[,input$columnidareaindata]
@@ -3216,28 +2933,23 @@ shinyApp(
             
             if (has_time_dimension) {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 + x4 + x5 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
                 f(data$x4_id, x4, model = "iid") +
                 f(data$x5_id, x5, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 + x4 + x5 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
                 f(data$x4_id, x4, model = "iid") +
                 f(data$x5_id, x5, model = "iid") +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
-            # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
@@ -3253,22 +2965,15 @@ shinyApp(
             
             rv$model <- model
             
-            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
-            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
-            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 + x4 + x5 เป็น fixed effect แทน
-            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
-            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
             if (has_time_dimension) {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 + x4 + x5 +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 + x4 + x5 +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
             model_fixed <- inla(
@@ -3292,7 +2997,6 @@ shinyApp(
             
             model2 <- rv$model
             
-            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -3317,8 +3021,6 @@ shinyApp(
             updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
             
             
-            # ค่า sig
-            # x1
             association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
             association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
             
@@ -3326,35 +3028,30 @@ shinyApp(
             association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
             
             
-            # x2
             association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
             association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
             
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
             
-            # x3
             association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
             association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
             
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
             
-            # x4
             association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
             association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
             
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
             
-            # x5
             association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
             association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
             
             association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
             association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
             
-            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
             print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
@@ -3369,9 +3066,6 @@ shinyApp(
             x5 <- data[,input$columncov5indata]
             x6 <- data[,input$columncov6indata]
             
-            
-            
-            # id for association each province
             data$x1_id <- data[,input$columnidareaindata]
             data$x2_id <- data[,input$columnidareaindata]
             data$x3_id <- data[,input$columnidareaindata]
@@ -3382,7 +3076,6 @@ shinyApp(
             
             if (has_time_dimension) {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 + x4 + x5 + x6 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
@@ -3390,22 +3083,18 @@ shinyApp(
                 f(data$x5_id, x5, model = "iid") +
                 f(data$x6_id, x6, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 + x4 + x5 + x6 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
                 f(data$x4_id, x4, model = "iid") +
                 f(data$x5_id, x5, model = "iid") +
                 f(data$x6_id, x6, model = "iid") +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
-            # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
@@ -3421,22 +3110,15 @@ shinyApp(
             
             rv$model <- model
             
-            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
-            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
-            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 + x4 + x5 + x6 เป็น fixed effect แทน
-            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
-            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
             if (has_time_dimension) {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 + x4 + x5 + x6 +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 + x4 + x5 + x6 +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
             model_fixed <- inla(
@@ -3460,7 +3142,6 @@ shinyApp(
             
             model2 <- rv$model
             
-            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -3488,8 +3169,6 @@ shinyApp(
             updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
             
             
-            # ค่า sig
-            # x1
             association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
             association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
             
@@ -3497,35 +3176,30 @@ shinyApp(
             association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
             
             
-            # x2
             association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
             association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
             
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
             
-            # x3
             association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
             association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
             
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
             
-            # x4
             association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
             association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
             
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
             
-            # x5
             association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
             association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
             
             association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
             association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
             
-            # x6
             association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
             association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
             
@@ -3533,7 +3207,6 @@ shinyApp(
             association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
             
             
-            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
             print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
             
@@ -3549,9 +3222,6 @@ shinyApp(
             x6 <- data[,input$columncov6indata]
             x7 <- data[,input$columncov7indata]
             
-            
-            
-            # id for association each province
             data$x1_id <- data[,input$columnidareaindata]
             data$x2_id <- data[,input$columnidareaindata]
             data$x3_id <- data[,input$columnidareaindata]
@@ -3563,7 +3233,6 @@ shinyApp(
             
             if (has_time_dimension) {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 + x4 + x5 + x6 + x7 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
@@ -3572,11 +3241,9 @@ shinyApp(
                 f(data$x6_id, x6, model = "iid") +
                 f(data$x7_id, x7, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
-                # x1 + x2 + x3 + x4 + x5 + x6 + x7 +  # (fixed effect - ปิดไว้ก่อน รอปรึกษาอาจารย์ก่อน)
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data$x3_id, x3, model = "iid") +
@@ -3584,11 +3251,9 @@ shinyApp(
                 f(data$x5_id, x5, model = "iid") +
                 f(data$x6_id, x6, model = "iid") +
                 f(data$x7_id, x7, model = "iid") +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
-            # computing part
             model <- inla(
               formula_1_bym_rw1,
               family = "poisson",
@@ -3605,22 +3270,15 @@ shinyApp(
             
             rv$model <- model
             
-            # ===== โมเดลที่ 2: Fixed-effect model (สำหรับ Overall / region-wide association) =====
-            # เก็บโมเดลเดิม (random slope รายพื้นที่) ไว้ด้านบน และเพิ่มโมเดลนี้แยกต่างหากเพื่อหาค่า overall association
-            # ตัด f(data$xN_id, xN, model="iid") ออก แล้วใส่ x1 + x2 + x3 + x4 + x5 + x6 + x7 เป็น fixed effect แทน
-            # ส่วน f(area_id_col,"bym"), f(date,"rw1"), f(province_int,"iid") ยังคงไว้เป็น adjustment term เหมือนโมเดลเดิม
-            # TODO: ยืนยันกับอาจารย์ว่าต้องตัด 3 เทอมนี้ออกด้วยหรือไม่ เพื่อให้เทียบเท่า CARBayesST ตรงๆ
             if (has_time_dimension) {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 + x4 + x5 + x6 + x7 +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(data[,input$columndateindata], model = "rw1") +
-                f(province_int, model = "iid")
+                f(data[,input$columndateindata], model = "rw1") 
             } else {
               formula_fixed_only <- data[,input$columncasesindata] ~ 1 +
                 x1 + x2 + x3 + x4 + x5 + x6 + x7 +
-                f(data[[area_id_col]], model = "bym", graph = tha_adj) +
-                f(province_int, model = "iid")
+                f(data[[area_id_col]], model = "bym", graph = tha_adj) 
             }
             
             model_fixed <- inla(
@@ -3644,7 +3302,6 @@ shinyApp(
             
             model2 <- rv$model
             
-            # NOTE: reverted to random-slope-only RR (no fixed effect combined in). Fixed-effect version pending discussion with advisor.
             association_df <- (data.frame(
               c(exp(model2$summary.random$`data|S|x1_id`$mean)),
               c(exp(model2$summary.random$`data|S|x2_id`$mean)),
@@ -3672,14 +3329,10 @@ shinyApp(
             association_wsf_df <- data.frame(association_wsf)
             
             
-            # rv$association_wsf_df <- association_wsf_df
-            
             ad <- names(association_df)
             updateSelectInput(session, "risk_factor_filter",  choices = ad,  selected = head(ad, 1))
             
             
-            # ค่า sig
-            # x1
             association_wsf_df[, paste( input$columncov1indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,4]
             association_wsf_df[, paste( input$columncov1indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x1_id`[,6]
             
@@ -3687,52 +3340,44 @@ shinyApp(
             association_wsf_df[, paste( input$columncov1indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x1_id`[,4] > 0 | model2$summary.random$`data|S|x1_id`[,6] < 0, "significant", "not significant")
             
             
-            # x2
             association_wsf_df[, paste( input$columncov2indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,4]
             association_wsf_df[, paste( input$columncov2indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x2_id`[,6]
             
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- model2$summary.random$`data|S|x2_id`[,4] > 0
             association_wsf_df[, paste( input$columncov2indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x2_id`[,4] > 0 | model2$summary.random$`data|S|x2_id`[,6] < 0, "significant", "not significant")
             
-            # x3
             association_wsf_df[, paste( input$columncov3indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,4]
             association_wsf_df[, paste( input$columncov3indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x3_id`[,6]
             
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- model2$summary.random$`data|S|x3_id`[,4] > 0
             association_wsf_df[, paste( input$columncov3indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x3_id`[,4] > 0 | model2$summary.random$`data|S|x3_id`[,6] < 0, "significant", "not significant")
             
-            # x4
             association_wsf_df[, paste( input$columncov4indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,4]
             association_wsf_df[, paste( input$columncov4indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x4_id`[,6]
             
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- model2$summary.random$`data|S|x4_id`[,4] > 0
             association_wsf_df[, paste( input$columncov4indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x4_id`[,4] > 0 | model2$summary.random$`data|S|x4_id`[,6] < 0, "significant", "not significant")
             
-            # x5
             association_wsf_df[, paste( input$columncov5indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,4]
             association_wsf_df[, paste( input$columncov5indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x5_id`[,6]
             
             association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- model2$summary.random$`data|S|x5_id`[,4] > 0
             association_wsf_df[, paste( input$columncov5indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x5_id`[,4] > 0 | model2$summary.random$`data|S|x5_id`[,6] < 0, "significant", "not significant")
             
-            # x6
             association_wsf_df[, paste( input$columncov6indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,4]
             association_wsf_df[, paste( input$columncov6indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x6_id`[,6]
             
             association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- model2$summary.random$`data|S|x6_id`[,4] > 0
             association_wsf_df[, paste( input$columncov6indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x6_id`[,4] > 0 | model2$summary.random$`data|S|x6_id`[,6] < 0, "significant", "not significant")
             
-            # x7
             association_wsf_df[, paste( input$columncov7indata,"_lowerbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,4]
             association_wsf_df[, paste( input$columncov7indata,"_upperbound", sep="")] <- model2$summary.random$`data|S|x7_id`[,6]
             
             association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- model2$summary.random$`data|S|x7_id`[,4] > 0
             association_wsf_df[, paste( input$columncov7indata,"_significance", sep="")] <- ifelse(model2$summary.random$`data|S|x7_id`[,4] > 0 | model2$summary.random$`data|S|x7_id`[,6] < 0, "significant", "not significant")
             
-            # ← เพิ่มก่อน rv$association_wsf_df <- association_wsf_df
             print(paste("DEBUG association_wsf_df columns:", paste(names(association_wsf_df), collapse=", ")))
             rv$association_wsf_df <- association_wsf_df
-            
             
             
             
@@ -3745,9 +3390,8 @@ shinyApp(
             sep = ""
           )
         })
-        rv$runtime_asso <- as.numeric(difftime(Sys.time(), assoc_start_time, units = "secs"))  # เก็บเวลาที่ใช้คำนวณ
-        rv$runtime_total <- as.numeric(difftime(Sys.time(), total_start_time, units = "secs"))  # เวลารวมทั้งหมด ตรงกับที่ผู้ใช้จับเองหลังกด Next
-        # model2 <- rv$model
+        rv$runtime_asso <- as.numeric(difftime(Sys.time(), assoc_start_time, units = "secs"))
+        rv$runtime_total <- as.numeric(difftime(Sys.time(), total_start_time, units = "secs"))
         
         print("===================== rv$errorMessageAssoc =====================")
         print(rv$errorMessageAssoc)
@@ -3765,8 +3409,6 @@ shinyApp(
     # ==================================== map_distribution ==================================== 
     
     
-    # ทำไม legend และค่าสีในแมพ เรียงจากมากไปน้อย
-    # จาก https://stackoverflow.com/questions/40276569/reverse-order-in-r-leaflet-continuous-legend
     addLegend_decreasing <- function (map, position = c("topright", "bottomright", "bottomleft","topleft"),
                                       pal, values, na.label = "NA", bins = 7, colors, 
                                       opacity = 0.5, labels = NULL, labFormat = labelFormat(), 
@@ -3871,103 +3513,6 @@ shinyApp(
     
     
     ###### map_distribution 1 ######### 
-    # output$map_distribution <- renderLeaflet({
-    #   tryCatch({
-    #     rv$errorMessageMapDis <- NULL
-    #     
-    #     # ตรวจสอบว่า rv$datosOriginal และ rv$map มีข้อมูลหรือไม่
-    #     if (is.null(rv$datosOriginal) | is.null(rv$map)) return(NULL)
-    #     
-    #     print("Plot: ...map distribution.1..")
-    #     
-    #     map <- rv$map
-    #     data <- rv$datosOriginal
-    #     
-    #     # กรองข้อมูลตามตัวกรองที่กำหนด
-    #     data <- data %>%
-    #       filter(
-    #         data[, input$columndateindata] %in% input$time_point_filter
-    #       )
-    #     
-    #     print("Plot: ...กรองข้อมูล: map distribution.1..")
-    #     
-    #     
-    #     # ตรวจสอบว่าหลังกรองข้อมูลแล้ว ยังมีข้อมูลหรือไม่
-    #     # if (nrow(data) == 0) {
-    #     #   showNotification("No data available after filtering", type = "error")
-    #     #   return(NULL)
-    #     # }
-    #     
-    #     datafiltered <- data
-    #     ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
-    #     map@data <- datafiltered[ordercounties, ]
-    #     
-    #     # ตรวจสอบว่า map@data มีข้อมูลหรือไม่
-    #     # if (is.null(map@data) || nrow(map@data) == 0 || all(is.na(map@data[, input$columncasesindata]))) {
-    #     #   showNotification("No valid data for mapping", type = "error")
-    #     #   return(NULL)
-    #     # }
-    #     
-    #     # สร้าง colorNumeric โดยจัดการ domain ที่ว่างหรือเป็น NA
-    #     domain_values <- map@data[, input$columncasesindata]
-    #     if (all(is.na(domain_values))) {
-    #       domain_values <- c(0, 1) # ค่าเริ่มต้นหาก domain เป็น NA ทั้งหมด
-    #     }
-    #     
-    #     pal <- colorNumeric(palette = input$color, domain = domain_values, na.color = "transparent")
-    #     
-    #     labels <- sprintf(
-    #       "<strong> %s </strong> <br/>  %s : %s ",
-    #       map@data[, input$columnidareanamedata], input$columncasesindata, map@data[, input$columncasesindata]
-    #     ) %>%
-    #       lapply(htmltools::HTML)
-    #     
-    #     print("Plot: ...แปลงข้อมูลแล้ว: map distribution.1..")
-    #     
-    #     # สร้างแผนที่
-    #     leaflet(map) %>%
-    #       addTiles() %>%
-    #       addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
-    #       addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
-    #       addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
-    #       addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
-    #       addPolygons(
-    #         color = "grey", weight = 1,
-    #         fillColor = ~pal(map@data[, input$columncasesindata]), fillOpacity = 0.7,
-    #         highlightOptions = highlightOptions(weight = 4),
-    #         label = labels,
-    #         labelOptions = labelOptions(
-    #           style = list("font-weight" = "normal", padding = "3px 8px"),
-    #           textsize = "16px", direction = "auto"
-    #         )
-    #       ) %>%
-    #       addLegend_decreasing(
-    #         pal = pal, values = ~map@data[, input$columncasesindata], opacity = 0.7,
-    #         title = input$columncasesindata, position = "bottomright",
-    #         decreasing = TRUE
-    #       ) %>%
-    #       addLayersControl(
-    #         baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"),
-    #         position = c("topleft"),
-    #         options = layersControlOptions(collapsed = TRUE)
-    #       ) %>%
-    #       addFullscreenControl()
-    #     print("Plot: ...สร้างเสร็จ: map distribution.1..")
-    #     
-    #   }, error = function(e) {
-    #     rv$errorMessageMapDis <- paste(
-    #       "An error occurred in Y Value Distribution Map.", 
-    #       "<br>Please check the uploaded data again.",
-    #       "<br>Error Message: ", e$message,
-    #       sep = ""
-    #     )
-    #   })
-    #   
-    #   print("===================== rv$errorMessageMapDis =====================")
-    #   print(rv$errorMessageMapDis)
-    #   
-    # })
-    
     output$map_distribution <- renderLeaflet({
       
       if (is.null(rv$datosOriginal)| is.null(rv$map))
@@ -3985,27 +3530,21 @@ shinyApp(
           
         )
       
-      
-      
-      # datafiltered <- data[which(data[,input$columndateindata] == input$time_point_filter), ]
-      # datafiltered <- data
-      # ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
-      # map@data <- datafiltered[ordercounties, ]
-      
       datafiltered <- data
-      # Sample Data (Thailand) shapefile only has province NAME_1 (text), no numeric id that matches
-      # "province_id", so keep name-based matching for it (safe: Thai province names have no duplicates).
-      # For uploaded data, match by area id (unique code) to avoid problems with duplicate area names.
-      match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
-      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[match_key_data]])
+      # [FIX] เดิม hardcode: match by name เฉพาะเมื่อเป็น sample "thailand" เท่านั้น
+      # ตอนนี้ใช้ resolve_match_key() ตรวจสอบจริงว่า id หรือ name match ได้ดีกว่ากัน แล้วใช้ตัวนั้น
+      # ใช้ได้ทั้ง sample data และไฟล์ที่ผู้ใช้อัปโหลดเอง
+      match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
+                                          input$columnidareaindata, input$columnidareanamedata)
+      # [FIX] trimws() ทั้งสองฝั่งกัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
+      ordercounties <- match(trimws(as.character(map[[input$columnidareainmap]])),
+                             trimws(as.character(datafiltered[[match_key_data]])))
       
-      # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
       temp_geom <- st_geometry(map)
       map <- datafiltered[ordercounties, ]
       st_geometry(map) <- temp_geom
       
       
-      # Create leaflet
       l <- leaflet(map) %>% addTiles()
       pal <- colorNumeric(palette = input$color, domain = map[[input$columncasesindata]])
       labels <- sprintf("<strong> %s </strong> <br/>  %s : %s ",
@@ -4018,8 +3557,6 @@ shinyApp(
         addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
         addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
         addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
-        #addProviderTiles(providers$Stamen.Watercolor, group = "Stamen Watercolor") %>%
-        #addProviderTiles(providers$Stamen.Toner, group = "Stamen Toner") %>%
         
         addPolygons(
           color = "grey", weight = 1,
@@ -4040,7 +3577,6 @@ shinyApp(
           decreasing = TRUE
         ) %>%
         addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
-                                        #"Stamen Watercolor", "Stamen Toner"
         ),
         position = c("topleft"),
         options = layersControlOptions(collapsed =  TRUE)
@@ -4055,138 +3591,6 @@ shinyApp(
     
     
     ###### map_distribution 2 ######### 
-    
-    
-    # output$map_distribution_2 <- renderLeaflet({
-    #   
-    #   tryCatch({
-    #     rv$errorMessageMapDis_2 <- NULL
-    #   if (is.null(rv$datosOriginal) | is.null(rv$map))
-    #     return(NULL)
-    #   
-    #   print("Plot: ...map distribution.2..")
-    #   
-    #   
-    #   map <- rv$map
-    #   data <- rv$datosOriginal
-    #   
-    #   
-    #   if(input$Expected_Value_from_csv == "yes" ){
-    #     if(input$columnexpvalueindata != "" ){
-    #       print("Check: ...this csv have expected value...")
-    #       data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
-    #       
-    #     }
-    #     
-    #   }else if (input$Expected_Value_from_csv == "no" ){
-    #     print("Check: ...this csv doesn't have expected value...")
-    #     
-    #     # คิด (sum(case) / (pop))*population
-    #     # sum case กับ pop ทั้งหมด เอามาหารกัน แล้วคูณด้วย pop ของจังหวัด,ปี นั้นๆ
-    #     sum_case <- sum(data[,input$columncasesindata])
-    #     sum_pop <- sum(data[,input$columnpopindata])
-    #     
-    #     divide_case_pop <- sum_case / sum_pop
-    #     
-    #     
-    #     expected_value <- data[,input$columnpopindata] * divide_case_pop
-    #     
-    #     
-    #     # Add a Column to a Data Frame
-    #     data['expected_value'] <- expected_value
-    #     
-    #   }
-    #   
-    #   
-    #   data <- data %>%
-    #     filter(
-    #       data[,input$columndateindata] %in% input$time_point_filter
-    #     )
-    #   
-    #   # คำนวณค่า divisor ตามตัวเลือกของผู้ใช้และสำหรับแต่ละแถว
-    #   if (input$divide_by == "columnpopindata") {
-    #     data$adjusted_cases <- data[, input$columncasesindata] / data[, input$columnpopindata]
-    #     
-    #     print("===================== ตัวหาร columnpopindata =====================")
-    #     print(data[, input$columnpopindata])
-    #     
-    #     
-    #   } else if (input$divide_by == "expected_value") {
-    #     data$adjusted_cases <- data[, input$columncasesindata] / data[, 'expected_value']
-    #     
-    #     print("===================== ตัวหาร expected_value =====================")
-    #     print(data[, 'expected_value'])
-    #   }
-    #   
-    #   datafiltered <- data
-    #   ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareanamedata])
-    #   map@data <- datafiltered[ordercounties, ]
-    #   
-    #   
-    #   
-    #   
-    #   # print("================ datafiltered$adjusted_cases ==========================")
-    #   # print(datafiltered$adjusted_cases)
-    #   # 
-    #   # 
-    #   # 
-    #   # print("================ datafiltered$adjusted_cases ==========================")
-    #   # print(datafiltered$adjusted_cases)
-    #   
-    #   
-    #   # สร้างแผนที่ leaflet
-    #   l <- leaflet(map) %>% addTiles()
-    #   pal <- colorNumeric(palette = input$color, domain = map@data$adjusted_cases)
-    #   labels <- sprintf("<strong> %s </strong> <br/>  Adjusted Cases : %s ",
-    #                     map@data[, input$columnidareanamedata], 
-    #                     format(round(map@data$adjusted_cases, 5), scientific = FALSE)
-    #   ) %>%
-    #     lapply(htmltools::HTML)
-    #   
-    #   l %>%
-    #     addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
-    #     addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
-    #     addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
-    #     addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
-    #     addPolygons(
-    #       color = "grey", weight = 1,
-    #       fillColor = ~ pal(map@data$adjusted_cases), fillOpacity = 0.7,
-    #       highlightOptions = highlightOptions(weight = 4),
-    #       label = labels,
-    #       labelOptions = labelOptions(
-    #         style = list(
-    #           "font-weight" = "normal",
-    #           padding = "3px 8px"
-    #         ),
-    #         textsize = "16px", direction = "auto"
-    #       )
-    #     ) %>%
-    #     addLegend_decreasing(
-    #       pal = pal, values = ~map@data$adjusted_cases, opacity = 0.7,
-    #       title = "Adjusted Cases", position = "bottomright", 
-    #       decreasing = TRUE
-    #     ) %>%
-    #     addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"),
-    #                      position = c("topleft"),
-    #                      options = layersControlOptions(collapsed =  TRUE)
-    #     ) %>%
-    #     addFullscreenControl()
-    #   
-    #   }, error = function(e) {
-    #     rv$errorMessageMapDis_2 <- paste(
-    #       "An error occurred in Normalized Y Value Distribution Map.",
-    #       "<br>Please check the uploaded data again.",
-    #       "<br>Error Message: ", e$message,
-    #       sep = ""
-    #     )
-    #   })
-    #   
-    #   print("===================== rv$errorMessageMapDis_2 =====================")
-    #   print(rv$errorMessageMapDis_2)
-    #   
-    #   
-    # })
-    # 
     
     output$map_distribution_2 <- renderLeaflet({
       
@@ -4210,8 +3614,6 @@ shinyApp(
       }else if (input$Expected_Value_from_csv == "no" ){
         print("Check: ...this csv doesn't have expected value...")
         
-        # คิด (sum(case) / (pop))*population
-        # sum case กับ pop ทั้งหมด เอามาหารกัน แล้วคูณด้วย pop ของจังหวัด,ปี นั้นๆ
         sum_case <- sum(data[,input$columncasesindata])
         sum_pop <- sum(data[,input$columnpopindata])
         
@@ -4221,7 +3623,6 @@ shinyApp(
         expected_value <- data[,input$columnpopindata] * divide_case_pop
         
         
-        # Add a Column to a Data Frame
         data['expected_value'] <- expected_value
         
       }
@@ -4232,7 +3633,6 @@ shinyApp(
           data[,input$columndateindata] %in% input$time_point_filter
         )
       
-      # คำนวณค่า divisor ตามตัวเลือกของผู้ใช้และสำหรับแต่ละแถว
       if (input$divide_by == "columnpopindata") {
         data$adjusted_cases <- data[, input$columncasesindata] / data[, input$columnpopindata]
         
@@ -4248,30 +3648,22 @@ shinyApp(
       }
       
       datafiltered <- data
-      # Sample Data (Thailand) shapefile only has province NAME_1 (text), no numeric id that matches
-      # "province_id", so keep name-based matching for it (safe: Thai province names have no duplicates).
-      # For uploaded data, match by area id (unique code) to avoid problems with duplicate area names.
-      match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
-      ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[match_key_data]])
+      # [FIX] เหมือนด้านบน ใช้ resolve_match_key() แทนการ hardcode เช็คเฉพาะ dataset "thailand"
+      match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
+                                          input$columnidareaindata, input$columnidareanamedata)
+      # [FIX] trimws() ทั้งสองฝั่งกัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
+      ordercounties <- match(trimws(as.character(map[[input$columnidareainmap]])),
+                             trimws(as.character(datafiltered[[match_key_data]])))
       
-      # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
       temp_geom <- st_geometry(map)
       map <- datafiltered[ordercounties, ]
       st_geometry(map) <- temp_geom
       
       
-      
-      
       print("================ datafiltered$adjusted_cases ==========================")
       print(datafiltered$adjusted_cases)
       
       
-      
-      print("================ datafiltered$adjusted_cases ==========================")
-      print(datafiltered$adjusted_cases)
-      
-      
-      # สร้างแผนที่ leaflet
       l <- leaflet(map) %>% addTiles()
       pal <- colorNumeric(palette = input$color, domain = map$adjusted_cases)
       labels <- sprintf("<strong> %s </strong> <br/>  Adjusted Cases : %s ",
@@ -4314,19 +3706,17 @@ shinyApp(
     
     # ==================================== cluster_dec ver ลองplot ==================================== 
     
-    output$map_cluster <- #renderPrint({  
+    output$map_cluster <- 
       renderLeaflet({
         
         if (is.null(rv$datosOriginal) | is.null(rv$map))
           return(NULL)
         
         print("Plot: ...map cluster...")
-        #print(rv$data) # ได้แน้วออกเป็นlabelเรย
         
         data2 <- rv$data
         map <- rv$map
         
-        # plot
         data2 <- data2 %>%
           filter(
             data2[,input$columndateindata] %in% input$time_point_filter_cluster
@@ -4335,20 +3725,17 @@ shinyApp(
         
         
         datafiltered <- data2
-        # Sample Data (Thailand) shapefile only has province NAME_1 (text), no numeric id that matches
-        # "province_id", so keep name-based matching for it (safe: Thai province names have no duplicates).
-        # For uploaded data, match by area id (unique code) to avoid problems with duplicate area names.
-        match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
-        ordercounties <- match(map[[input$columnidareainmap]], datafiltered[[match_key_data]])
+        # [FIX] ใช้ resolve_match_key() แทนการ hardcode เช็คเฉพาะ dataset "thailand"
+        match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
+                                            input$columnidareaindata, input$columnidareanamedata)
+        # [FIX] trimws() ทั้งสองฝั่งกัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
+        ordercounties <- match(trimws(as.character(map[[input$columnidareainmap]])),
+                               trimws(as.character(datafiltered[[match_key_data]])))
         
-        # เก็บ geometry ไว้ก่อนเอา data มาเขียนทับ
         temp_geom <- st_geometry(map)
         map <- datafiltered[ordercounties, ]
         st_geometry(map) <- temp_geom
         
-        # print(map@data[, "label"])
-        
-        # Create leaflet c("red", "blue")
         l <- leaflet(map) %>% addTiles()
         pal <- colorFactor(palette = input$color_cluster, domain = map[["hotspot label"]],
                            levels = c("hotspot", "non-hotspot"))
@@ -4362,8 +3749,6 @@ shinyApp(
           addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
           addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
           addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
-          #addProviderTiles(providers$Stamen.Watercolor, group = "Stamen Watercolor") %>%
-          #addProviderTiles(providers$Stamen.Toner, group = "Stamen Toner") %>%
           
           addPolygons(
             color = "grey", weight = 1,
@@ -4383,109 +3768,17 @@ shinyApp(
             title = "hotspot label", position = "bottomright"
           )%>%
           addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
-                                          #"Stamen Watercolor", "Stamen Toner"
           ),
           position = c("topleft"),
           options = layersControlOptions(collapsed =  TRUE)
           )%>%
           addFullscreenControl()
         
-        #labels  =  c("hotspot", "non-hotspot")
-        
-        
       })
     
     
     
     # ==================================== risk_fac ==================================== 
-    
-    
-    # output$map_risk_fac <- renderLeaflet({
-    #   
-    #   if (is.null(rv$datosOriginal) | is.null(rv$map))
-    #     return(NULL)
-    #   
-    #   print("Plot: ...map risk factor...")
-    #   
-    #   map <- rv$map
-    #   
-    #   association_wsf_df <- rv$association_wsf_df 
-    #   
-    #   datafiltered <- association_wsf_df
-    #   ordercounties <- match(map@data[, input$columnidareainmap], datafiltered[, input$columnidareainmap])
-    #   map@data <- datafiltered[ordercounties, ]
-    #   
-    #   
-    #   if (input$risk_factor_filter == paste(input$columncov1indata,"_RR", sep="")){
-    #     sig_col <- map@data[, paste(input$columncov1indata,"_significance", sep="")]
-    #     
-    #   } else if (input$risk_factor_filter == paste(input$columncov2indata,"_RR", sep="")) {
-    #     sig_col <- map@data[, paste(input$columncov2indata,"_significance", sep="")]
-    #     
-    #   } else if (input$risk_factor_filter == paste(input$columncov3indata,"_RR", sep="")) {
-    #     sig_col <- map@data[, paste(input$columncov3indata,"_significance", sep="")]
-    #     
-    #   } else if (input$risk_factor_filter == paste(input$columncov4indata,"_RR", sep="")) {
-    #     sig_col <- map@data[, paste(input$columncov4indata,"_significance", sep="")]
-    #     
-    #   } else if (input$risk_factor_filter == paste(input$columncov5indata,"_RR", sep="")) {
-    #     sig_col <- map@data[, paste(input$columncov5indata,"_significance", sep="")]
-    #     
-    #   } else if (input$risk_factor_filter == paste(input$columncov6indata,"_RR", sep="")) {
-    #     sig_col <- map@data[, paste(input$columncov6indata,"_significance", sep="")]
-    #     
-    #   } else if (input$risk_factor_filter == paste(input$columncov7indata,"_RR",sep="")) {
-    #     sig_col <- map@data[, paste(input$columncov7indata,"_significance", sep="")]
-    #     
-    #   } 
-    #   
-    #   
-    #   # Create leaflet
-    #   l <- leaflet(map) %>% addTiles()
-    #   pal <- colorNumeric(palette = input$color_asso, domain = map@data[, input$risk_factor_filter])
-    #   labels <- sprintf("<strong> %s </strong> <br/>  %s : %s <br/> Significance: %s",
-    #                     map@data[, input$columnidareainmap] , input$risk_factor_filter, map@data[, input$risk_factor_filter] , sig_col #paste(input$columncov1indata,"_significance", sep="")
-    #   ) %>%
-    #     lapply(htmltools::HTML)
-    #   
-    #   l %>%
-    #     addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
-    #     addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
-    #     addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
-    #     addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
-    #     #addProviderTiles(providers$Stamen.Watercolor, group = "Stamen Watercolor") %>%
-    #     #addProviderTiles(providers$Stamen.Toner, group = "Stamen Toner") %>%
-    #     
-    #     addPolygons(
-    #       color = "grey", weight = 1,
-    #       fillColor = ~ pal(map@data[, input$risk_factor_filter]), fillOpacity = 0.7,
-    #       highlightOptions = highlightOptions(weight = 4),
-    #       label = labels,
-    #       labelOptions = labelOptions(
-    #         style = list(
-    #           "font-weight" = "normal",
-    #           padding = "3px 8px"
-    #         ),
-    #         textsize = "15px", direction = "auto"
-    #       )
-    #     ) %>%
-    #     addLegend_decreasing(
-    #       pal = pal, values = ~map@data[, input$risk_factor_filter], opacity = 0.7,
-    #       title = input$risk_factor_filter, position = "bottomright",
-    #       decreasing = TRUE
-    #     ) %>%
-    #     addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
-    #                                     #"Stamen Watercolor", "Stamen Toner"
-    #     ),
-    #     position = c("topleft"),
-    #     options = layersControlOptions(collapsed =  TRUE)
-    #     )%>%
-    #     addFullscreenControl()
-    #   
-    #   
-    # })
-    # 
-    
     
     output$model_type_badge <- renderUI({
       if (is.null(rv$has_time_dimension)) return(NULL)
@@ -4511,7 +3804,7 @@ shinyApp(
     
     
     # ====================================
-    # ตารางแบบเรียบง่าย ไม่มีแถบสี (เพื่อไม่ให้ตีความสัดส่วนผิด เพราะค่า % มักเล็กมาก)
+    # ตารางแบบเรียบง่าย ไม่มีแถบสี
     # ====================================
     render_bar_table <- function(df, pct_col, bold_col = NULL) {
       dt <- datatable(
@@ -4526,16 +3819,6 @@ shinyApp(
       }
       dt
     }
-    
-    # Cluster Detection Results section is disabled for now (UI hidden above) -
-    # commenting out this server output too so it doesn't run in the background.
-    # output$cluster_summary_table <- renderDT({
-    #   if (is.null(rv$data)) return(NULL)
-    #   df <- compute_cluster_summary(rv$data, input$columnidareaindata)
-    #   if (is.null(df)) return(NULL)
-    #   render_bar_table(df, "% of total", bold_col = "Metric")
-    # })
-    
     
     output$significance_summary_table <- renderDT({
       if (is.null(rv$association_wsf_df)) return(NULL)
@@ -4563,8 +3846,6 @@ shinyApp(
       
       df <- rv$overall_rr_df
       
-      # เลือกจำนวนทศนิยมแบบไดนามิกทั้งตาราง (ใช้ค่าเดียวกันทุกแถวเพื่อให้คอลัมน์ตรงกัน)
-      # เพิ่มทศนิยมขึ้นเรื่อยๆ จนกว่า lower/upper ของทุกแถวจะแยกแยะออกจากกันได้ (ไม่ round จนเท่ากันหมดเป็น 1.000)
       choose_decimals <- function(lower, upper, min_d = 3, max_d = 6) {
         d <- min_d
         while (d < max_d && any(round(lower, d) == round(upper, d))) d <- d + 1
@@ -4581,8 +3862,6 @@ shinyApp(
         `Interpretation` = df$Interpretation,
         check.names = FALSE
       )
-      # ใส่ tooltip อธิบายวิธีคิดคอลัมน์ Interpretation และเกณฑ์ significant ไว้ที่หัวตาราง
-      # (ต้องปิด sanitize เพื่อให้ HTML/tooltip แสดงผลได้)
       colnames(out)[5] <- paste0(
         'Significant <span class="mr-tip"><i class="fa fa-info mr-tip-icon"></i>',
         '<span class="mr-tip-text">Yes if the 95% CI excludes RR = 1 (i.e. RR &gt; 1 or RR &lt; 1 throughout the interval); ',
@@ -4609,8 +3888,6 @@ shinyApp(
     }, striped = TRUE, bordered = TRUE, spacing = "s")
     
     
-    # ชื่อแผนที่ของหน้า Cluster Detection - บอกว่าแผนที่นี้สื่อถึงอะไร (hotspot ของ case count คอลัมน์ไหน)
-    # จัดรูปแบบเวลาที่ใช้คำนวณโมเดลให้อ่านง่าย (วินาที -> "Xs" หรือ "X min Y sec")
     format_runtime <- function(secs) {
       if (is.null(secs) || is.na(secs)) return(NULL)
       if (secs < 60) {
@@ -4622,9 +3899,6 @@ shinyApp(
       }
     }
     
-    # การ์ดเดียวใช้ร่วมกันทั้ง 2 หน้า ให้หน้าตาเหมือนกันทุกจุด
-    # โชว์ทั้งเวลาของโมเดลนี้ และเวลารวมทั้งหมด (เพราะหน้าเว็บจะไม่อัปเดตจนกว่า Cluster+Association จะเสร็จทั้งคู่
-    # ผู้ใช้ที่จับเวลาเองตั้งแต่กดปุ่ม Next จะเห็นเป็นเวลารวมนี้ ไม่ใช่แค่เวลาของโมเดลเดียว)
     runtime_card_ui <- function(secs, total_secs = NULL) {
       req(secs)
       total_html <- if (!is.null(total_secs) && !is.na(total_secs)) {
@@ -4639,12 +3913,10 @@ shinyApp(
       )
     }
     
-    # Card แสดงเวลาที่ใช้คำนวณโมเดล Cluster Detection
     output$runtime_card_cluster <- renderUI({
       runtime_card_ui(rv$runtime_cluster, rv$runtime_total)
     })
     
-    # Card แสดงเวลาที่ใช้คำนวณโมเดล Association with Risk Factors
     output$runtime_card_asso <- renderUI({
       runtime_card_ui(rv$runtime_asso, rv$runtime_total)
     })
@@ -4662,7 +3934,6 @@ shinyApp(
     })
     
     
-    # ชื่อแผนที่ของหน้า Association with Risk Factors - บอกว่าแผนที่นี้สื่อถึงอะไร (RR ของ risk factor ไหน)
     output$map_risk_fac_title <- renderUI({
       req(input$risk_factor_filter)
       HTML(paste0(
@@ -4691,10 +3962,14 @@ shinyApp(
       map <- merge(map, association_wsf_df[, cols_to_join, drop = FALSE],
                    by = area_col, all.x = TRUE)
       
-      # เพิ่มชื่อพื้นที่ (area name) เข้ามาด้วย เพราะ map เดิมมีแต่รหัสพื้นที่ (area id) จาก shapefile เท่านั้น
-      match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
+      # [FIX] ใช้ resolve_match_key() แทนการ hardcode เช็คเฉพาะ dataset "thailand"
+      match_key_data <- resolve_match_key(rv$map, rv$data, input$columnidareainmap,
+                                          input$columnidareaindata, input$columnidareanamedata)
       name_lookup <- unique(rv$data[, c(match_key_data, input$columnidareanamedata)])
       names(name_lookup) <- c(area_col, "area_display_name")
+      # [FIX] trimws() ทั้งสองฝั่งก่อน merge กัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
+      name_lookup[[area_col]] <- trimws(as.character(name_lookup[[area_col]]))
+      map[[area_col]] <- trimws(as.character(map[[area_col]]))
       map <- merge(map, name_lookup, by = area_col, all.x = TRUE)
       
       sig_col <- NULL
@@ -4721,7 +3996,6 @@ shinyApp(
         sig_col <- map[[paste(input$columncov7indata,"_significance", sep="")]]
       } 
       
-      # Create leaflet
       l <- leaflet(map) %>% addTiles()
       pal <- colorNumeric(palette = input$color_asso, domain = map[[input$risk_factor_filter]])
       labels <- sprintf("<strong> %s </strong> <br/>  %s : %s <br/> Significance: %s",
@@ -4743,10 +4017,10 @@ shinyApp(
           label = labels,
           labelOptions = labelOptions(
             style = list(
-              "font-weight" = "normal", # ข้อความจะเป็นตัวหนา
-              padding = "5px 10px" # ขนาด padding ใหญ่ขึ้น
+              "font-weight" = "normal",
+              padding = "5px 10px"
             ),
-            textsize = "16px", # ขนาดตัวอักษรใหญ่ขึ้น
+            textsize = "16px",
             direction = "auto"
           )
         ) %>%
@@ -4767,13 +4041,11 @@ shinyApp(
     # ==================================== ปุุ่ม  downloadData ==================================== 
     
     dataresult_cluster <- reactive({
-      # data <- rv$data
       
       if(input$Expected_Value_from_csv == "yes" ){
         if(input$columnexpvalueindata != "" ){
           print("download data: ...this csv have expected value...")
           
-          # Remove  Columns in List
           data <- rv$data[,!names(rv$data) %in% c("province_year", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id","expected_value")]
           
           
@@ -4782,7 +4054,6 @@ shinyApp(
       }else if (input$Expected_Value_from_csv == "no" ){
         print("download data: ...this csv doesn't have expected value...")
         
-        # Remove  Columns in List
         data <- rv$data[,!names(rv$data) %in% c("province_year", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id")]
         
         
@@ -4792,18 +4063,19 @@ shinyApp(
     
     
     
-    # ปุ่ม Download sample data (.csv) - โหลดไฟล์ตัวอย่างดิบ (ไม่ผ่านโมเดล) ตาม dataset ที่เลือกในการ์ด Use Sample Data
     output$download_sample_csv <- downloadHandler(
       filename = function() {
         switch(input$sample_dataset_choice,
                "pollution"      = "pollution_health_data.csv",
                "pollution_2007" = "pollution_health_data_2007.csv",
+               "suicide_attempt" = "suicide_attempt_model_with_risk_factors.csv",
                "suicide_th_data_sample_have_e_value.csv")
       },
       content = function(file) {
         src <- switch(input$sample_dataset_choice,
                       "pollution"      = "sample data/pollution_health_data.csv",
                       "pollution_2007" = "sample data/pollution_health_data_2007.csv",
+                      "suicide_attempt" = "sample data/suicide_attempt_model_with_risk_factors.csv",
                       "sample data/suicide_th_data_sample_have_e_value.csv")
         file.copy(src, file)
       }
@@ -4842,14 +4114,16 @@ shinyApp(
       df_wide <- tryCatch(sf::st_drop_geometry(rv$association_wsf_df),
                           error = function(e) as.data.frame(rv$association_wsf_df))
       
-      # เพิ่มชื่อพื้นที่ (area name) เข้ามาด้วย ไม่ใช่แค่รหัสพื้นที่ (area id) เหมือนที่แก้ในแผนที่ด้านบน
-      match_key_data <- if (input$data_source_type == "sample" && identical(input$sample_dataset_choice, "thailand")) input$columnidareanamedata else input$columnidareaindata
+      # [FIX] ใช้ resolve_match_key() แทนการ hardcode เช็คเฉพาะ dataset "thailand"
+      match_key_data <- resolve_match_key(rv$map, rv$data, input$columnidareainmap,
+                                          input$columnidareaindata, input$columnidareanamedata)
       name_lookup <- unique(rv$data[, c(match_key_data, input$columnidareanamedata)])
       names(name_lookup) <- c(area_col, "area_name")
+      # [FIX] trimws() ทั้งสองฝั่งก่อน merge กัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
+      name_lookup[[area_col]] <- trimws(as.character(name_lookup[[area_col]]))
+      df_wide[[area_col]] <- trimws(as.character(df_wide[[area_col]]))
       df_wide <- merge(df_wide, name_lookup, by = area_col, all.x = TRUE)
       
-      # จัดเป็น long/tidy format: 1 แถวต่อ (พื้นที่ x risk factor) แทนที่จะเป็น 1 แถวต่อพื้นที่ 
-      # แล้วมีคอลัมน์เพิ่มไปเรื่อยๆ ตามจำนวน risk factor ที่เลือก (คอลัมน์คงที่เสมอไม่ว่าจะเลือกกี่ตัวแปร)
       long_list <- lapply(active_covs, function(cov_name) {
         out <- data.frame(
           area_id     = df_wide[[area_col]],
@@ -4882,12 +4156,9 @@ shinyApp(
     
     # ---------------------------- portable App ------------------------------ 
     
-    
-    
     # session$onSessionEnded(function() {
     #   stopApp()
     # })
-    
     
     # ------------------------------------------------------------------------
     
