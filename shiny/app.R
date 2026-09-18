@@ -1942,7 +1942,7 @@ shinyApp(
         # Sample Data: Thailand Suicide Attempt - uses same gadm40_THA_1 shapefile, matched by province name
         updateSelectInput(session, "columnidareaindata", choices = xd, selected = "province")
         updateSelectInput(session, "columnidareanamedata", choices = xd, selected = "province")
-        updateSelectInput(session, "columndateindata", choices = xd, selected = "year_index")
+        updateSelectInput(session, "columndateindata", choices = xd, selected = "year")
         updateSelectInput(session, "columncasesindata", choices = xd, selected = "observed")
         updateSelectInput(session, "columnpopindata", choices = xd, selected = "E")
         updateSelectInput(session, "columnexpvalueindata", choices = c("", xd), selected = "")
