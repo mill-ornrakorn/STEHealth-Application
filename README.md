@@ -57,15 +57,14 @@ STEHealth Application is fully deployed on the cloud via **Hugging Face Spaces**
 👉 **[Launch STEHealth Application Here](https://mmillorkrn-stehealth-application.hf.space)**
 
 
-
 ## Deployment Architecture 🚀
 
-Deploying STEHealth to the cloud involved addressing complex dependency challenges between modern R spatial packages and the `R-INLA` computational engine. We achieved a high-performance, stable cloud deployment on **Hugging Face Spaces** using the following updated strategy:
+Deploying STEHealth to the cloud involved addressing dependency challenges between modern R spatial packages and the `R-INLA` computational engine. We achieved a stable, reproducible cloud deployment on **Hugging Face Spaces** using the following strategy:
 
-*   **Modern Docker Infrastructure:** We utilized the latest `rocker/shiny` base image, transitioning to **R 4.5+** and **Ubuntu 24.04 (Noble)**. This ensures access to the latest security patches and high-performance system libraries.
-*   **Next-Generation Spatial Stack:** We migrated from legacy libraries (like `rgdal`) to the modern **`sf` (Simple Features)** and **`spdep`** stack. By leveraging dynamic package management instead of time-locked snapshots, the application stays compatible with current geospatial standards.
-*   **Optimized Model Integration:** To maintain peak analytical accuracy, we integrate the **`R-INLA` Testing Build**, specifically configured to remain compatible with advanced R environments. This bypasses traditional `GLIBC` and shared library conflicts (e.g., `libproj`) common in complex epidemiological modeling.
-*   **Containerized Portability:** The entire environment is encapsulated in a custom Docker container, exposing **Port 7860** for seamless integration with Hugging Face's infrastructure, ensuring that the local development environment perfectly matches the cloud production state.
+*   **Version-Pinned Docker Infrastructure:** The base image is pinned to `rocker/shiny:4.5.1` (**R 4.5.1** on **Ubuntu 24.04 Noble**) instead of the `latest` tag. This keeps the R version identical to the local development environment and prevents builds from breaking when a new R release changes the base image.
+*   **Modern Spatial Stack:** We migrated from legacy libraries (like `rgdal`) to the **`sf` (Simple Features)** and **`spdep`** stack, with the required system libraries (GDAL, GEOS, PROJ, udunits) installed via `apt`. Because the base image is pinned, CRAN packages are installed from the matching date-based binary snapshot, so dependency versions stay consistent between builds.
+*   **Bundled R-INLA Package:** The [`R-INLA`](https://inla.r-inla-download.org/R/stable/src/contrib/) source package (**version 26.08.07**) is stored directly in the repository and installed from the local file by `install_inla.R`, which also installs its CRAN dependencies. This avoids reliance on the external INLA download server during the build, which began blocking automated (non-browser) clients. To update INLA, replace the tarball in the repository with a newer one.
+*   **Containerized Portability:** The entire environment is encapsulated in a custom Docker container, exposing **Port 7860** for integration with Hugging Face's infrastructure, so the local development environment matches the cloud production state.
 
 
 ## Sample Data 📁

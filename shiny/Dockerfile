@@ -1,5 +1,5 @@
-# ใช้ image ล่าสุดของ Shiny (Ubuntu 24.04 / R 4.4+)
-FROM rocker/shiny:latest
+# ใช้ Shiny image ที่ pin R 4.5.1 เพื่อให้ INLA ติดตั้งได้เสถียร
+FROM rocker/shiny:4.5.1
 
 # ติดตั้ง System Dependencies ที่จำเป็น
 RUN apt-get update && apt-get install -y \
@@ -17,9 +17,11 @@ RUN apt-get update && apt-get install -y \
 RUN R -e "install.packages('remotes'); \
     install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyBS', 'leaflet', 'dplyr', 'ggplot2', 'RColorBrewer', 'shinyWidgets', 'shinydashboardPlus', 'sf', 'spdep', 'leaflet.extras', 'bsplus', 'markdown', 'readxl', 'plotly', 'DT'))"
 
-# ติดตั้ง INLA (อัปเดตเป็น testing repo สำหรับ R เวอร์ชันใหม่ และเขียนตัวดัก Error)
-RUN R -e "install.packages('INLA', repos=c(INLA='https://inla.r-inla-download.org/R/testing', getOption('repos')), dependencies=TRUE); \
-    if (!requireNamespace('INLA', quietly = TRUE)) stop('❌ Failed to install INLA! Build stopped.')"
+
+# ติดตั้ง INLA จากไฟล์ใน repo (server ของ INLA บล็อก install.packages จาก build server)
+COPY INLA_*.tar* /tmp/
+COPY install_inla.R /tmp/install_inla.R
+RUN Rscript /tmp/install_inla.R
 
 RUN chmod -R 755 /usr/local/lib/R/site-library/INLA || true
 

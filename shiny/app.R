@@ -415,12 +415,12 @@ body <- dashboardBody(
                                           selectizeInput("sample_dataset_choice",
                                                          label = "Choose a sample dataset:",
                                                          choices = c(
-                                                           "Thailand Suicide Mortality 2011–2021 (77 provinces)" = "thailand",
+                                                           # "Thailand Suicide Mortality 2011–2021 (77 provinces)" = "thailand",
                                                            "Thailand Suicide Attempt (77 provinces)" = "suicide_attempt",
                                                            "Pollution & Health Data, 2007–2011 (CARBayesST)" = "pollution",
                                                            "Pollution & Health Data, 2007 Only (CARBayesST)" = "pollution_2007"
                                                          ),
-                                                         selected = "thailand", width = "100%",
+                                                         selected = "suicide_attempt", width = "100%",
                                                          # หมายเหตุ: Shiny เมาท์ dropdown ของ selectize ไว้ที่ <body> ไม่ใช่ในตัว
                                                          # .selectize-control เอง ทำให้ CSS ที่ scope ผ่าน DOM nesting ใช้ไม่ได้
                                                          # -> ใส่ inline style ลงใน HTML ที่ return จาก render function โดยตรงแทน
@@ -1733,27 +1733,46 @@ shinyApp(
     # ========================= Modal สำหรับตัวอย่างแปลผล ================================ 
     # ==================================== Data Dictionary (Sample Data) ==================================== 
     
+    # dict_thailand <- data.frame(
+    #   Column      = c("province_id", "province", "year", "suicide", "population",
+    #                   "expected.value", "debt", "income", "poverty", "expenditure",
+    #                   "homicide.crime", "property.crime", "shocking.crime"),
+    #   Role        = c("area id", "area name", "time point", "cases", "population",
+    #                   "expected value", "covariate", "covariate", "covariate", "covariate",
+    #                   "covariate", "covariate", "covariate"),
+    #   Description = c(
+    #     "Unique code identifying each of the 77 provinces.",
+    #     "Province name (one of Thailand's 77 provinces), used as the display label on the maps.",
+    #     "Year of observation.",
+    #     "Number of suicide deaths recorded in the province and year, sourced from the Center for Suicide Prevention, Khon Kaen Rajanagarindra Psychiatric Hospital.",
+    #     "Mid-year population of the province in that year, sourced from the National Statistics Office of Thailand.",
+    #     "Pre-calculated expected number of suicide cases (E) for the province and year, used as the baseline in the Poisson model (cases ~ Poisson(E x relative risk)).",
+    #     "Average amount of debt per household in the province, sourced from the National Statistics Office of Thailand.",
+    #     "Average monthly income per household in the province, sourced from the National Statistics Office of Thailand.",
+    #     "Proportion of poverty (based on household expense) in the province, sourced from the National Statistics Office of Thailand.",
+    #     "Average monthly expenses per household in the province, sourced from the National Statistics Office of Thailand.",
+    #     "Reported cases/arrests for homicide, bodily harm and sexual assault offences in the province, sourced from the National Statistics Office of Thailand.",
+    #     "Reported cases/arrests for theft and robbery offences in the province, sourced from the National Statistics Office of Thailand.",
+    #     "Reported cases/arrests for violent crime offences in the province, sourced from the National Statistics Office of Thailand."
+    #   ),
+    #   stringsAsFactors = FALSE
+    # )
+    
+    
     dict_thailand <- data.frame(
-      Column      = c("province_id", "province", "year", "suicide", "population",
-                      "expected.value", "debt", "income", "poverty", "expenditure",
-                      "homicide.crime", "property.crime", "shocking.crime"),
-      Role        = c("area id", "area name", "time point", "cases", "population",
-                      "expected value", "covariate", "covariate", "covariate", "covariate",
+      Column      = c("province", "province_id", "year", "observed", "E", 
+                      "lai_hv", "lai_lv", "ndvi_mean_scaled"),
+      Role        = c("area id / area name", "area id", "time point", "cases", "population",
                       "covariate", "covariate", "covariate"),
       Description = c(
-        "Unique code identifying each of the 77 provinces.",
-        "Province name (one of Thailand's 77 provinces), used as the display label on the maps.",
-        "Year of observation.",
-        "Number of suicide deaths recorded in the province and year, sourced from the Center for Suicide Prevention, Khon Kaen Rajanagarindra Psychiatric Hospital.",
-        "Mid-year population of the province in that year, sourced from the National Statistics Office of Thailand.",
-        "Pre-calculated expected number of suicide cases (E) for the province and year, used as the baseline in the Poisson model (cases ~ Poisson(E x relative risk)).",
-        "Average amount of debt per household in the province, sourced from the National Statistics Office of Thailand.",
-        "Average monthly income per household in the province, sourced from the National Statistics Office of Thailand.",
-        "Proportion of poverty (based on household expense) in the province, sourced from the National Statistics Office of Thailand.",
-        "Average monthly expenses per household in the province, sourced from the National Statistics Office of Thailand.",
-        "Reported cases/arrests for homicide, bodily harm and sexual assault offences in the province, sourced from the National Statistics Office of Thailand.",
-        "Reported cases/arrests for theft and robbery offences in the province, sourced from the National Statistics Office of Thailand.",
-        "Reported cases/arrests for violent crime offences in the province, sourced from the National Statistics Office of Thailand."
+        "Province name (one of Thailand's 77 provinces), used to match the shapefile and as the display label on the maps.",
+        "Unique numerical code identifying each of the 77 provinces.",
+        "Year of observation (2024–2025).",
+        "Number of suicide attempt cases recorded in the province and year.",
+        "Population of the province in that year.",
+        "Leaf Area Index for high vegetation (LAI-HV), representing the greenness/density of tall vegetation (e.g., trees, forests).",
+        "Leaf Area Index for low vegetation (LAI-LV), representing the greenness/density of short vegetation (e.g., crops, grass).",
+        "Standardized mean Normalized Difference Vegetation Index (NDVI), measuring overall vegetation greenness and density."
       ),
       stringsAsFactors = FALSE
     )
@@ -1799,9 +1818,14 @@ shinyApp(
                         </div>
                        '),
           tabsetPanel(
-            tabPanel("Thailand Suicide Mortality 2011–2021",
+            # tabPanel("Thailand Suicide Mortality 2011–2021",
+            #          br(),
+            #          HTML("<p>77 provinces x 11 years (2011-2021).</p>"),
+            #          DTOutput("dict_table_thailand")
+            # ),
+            tabPanel("Thailand Suicide Attempt 2024-2025 (77 provinces)",
                      br(),
-                     HTML("<p>77 provinces x 11 years (2011-2021).</p>"),
+                     HTML("<p>77 provinces × 2 years (2024-2025).</p>"),
                      DTOutput("dict_table_thailand")
             ),
             tabPanel("Pollution & Health Data (CARBayesST)",
@@ -2044,7 +2068,7 @@ shinyApp(
                      ),
                      "suicide_attempt" = list(
                        badge = "Spatial-Temporal", cls = "badge-st",
-                       text = "77 provinces, spatio-temporal. Suicide attempt data with risk factors (employee injury count, drug-related cases)."
+                       text = "77 provinces x 2 years (2024–2025). Suicide attempt data with environmental/vegetation risk factors (LAI-HV, LAI-LV, NDVI)."
                      ),
                      "pollution" = list(
                        badge = "Spatial-Temporal", cls = "badge-st",
