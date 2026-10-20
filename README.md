@@ -5,7 +5,7 @@
 This application is part of **```Spatiotemporal analysis with application development for epidemiological study of suicide mortality: From global perspectives to a case study in Thailand 💀📝```** senior project of the Princess Srisavangavadhana Faculty of Medicine, [Chulabhorn Royal Academy](https://www.cra.ac.th/en/home) and the Department of Computer Engineering, [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/).
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/Poster_Project_No74_resize.png?raw=true" alt= "Poster_Project" height="500">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/Poster_Project_No74_resize.png?raw=true" alt= "Poster_Project" height="600">
 </p>
 
 
@@ -19,7 +19,7 @@ This application is part of **```Spatiotemporal analysis with application develo
 
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/04_Cluster Detection tab.png?raw=true" alt= “STEHealth_ClusterDetection” height="300">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/04_Cluster Detection tab.png?raw=true" alt= “STEHealth_ClusterDetection” height="400">
 </br>
 Cluster detection
 
@@ -27,7 +27,7 @@ Cluster detection
 
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/05_Association with Risk Factors tab.png?raw=true" alt= “STEHealth_AssociationwithRiskFactors” height="300" > 
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/05_Association with Risk Factors tab.png?raw=true" alt= “STEHealth_AssociationwithRiskFactors” height="550" > 
 </br>
 Association with risk factors
 </p>
