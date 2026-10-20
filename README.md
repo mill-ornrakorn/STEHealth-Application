@@ -5,7 +5,7 @@
 This application is part of **```Spatiotemporal analysis with application development for epidemiological study of suicide mortality: From global perspectives to a case study in Thailand 💀📝```** senior project of the Princess Srisavangavadhana Faculty of Medicine, [Chulabhorn Royal Academy](https://www.cra.ac.th/en/home) and the Department of Computer Engineering, [King Mongkut's University of Technology Thonburi](https://www.kmutt.ac.th/en/).
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/Poster_Project_No74_resize.png?raw=true" alt= "Poster_Project" height="600">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/Poster_Project_No74_resize.png?raw=true" alt= "Poster_Project" height="500">
 </p>
 
 
@@ -19,7 +19,7 @@ This application is part of **```Spatiotemporal analysis with application develo
 
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_gif_Cluster%20detection1-2.gif?raw=true" alt= “STEHealth_Manual” height="400">
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/04_Cluster Detection tab.png?raw=true" alt= “STEHealth_ClusterDetection” height="300">
 </br>
 Cluster detection
 
@@ -27,7 +27,7 @@ Cluster detection
 
 
 <p align="center">
-<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_gif_Association%20with%20risk%20factors1-2.gif?raw=true" alt= “STEHealth_Manual” height="400" > 
+<img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/05_Association with Risk Factors tab.png?raw=true" alt= “STEHealth_AssociationwithRiskFactors” height="300" > 
 </br>
 Association with risk factors
 </p>
@@ -70,8 +70,8 @@ Deploying STEHealth to the cloud involved addressing dependency challenges betwe
 ## Sample Data 📁
 The application includes **three ready-to-use sample datasets**, selectable directly in the app via the **Use Sample Data** dropdown on the Upload Data page — no need to download or upload anything to try the application. Each is labelled with a badge showing whether it supports **Spatial-Temporal** or **Spatial** models, and comes with a **View Data Dictionary** button describing its columns. The raw files are also available for download, both via the **Download sample data (.csv)** button in-app and here on [GitHub](https://github.com/mill-ornrakorn/STEHealth-Application/tree/main/shiny/sample%20data):
 
-### 1. Thailand Suicide Mortality 2011-2021 (used for case study in this project)
-Consists of a Thailand shapefile and a csv file (Suicide Mortality and Risk Factors in Thailand from 2011 to 2021).
+### 1. Thailand Suicide Attempt 2024-2025
+Consists of a Thailand shapefile and a csv file (Suicide attempt data with environmental/vegetation risk factors (LAI-HV, LAI-LV, NDVI)).
 
 ### 2. Pollution & Health Data 2007-2011 (from the CARBayesST R package)
 Covers the Greater Glasgow and Clyde health board in Scotland (271 Intermediate Zones). Contains `pm10`, `jsa` (Job Seekers Allowance proportion), and `price` (average property price) as covariates, with respiratory hospital admissions as the outcome. Supports **Spatial-Temporal** models (2007-2011).
@@ -80,15 +80,14 @@ Covers the Greater Glasgow and Clyde health board in Scotland (271 Intermediate 
 The same dataset and shapefile as above, filtered to a single year (2007). Since it has no time dimension, this dataset is intended for testing the **Spatial** model.
 
 ## Manual📗
-🚧 Note: The manual is currently under revision to reflect the latest updates and the new Cloud Deployment on Hugging Face Spaces.
 
-This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://canva.link/yk8vjfdonxnxu0o)
+This manual includes step-by-step instructions on how to use each page of the application. [Click here to read more](https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/shiny/www/STEHealth_Application_Manual.pdf)
 
-<p align="center">
+<!-- <p align="center">
   <a href="https://canva.link/yk8vjfdonxnxu0o" target="_blank">
     <img src="https://github.com/mill-ornrakorn/STEHealth-Application/blob/main/pic%20for%20readme/STEHealth_Application_Manual_cover.png?raw=true" alt="STEHealth_Manual" height="600" style="cursor: pointer;">
   </a>
-</p>
+</p> -->
 
 
 ### Deployment & Infrastructure
@@ -115,14 +114,14 @@ This manual includes step-by-step instructions on how to use each page of the ap
 | [RColorBrewer](https://cran.r-project.org/web/packages/RColorBrewer/index.html) | Provides color schemes for maps and other graphics. |
 | [sf](https://cran.r-project.org/web/packages/sf/index.html) | Simple Features: modern support for spatial vector data, used for shapefile handling (replaces the legacy `rgdal`). |
 | [spdep](https://cran.r-project.org/web/packages/spdep/index.html)| Spatial Dependence: Weighting Schemes, Statistics. |
-| [R-INLA](https://www.r-inla.org/download-install) | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations. The app uses the **Testing Build**, kept compatible with the modern R/Ubuntu environment described above (see Deployment Architecture). |
+| [R-INLA](https://www.r-inla.org/download-install) | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations. |
 | [readxl](https://cran.r-project.org/web/packages/readxl/index.html) | Reads Excel (.xls/.xlsx) files, used for the Excel upload option on the Upload Data page. |
 | [DT](https://cran.r-project.org/web/packages/DT/index.html) | Renders interactive data tables (e.g. the area-level significance table on the Association with Risk Factors tab). |
 | [capture](https://github.com/dreamRs/capture) | Add a button in Shiny application to take a screenshot of a specified element. |
 
 
 ### 🩹Limitations
-- **Auto-Sleep Mode:** The application may enter sleep mode after 48 hours of inactivity to save resources. It will automatically wake up and restart upon your next visit, which might take 1-2 minutes to load.
+- **Auto-Sleep Mode:** The application may enter sleep mode after 48 hours of inactivity to save resources. It will automatically wake up and restart upon your next visit, which might take 30 to 60 seconds to load.
 - The application supports only English.
 - Recommended screen size is at least 1440x900 pixels for the best viewing experience on desktop browsers.
 
