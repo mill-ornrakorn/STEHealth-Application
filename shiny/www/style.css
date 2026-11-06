@@ -1412,3 +1412,18 @@ span.purple {
       .nav-pills > li.nav-header:first-child {
         margin-top: 0 !important;
       }
+
+
+/* ===== บังคับเปลี่ยนสี Dropdown (Selectize) แบบฝังตรงใน R ===== */
+.selectize-dropdown .option.active,
+.selectize-dropdown .active {
+  background-color: #735DFB !important;
+  color: #ffffff !important;
+}
+
+.selectize-dropdown .option.selected,
+.selectize-dropdown .selected {
+  background-color: #e9e7e7 !important;
+  color: #050505 !important;
+}
+

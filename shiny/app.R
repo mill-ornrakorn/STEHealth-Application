@@ -114,7 +114,7 @@ body <- dashboardBody(
   tags$head(
     tags$meta(charset="utf-8"),
     tags$link(rel="stylesheet" ,href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"), # UNICONS
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css?v=2.4"),   # import css file
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css?v=2.4.1"),   # import css file
     tags$script(src="js/index.js"), # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่นม ๆ
     # สคริปต์สร้าง Tooltip ด้วยตัวเองเมื่อเอาเมาส์ชี้เมนูสีเทา
     tags$script(HTML("
@@ -320,12 +320,11 @@ body <- dashboardBody(
                                           selectizeInput("sample_dataset_choice",
                                                          label = "Choose a sample dataset:",
                                                          choices = c(
-                                                           # "Thailand Suicide Mortality 2011–2021 (77 provinces)" = "thailand",
-                                                           "Thailand Suicide Attempt (77 provinces)" = "suicide_attempt",
                                                            "Pollution & Health Data, 2007–2011 (CARBayesST)" = "pollution",
-                                                           "Pollution & Health Data, 2007 Only (CARBayesST)" = "pollution_2007"
+                                                           "Pollution & Health Data, 2007 Only (CARBayesST)" = "pollution_2007",
+                                                           "Thailand Suicide Attempt (77 provinces)" = "suicide_attempt"
                                                          ),
-                                                         selected = "suicide_attempt", width = "100%",
+                                                         selected = "pollution", width = "100%",
                                                          # หมายเหตุ: Shiny เมาท์ dropdown ของ selectize ไว้ที่ <body> ไม่ใช่ในตัว
                                                          # .selectize-control เอง ทำให้ CSS ที่ scope ผ่าน DOM nesting ใช้ไม่ได้
                                                          # -> ใส่ inline style ลงใน HTML ที่ return จาก render function โดยตรงแทน
