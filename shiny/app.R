@@ -103,6 +103,23 @@ body <- dashboardBody(
         pointer-events: none !important;
       }
       
+      /* ===== ย้าย Progress Bar และ Notification ไปกลางจอ ===== */
+      #shiny-notification-panel {
+        top: 50% !important;
+        left: 50% !important;
+        bottom: auto !important;
+        right: auto !important;
+        transform: translate(-50%, -50%) !important;
+        width: 350px !important;
+        z-index: 999999 !important;
+      }
+      
+      .shiny-notification {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+        border-radius: 8px !important;
+        padding: 15px !important;
+      }
+      
       /* ===== Tooltip แบบใหม่ที่แยกเฉพาะ ไม่ชนกับ .info-tooltip-container เดิม ===== */
       .mr-tip {
         position: relative;
@@ -523,15 +540,17 @@ body <- dashboardBody(
                                    ), # จบ div(position: relative)
                                    
                                    hr(),
-                                   HTML("<strong><font color= \"#735DFB\">Upload 4 shapefile components at once:</font></strong> shp, dbf, shx and prj."),
-                                   fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj"), multiple=TRUE),
+                                   HTML("<strong><font color= \"#735DFB\">Upload the shapefile:</font></strong> select the <strong>.shp, .dbf, .shx and .prj</strong> files together, <strong>or a single .zip</strong> that contains them (GeoJSON / GeoPackage also work)."),
+                                   fileInput("filemap", "", accept=c('.shp','.dbf','.sbn','.sbx','.shx',".prj",".cpg",".zip",".geojson",".json",".gpkg"), multiple=TRUE),
                                    
-                                   helpText("Select the column that matches the area id in the CSV file. This can be a unique code (e.g. IZ) OR a name column (e.g. province name) - as long as its values are unique and are spelled exactly the same way as in the CSV file's area id column."),
+                                   helpText("Pick the shapefile column whose values match your CSV file. It can match EITHER the CSV's area id column (e.g. Location_ID) OR its area name column (e.g. Location_name) - you do not need both. The app checks this for you and picks the best column automatically; you can change it if needed."),
                                    fluidRow(
                                      column(12, selectInput("columnidareainmap",   
-                                                            label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">This column is used to match each shapefile polygon to a row in the CSV. It must contain a value that uniquely identifies each area, matched against the "area id" column selected on the data page. This can be a code (e.g. "IZ") or a name (e.g. a province name) - either works, as long as the values are unique here and are spelled identically (same capitalisation, no extra spaces) to the values in the CSV\'s "area id" column.</span></div>'),   
+                                                            label = HTML('Shapefile column to match with CSV <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">Choose the shapefile column that holds the same values as ONE of the CSV columns you select on the data page (area id OR area name). Matching ignores capital letters, extra spaces and leading zeros (e.g. "01" = "1"). The status box below shows how many areas were matched.</span></div>'),   
                                                             choices = c(""), selected = "")
                                      )),
+                                   
+                                   uiOutput("area_match_status"),
                                    
                                    HTML("</br>"),
                                    
@@ -598,12 +617,12 @@ body <- dashboardBody(
                                    HTML("CSV or Excel (.xlsx/.xls) file needs to have columns:<strong><font color= \"#735DFB\"> area id, area name, time point, cases, population</font></strong>"),
                                    fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv", ".xlsx", ".xls")),
                                    
-                                   helpText("Select columns:"),
+                                   helpText("Select columns: your column headers do NOT need to be renamed - just pick which column in your file plays each role below. The app tries to pre-select them from the header names."),
                                    
                                    # area id (unique code, e.g. IZ) and area name (display label) on the same row
                                    fluidRow(
                                      column(6, selectInput("columnidareaindata", 
-                                                           label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">A column that uniquely identifies each area - a code (e.g. "IZ") or a name column, as long as its values are unique here and are spelled exactly the same way as the shapefile\'s "area id" column ("area id" selected on the Upload Shapefile page). This is used to match rows to the shapefile and to run the statistical model.</span></div>'), 
+                                                           label = HTML('area id <div class="info-tooltip-container"><i class="fa fa-info" style="cursor:help;"></i><span class="tooltip-text">A column that uniquely identifies each area (e.g. Location_ID or a code like "IZ"). Either this column OR the area name column below can be used to match the shapefile - the app checks both and uses whichever matches the "Shapefile column to match with CSV" selected on the Upload Shapefile step.</span></div>'), 
                                                            choices = c(""), selected = "")
                                      ),
                                      column(6, selectInput("columnidareanamedata", 
@@ -628,6 +647,8 @@ body <- dashboardBody(
                                                            choices = c(""), selected = "")
                                      )
                                    ),
+                                   
+                                   uiOutput("area_match_status_csv"),
                                    
                                    # ===================== 3.1 Select Expected Value =====================
                                    HTML("<h4><strong>3.1 Expected Value</strong> <font color= \"#03989e\"> (Optional) </font></h4>"),
@@ -736,8 +757,8 @@ body <- dashboardBody(
                                 div(class = "info-note",
                                     HTML("<i class='uil uil-exclamation-triangle'></i>
                                     <strong>Important:</strong> 
-                                    The shapefile and CSV file must use <strong>matching area names</strong>. 
-                                    Mismatched names will cause errors in visualization and analysis.")
+                                    The shapefile and CSV file must share the <strong>same area codes or names</strong> in at least one column each (you do not need to rename any column headers - just select the matching columns). 
+                                    The app shows a match status under the shapefile selector; mismatched areas will cause errors in visualization and analysis.")
                                 )
                          )
                 ),
@@ -1243,24 +1264,166 @@ shinyApp(
     # ตอนนี้จะตรวจสอบจริงว่า matching ด้วย id หรือ name แล้วได้จำนวนพื้นที่ที่ match กันมากกว่ากัน
     # แล้วใช้ตัวนั้น ไม่ว่าจะเป็น sample data หรือไฟล์ที่ผู้ใช้อัปโหลดเอง
     # ====================================
+    # ====================================
+    # [NEW] norm_key(): ทำให้ค่า key ของพื้นที่อยู่ในรูปมาตรฐานก่อนเทียบกัน
+    # - ตัดช่องว่างหน้า/หลัง/ซ้ำ และช่องว่างที่มองไม่เห็น (nbsp, zero-width)
+    # - ไม่สนตัวพิมพ์เล็ก/ใหญ่
+    # - ถ้าเป็นตัวเลข จะเทียบเป็นตัวเลข (เช่น "01" = "1" = 1.0) ซึ่งเป็นปัญหาที่เจอบ่อยเมื่อเปิดรหัสพื้นที่ผ่าน Excel
+    # ====================================
+    norm_key <- function(x) {
+      x <- as.character(x)
+      x <- gsub("[\u00a0\u200b\ufeff]", " ", x)
+      x <- toupper(gsub("\\s+", " ", trimws(x)))
+      num <- suppressWarnings(as.numeric(x))
+      ifelse(!is.na(num), as.character(num), x)
+    }
+    
     resolve_match_key <- function(map, data, id_col_map, id_col_data, name_col_data) {
-      if (is.null(map) || is.null(data) || is.null(id_col_map) || is.null(id_col_data) ||
-          id_col_map == "" || id_col_data == "" || !(id_col_map %in% names(map))) {
+      has_col <- function(cl) !is.null(cl) && length(cl) == 1 && !is.na(cl) && nzchar(cl) && cl %in% names(data)
+      if (is.null(map) || is.null(data) || is.null(id_col_map) || id_col_map == "" ||
+          !(id_col_map %in% names(map))) {
         return(id_col_data)
       }
       
-      map_ids <- trimws(as.character(map[[id_col_map]]))
-      
-      by_id <- if (id_col_data %in% names(data)) {
-        length(intersect(map_ids, trimws(as.character(data[[id_col_data]]))))
-      } else 0
-      
-      by_name <- if (!is.null(name_col_data) && name_col_data != "" && name_col_data %in% names(data)) {
-        length(intersect(map_ids, trimws(as.character(data[[name_col_data]]))))
-      } else 0
+      map_ids <- norm_key(map[[id_col_map]])
+      by_id   <- if (has_col(id_col_data))   length(intersect(map_ids, norm_key(data[[id_col_data]])))   else -1
+      by_name <- if (has_col(name_col_data)) length(intersect(map_ids, norm_key(data[[name_col_data]]))) else -1
       
       if (by_name > by_id) name_col_data else id_col_data
     }
+    
+    # ====================================
+    # [NEW] match_candidates(): ลองทุกคอลัมน์ของ shapefile ว่าตรงกับ CSV (area id / area name) กี่พื้นที่
+    # ใช้ทั้งเลือกคอลัมน์อัตโนมัติ และแสดงตารางช่วยผู้ใช้ตัดสินใจ
+    # ====================================
+    match_candidates <- function(map, data, id_col_data, name_col_data) {
+      if (is.null(map) || is.null(data)) return(NULL)
+      mdf <- tryCatch(sf::st_drop_geometry(map), error = function(e) NULL)
+      if (is.null(mdf) || ncol(mdf) == 0) return(NULL)
+      
+      ok <- function(cl) !is.null(cl) && length(cl) == 1 && !is.na(cl) && nzchar(cl) && cl %in% names(data)
+      d_id <- if (ok(id_col_data))   unique(norm_key(data[[id_col_data]]))   else character(0)
+      d_nm <- if (ok(name_col_data)) unique(norm_key(data[[name_col_data]])) else character(0)
+      
+      rows <- lapply(names(mdf), function(cl) {
+        v <- tryCatch(norm_key(mdf[[cl]]), error = function(e) character(0))
+        v <- v[!is.na(v) & nzchar(v)]
+        u <- unique(v)
+        data.frame(column     = cl,
+                   n_unique   = length(u),
+                   n_rows     = nrow(mdf),
+                   match_id   = length(intersect(u, d_id)),
+                   match_name = length(intersect(u, d_nm)),
+                   stringsAsFactors = FALSE)
+      })
+      out <- do.call(rbind, rows)
+      out$best  <- pmax(out$match_id, out$match_name)
+      out$score <- out$best + ifelse(out$n_unique == out$n_rows, 0.5, 0)   # ชอบคอลัมน์ที่ค่าไม่ซ้ำ
+      out
+    }
+    
+    # เลือกคอลัมน์ใน shapefile ที่ match กับ CSV ได้ดีที่สุด (ถ้าคอลัมน์ที่เลือกอยู่แล้วดีที่สุดอยู่แล้ว จะคงไว้)
+    auto_pick_map_col <- function(map, data, id_col_data, name_col_data, current = NULL) {
+      cand <- match_candidates(map, data, id_col_data, name_col_data)
+      if (is.null(cand) || max(cand$best) == 0) return(NULL)
+      top <- cand[order(-cand$score), ][1, ]
+      if (!is.null(current) && length(current) == 1 && current %in% cand$column &&
+          cand$score[cand$column == current] >= top$score) {
+        return(current)
+      }
+      top$column
+    }
+    
+    # # เดาคอลัมน์ใน CSV จากชื่อหัวคอลัมน์ (ไทย/อังกฤษ) เพื่อให้ผู้ใช้ไม่ต้องเลือกเองทุกช่อง
+    # guess_columns <- function(cols) {
+    #   used <- character(0)
+    #   pick <- function(patterns) {
+    #     for (p in patterns) {
+    #       hit <- cols[grepl(p, cols, ignore.case = TRUE, perl = TRUE) & !(cols %in% used)]
+    #       if (length(hit) > 0) { used <<- c(used, hit[1]); return(hit[1]) }
+    #     }
+    #     ""
+    #   }
+    #   list(
+    #     id    = pick(c("(^|[_.\\s-])(id|code)$", "(^|[_.\\s-])(id|code)([_.\\s-]|$)", "id$", "code", "รหัส")),
+    #     name  = pick(c("name", "ชื่อ", "province", "district", "area", "location")),
+    #     pop   = pick(c("pop", "ประชากร", "denominator")),
+    #     cases = pick(c("case", "observed", "outcome", "death", "count", "ผู้ป่วย", "จำนวน")),
+    #     date  = pick(c("year", "date", "month", "week", "period", "time", "ปี", "เดือน", "วันที่"))
+    #   )
+    # }
+    
+    # สร้าง Reactive function สำหรับ UI จับคู่
+    generate_match_status_ui <- reactive({
+      map <- rv$map; data <- rv$datosOriginal
+      if (is.null(map) && is.null(data)) return(NULL)
+      
+      box <- function(bg, border, ...) div(style = paste0("margin-top:8px; padding:10px 12px; border-radius:8px; font-size:13px; background:", bg, "; border:1px solid ", border, ";"), ...)
+      
+      if (is.null(map) || is.null(data)) {
+        return(box("#f4f2ff", "#d9d2ff", HTML("<i class='uil uil-info-circle'></i> Upload both the shapefile and the CSV/Excel file, then the app will check that their areas match.")))
+      }
+      
+      col_map <- input$columnidareainmap
+      if (is.null(col_map) || col_map == "" || !(col_map %in% names(map))) return(NULL)
+      
+      key <- resolve_match_key(map, data, col_map, input$columnidareaindata, input$columnidareanamedata)
+      chk <- check_area_match(map, data, col_map, key)
+      if (is.null(chk)) {
+        return(box("#f4f2ff", "#d9d2ff", HTML("<i class='uil uil-info-circle'></i> Select the CSV columns (area id / area name) on the data page to check the match.")))
+      }
+      
+      key_role <- if (!is.null(input$columnidareaindata) && identical(key, input$columnidareaindata)) "area id" else "area name"
+      pair_txt <- tags$span("shapefile column ", tags$b(col_map), " \u2194 CSV ", key_role, " column ", tags$b(key))
+      
+      cand <- match_candidates(map, data, input$columnidareaindata, input$columnidareanamedata)
+      cand_tbl <- NULL
+      if (!is.null(cand)) {
+        cand <- cand[order(-cand$score), ]
+        cand_tbl <- tags$details(style = "margin-top:6px;",
+                                 tags$summary(style = "cursor:pointer; color:#735DFB;", "See how every shapefile column matches"),
+                                 tags$table(class = "table table-condensed", style = "margin:6px 0 0 0; font-size:12px; background:transparent;",
+                                            tags$thead(tags$tr(tags$th("Shapefile column"), tags$th("Unique values"), tags$th("Matches CSV area id"), tags$th("Matches CSV area name"))),
+                                            tags$tbody(lapply(seq_len(nrow(cand)), function(i) {
+                                              tags$tr(style = if (cand$column[i] == col_map) "font-weight:bold;" else NULL,
+                                                      tags$td(cand$column[i]), tags$td(cand$n_unique[i]), tags$td(cand$match_id[i]), tags$td(cand$match_name[i]))
+                                            }))
+                                 )
+        )
+      }
+      
+      dup_note <- NULL
+      if (chk$dup_map > 0) {
+        dup_note <- tags$div(style = "margin-top:4px;", HTML(paste0("\u26a0\ufe0f ", chk$dup_map, " value(s) in shapefile column <b>", htmltools::htmlEscape(col_map), "</b> are duplicated, so some areas cannot be told apart. Choose a column with unique values if possible.")))
+      }
+      
+      if (chk$n_matched == 0) {
+        best <- cand[1, ]
+        hint <- if (!is.null(best) && best$best > 0) HTML(paste0("Try shapefile column <b>", htmltools::htmlEscape(best$column), "</b> (matches ", best$best, " areas).")) else "No shapefile column matches yet. Check that both files use the same names/codes."
+        return(box("#fdecea", "#f5c2c0", tags$div(HTML("\u274c <b>No areas matched.</b> "), hint), cand_tbl))
+      }
+      
+      if (chk$pct_matched < 100) {
+        miss <- raw_unmatched <- NULL
+        raw <- unique(trimws(as.character(data[[key]])))
+        miss <- raw[!(norm_key(raw) %in% norm_key(map[[col_map]]))]
+        miss_txt <- paste(utils::head(miss, 5), collapse = ", ")
+        if (length(miss) > 5) miss_txt <- paste0(miss_txt, ", ...")
+        return(box("#fff6e5", "#f3d9a4",
+                   tags$div(HTML(paste0("\u26a0\ufe0f <b>", chk$n_matched, " of ", chk$n_data, " CSV areas matched</b> ("), chk$pct_matched, "%): "), pair_txt),
+                   tags$div(style = "margin-top:4px;", paste0("Not found in the shapefile: ", miss_txt)),
+                   dup_note, cand_tbl))
+      }
+      
+      box("#e8f7ee", "#b7e3c8",
+          tags$div(HTML(paste0("\u2705 <b>All ", chk$n_matched, " areas matched</b> - ")), pair_txt),
+          dup_note, cand_tbl)
+    })
+    
+    # สั่ง Output ให้ทั้งบน Shapefile และ CSV
+    output$area_match_status <- renderUI({ generate_match_status_ui() })
+    output$area_match_status_csv <- renderUI({ generate_match_status_ui() })
+    
     
     # ====================================
     # ตรวจสอบว่า area id ใน Shapefile กับ CSV Data ตรงกันกี่พื้นที่ ก่อนไปหน้า Map Distribution / Analysis
@@ -1321,8 +1484,9 @@ shinyApp(
           !(map_id_col %in% names(map)) || !(data_id_col %in% names(data))) {
         return(NULL)
       }
-      map_ids  <- unique(trimws(as.character(map[[map_id_col]])))
-      data_ids <- unique(trimws(as.character(data[[data_id_col]])))
+      map_all  <- norm_key(map[[map_id_col]])
+      map_ids  <- unique(map_all)
+      data_ids <- unique(norm_key(data[[data_id_col]]))
       matched  <- intersect(map_ids, data_ids)
       
       list(
@@ -1330,7 +1494,8 @@ shinyApp(
         n_data    = length(data_ids),
         n_matched = length(matched),
         pct_matched = if (length(data_ids) > 0) round(length(matched) / length(data_ids) * 100, 1) else 0,
-        unmatched_data_ids = setdiff(data_ids, map_ids)
+        unmatched_data_ids = setdiff(data_ids, map_ids),
+        dup_map   = sum(duplicated(map_all[!is.na(map_all)]))
       )
     }
     
@@ -1345,11 +1510,18 @@ shinyApp(
       if (is.null(chk)) return(TRUE)  # ยังไม่มีข้อมูลพอจะเช็ค ปล่อยผ่าน (จะถูกเช็ค null ที่อื่นอยู่แล้ว)
       
       if (chk$n_matched == 0) {
+        cand_all <- match_candidates(rv$map, rv$datosOriginal, input$columnidareaindata, input$columnidareanamedata)
+        best_hint <- ""
+        if (!is.null(cand_all) && max(cand_all$best) > 0) {
+          b <- cand_all[order(-cand_all$score), ][1, ]
+          best_hint <- paste0("<p><b>Suggestion:</b> select shapefile column <b>", htmltools::htmlEscape(b$column), "</b> (it matches ", b$best, " areas).</p>")
+        }
         showModal(modalDialog(
           title = "Shapefile and Data File Do Not Match",
           HTML(paste0(
             "<p>None of the area values in your <b>shapefile</b> (", chk$n_map, " areas) match the area values ",
             "in your <b>CSV/Excel data</b> (", chk$n_data, " areas), whether matching by area id or by area name.</p>",
+            best_hint,
             "<p>Please check that:</p>",
             "<ul><li>You selected the correct <b>area id</b> / <b>area name</b> columns on both the Upload Shapefile page and the Upload CSV Data File page</li>",
             "<li>The values are formatted the same way on both sides (e.g. same capitalisation, no extra spaces, same code system)</li></ul>"
@@ -1994,6 +2166,7 @@ shinyApp(
         updateSelectInput(session, "columncov6indata", choices = xd2, selected = "property.crime")
         updateSelectInput(session, "columncov7indata", choices = xd2, selected = "shocking.crime")
       } else {
+        # เปลี่ยนกลับมาเป็นค่าว่าง (ผู้ใช้ต้องเลือกคอลัมน์เองทั้งหมด)
         updateSelectInput(session, "columnidareaindata", choices = c("", xd), selected = "")
         updateSelectInput(session, "columnidareanamedata", choices = c("", xd), selected = "")
         updateSelectInput(session, "columnexpvalueindata", choices = c("", xd), selected = "")
@@ -2028,9 +2201,11 @@ shinyApp(
           xd_updated <- names(df)
           current_id <- isolate(input$columnidareaindata)
           if (is.null(current_id) || current_id == "" || !(current_id %in% xd_updated)) {
-            updateSelectInput(session, "columnidareaindata", choices = xd_updated, selected = "__areaID_auto__")
+            id_choices <- stats::setNames(xd_updated, ifelse(xd_updated == "__areaID_auto__", "(auto-generated from area name)", xd_updated))
+            updateSelectInput(session, "columnidareaindata", choices = id_choices, selected = "__areaID_auto__")
           } else {
-            updateSelectInput(session, "columnidareaindata", choices = xd_updated, selected = current_id)
+            id_choices <- stats::setNames(xd_updated, ifelse(xd_updated == "__areaID_auto__", "(auto-generated from area name)", xd_updated))
+            updateSelectInput(session, "columnidareaindata", choices = id_choices, selected = current_id)
           }
         }
       } else {
@@ -2096,6 +2271,8 @@ shinyApp(
       x <- names(rv$map)
       if (is.null(x)) {
         x <- character(0)
+      } else {
+        x <- setdiff(x, attr(rv$map, "sf_column"))   # ไม่ต้องแสดงคอลัมน์ geometry ให้เลือก
       }
       
       if (input$data_source_type == "sample" && length(x) > 0) {
@@ -2106,7 +2283,15 @@ shinyApp(
         }
         
       } else {
-        updateSelectInput(session, "columnidareainmap", choices = x, selected = head(x, 1))
+        # [NEW] โหมดอัปโหลดเอง: ลองทุกคอลัมน์ของ shapefile กับ CSV แล้วเลือกตัวที่ match มากที่สุดให้อัตโนมัติ
+        sel <- head(x, 1)
+        if (length(x) > 0 && !is.null(rv$datosOriginal)) {
+          picked <- auto_pick_map_col(rv$map, rv$datosOriginal,
+                                      input$columnidareaindata, input$columnidareanamedata,
+                                      current = isolate(input$columnidareainmap))
+          if (!is.null(picked) && picked %in% x) sel <- picked
+        }
+        updateSelectInput(session, "columnidareainmap", choices = x, selected = sel)
       }
     })
     
@@ -2201,6 +2386,65 @@ shinyApp(
     
     
     
+    # [NEW] อ่านไฟล์แผนที่ที่ผู้ใช้อัปโหลด: รองรับ .zip / GeoJSON / GeoPackage,
+    # ซ่อม .shx ที่ขาดให้อัตโนมัติ, ลองอ่านภาษาไทย (UTF-8 -> CP874), และแจ้งข้อความที่เข้าใจง่ายเมื่อไฟล์ไม่ครบ
+    read_uploaded_map <- function(shpdf) {
+      notes <- character(0)
+      work <- file.path(tempdir(), paste0("map_", format(Sys.time(), "%H%M%S"), "_", sample.int(1e6, 1)))
+      dir.create(work, recursive = TRUE)
+      for (i in seq_len(nrow(shpdf))) {
+        if (grepl("\\.zip$", shpdf$name[i], ignore.case = TRUE)) {
+          utils::unzip(shpdf$datapath[i], exdir = work, junkpaths = TRUE)
+        } else {
+          file.copy(shpdf$datapath[i], file.path(work, basename(shpdf$name[i])), overwrite = TRUE)
+        }
+      }
+      files <- list.files(work, full.names = TRUE)
+      ext   <- tolower(tools::file_ext(files))
+      stem  <- tolower(tools::file_path_sans_ext(basename(files)))
+      
+      shp  <- files[ext == "shp"]
+      geo  <- files[ext %in% c("geojson", "json", "gpkg")]
+      
+      if (length(shp) > 0) {
+        path <- shp[1]
+        if (length(shp) > 1) notes <- c(notes, paste0("More than one .shp was found. Using '", basename(path), "'."))
+        st <- tolower(tools::file_path_sans_ext(basename(path)))
+        has <- function(e) any(stem == st & ext == e)
+        if (!has("dbf")) stop("The .dbf file is missing. A shapefile needs at least .shp and .dbf (the .dbf holds the area names/codes). Please upload them together, or upload one .zip.")
+        if (!has("shx")) {
+          Sys.setenv(SHAPE_RESTORE_SHX = "YES")
+          notes <- c(notes, "The .shx file was missing, so it was rebuilt automatically.")
+        }
+        read_one <- function(enc) sf::st_read(path, quiet = TRUE, options = paste0("ENCODING=", enc))
+        map <- read_one("UTF-8")
+        has_bad_text <- any(vapply(sf::st_drop_geometry(map), function(col) is.character(col) && any(!validUTF8(col[!is.na(col)])), logical(1)))
+        if (has_bad_text) {
+          map2 <- tryCatch(read_one("CP874"), error = function(e) NULL)
+          if (!is.null(map2)) {
+            map <- map2
+            notes <- c(notes, "Text in the shapefile was not UTF-8, so it was read as Thai (CP874/TIS-620).")
+          }
+        }
+      } else if (length(geo) > 0) {
+        map <- sf::st_read(geo[1], quiet = TRUE)
+      } else {
+        stop("No .shp file found. Please select the .shp, .dbf, .shx and .prj files together (or one .zip that contains them).")
+      }
+      
+      map <- sf::st_zm(map)
+      if (is.na(sf::st_crs(map))) {
+        bb <- sf::st_bbox(map)
+        if (all(bb[c("xmin", "xmax")] >= -180 & bb[c("xmin", "xmax")] <= 180 & bb[c("ymin", "ymax")] >= -90 & bb[c("ymin", "ymax")] <= 90)) {
+          sf::st_crs(map) <- 4326
+          notes <- c(notes, "No .prj file (coordinate system) was found. The coordinates look like longitude/latitude, so WGS84 (EPSG:4326) was assumed.")
+        } else {
+          stop("The coordinate system is unknown because the .prj file is missing. Please include the .prj file.")
+        }
+      }
+      list(map = sf::st_transform(map, crs = 4326), notes = notes)
+    }
+    
     # Upload shapefile
     observe({
       if (input$data_source_type == "upload") {
@@ -2208,15 +2452,14 @@ shinyApp(
         if(is.null(shpdf)){
           return()
         }
-        previouswd <- getwd()
-        uploaddirectory <- dirname(shpdf$datapath[1])
-        setwd(uploaddirectory)
-        for(i in 1:nrow(shpdf)){
-          file.rename(shpdf$datapath[i], shpdf$name[i])
-        }
-        setwd(previouswd)
-        
-        shp_file <- file.path(uploaddirectory, shpdf$name[grep("\\.shp$", shpdf$name)])
+        tryCatch({
+          res <- read_uploaded_map(shpdf)
+          rv$map <- res$map
+          for (n in res$notes) showNotification(n, type = "warning", duration = 12)
+        }, error = function(e) {
+          showNotification(paste("Error reading shapefile:", conditionMessage(e)), type = "error", duration = 15)
+        })
+        return()
         
       } else if (input$sample_dataset_choice %in% c("pollution", "pollution_2007")) {
         shp_file <- "sample data/GGHB_IZ.shp"
@@ -2302,6 +2545,11 @@ shinyApp(
         data <- rv$datosOriginal
         total_start_time <- Sys.time()
         
+        # ===== เปิดใช้งาน Progress Bar แจ้งสถานะผู้ใช้ =====
+        withProgress(message = 'Running Epidemiological Analysis...', value = 0, {
+          
+          incProgress(0.1, detail = "Preparing spatial and temporal data...")
+        
         
         ######################### คำนวณ cluster ###################################
         cluster_start_time <- Sys.time()
@@ -2348,31 +2596,27 @@ shinyApp(
           # ถูกจับคู่กับ adjacency ของพื้นที่อื่นแบบเงียบๆ โดยไม่มี error ใดๆ ขึ้นเตือน
           # แก้ใหม่: ใช้ match() กับลำดับแถวของ shapefile (map) โดยตรง เพื่อให้ id อ้างอิงตำแหน่งแถวใน 
           # adjacency matrix ได้ถูกต้องเสมอ ไม่ว่าค่า area id/name จะเรียงตามตัวอักษรหรือไม่ก็ตาม
-          raw_id <- data[, input$columnidareaindata]
-          numeric_id <- suppressWarnings(as.numeric(raw_id))
+          # [FIX 2] เดิมถ้า area id ในไฟล์เป็นตัวเลข จะถูกใช้เป็นลำดับแถวใน shapefile ตรงๆ (ผิดถ้ารหัสไม่เรียงตาม shapefile)
+          # และไม่ได้ใช้คอลัมน์ที่ match จริง (id หรือ name) เหมือนหน้า Map Distribution
+          # ตอนนี้ใช้ resolve_match_key() + norm_key() แล้ว match() กับ shapefile ตรงๆ เสมอ ได้เลขแถวที่ถูกต้องเสมอ
+          match_col_data <- resolve_match_key(map, data, input$columnidareainmap,
+                                              input$columnidareaindata, input$columnidareanamedata)
+          area_idx <- match(norm_key(data[[match_col_data]]), norm_key(map[[input$columnidareainmap]]))
           
-          if (any(is.na(numeric_id))) {
-            # กรณี area id เป็น text เช่น "S02000260" หรือชื่อพื้นที่ -> จับคู่กับลำดับแถวของ shapefile โดยตรง
-            data[["__areaID_auto__"]] <- match(trimws(as.character(raw_id)),
-                                               trimws(as.character(map[[input$columnidareainmap]])))
-            area_id_col <- "__areaID_auto__"
-            
-            if (any(is.na(data[["__areaID_auto__"]]))) {
-              n_missing <- sum(is.na(data[["__areaID_auto__"]]))
-              stop(paste0(n_missing, " row(s) in the CSV data could not be matched to any area in the shapefile. ",
-                          "Please check that the selected 'area id' column matches the shapefile's area id/name exactly."))
-            }
-          } else {
-            data[, input$columnidareaindata] <- numeric_id
-            area_id_col <- input$columnidareaindata
+          if (any(is.na(area_idx))) {
+            stop(paste0(sum(is.na(area_idx)), " row(s) in the CSV data could not be matched to any area in the shapefile ",
+                        "(CSV column '", match_col_data, "' vs shapefile column '", input$columnidareainmap, "'). ",
+                        "Please check the 'Shapefile column to match with CSV' and the 'area id' / 'area name' selections."))
           }
+          data[["__map_row__"]] <- area_idx
+          area_id_col <- "__map_row__"
           
           
           data[,input$columndateindata] <- as.numeric(data[,input$columndateindata])
           
           data$province_year <- seq(1, nrow(data))
           
-          province_int <- data[,input$columnidareaindata]
+          province_int <- data[[area_id_col]]
           year_int <- data[,input$columndateindata]
           
           has_time_dimension <- length(unique(data[,input$columndateindata])) > 1
@@ -2404,6 +2648,7 @@ shinyApp(
           ####################   Cluster   #################### 
           
           
+          incProgress(0.2, detail = "Computing Cluster Detection model (INLA)...")
           
           if (has_time_dimension) {
             formula_1_bym_rw1_Cluter <- data[,input$columncasesindata] ~ 1 +
@@ -2455,6 +2700,7 @@ shinyApp(
         
         ####################################################
         
+        incProgress(0.4, detail = "Evaluating Risk Factor Associations...")
         
         assoc_start_time <- Sys.time()
         tryCatch({
@@ -2484,7 +2730,7 @@ shinyApp(
             print("Check: ...1 not null...")
             x1 <- data[,input$columncov1indata]
             
-            data$x1_id <- data[,input$columnidareaindata]
+            data$x1_id <- data[[area_id_col]]
             
             
             if (has_time_dimension) {
@@ -2492,7 +2738,7 @@ shinyApp(
                 f(data$x1_id, x1, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
                 f(data[,input$columndateindata], model = "rw1") 
-                
+              
             } else {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
                 f(data$x1_id, x1, model = "iid") +
@@ -2587,8 +2833,8 @@ shinyApp(
             x1 <- data[,input$columncov1indata]
             x2 <- data[,input$columncov2indata]
             
-            data$x1_id <- data[,input$columnidareaindata]
-            data$x2_id <- data[,input$columnidareaindata]
+            data$x1_id <- data[[area_id_col]]
+            data$x2_id <- data[[area_id_col]]
             
             
             if (has_time_dimension) {
@@ -2597,13 +2843,13 @@ shinyApp(
                 f(data$x2_id, x2, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) +
                 f(data[,input$columndateindata], model = "rw1") 
-                
+              
             } else {
               formula_1_bym_rw1 <- data[,input$columncasesindata] ~ 1 +
                 f(data$x1_id, x1, model = "iid") +
                 f(data$x2_id, x2, model = "iid") +
                 f(data[[area_id_col]], model = "bym", graph = tha_adj) 
-                
+              
             }
             
             model <- inla(
@@ -2697,9 +2943,9 @@ shinyApp(
             x2 <- data[,input$columncov2indata]
             x3 <- data[,input$columncov3indata]
             
-            data$x1_id <- data[,input$columnidareaindata]
-            data$x2_id <- data[,input$columnidareaindata]
-            data$x3_id <- data[,input$columnidareaindata]
+            data$x1_id <- data[[area_id_col]]
+            data$x2_id <- data[[area_id_col]]
+            data$x3_id <- data[[area_id_col]]
             
             
             if (has_time_dimension) {
@@ -2817,10 +3063,10 @@ shinyApp(
             x3 <- data[,input$columncov3indata]
             x4 <- data[,input$columncov4indata]
             
-            data$x1_id <- data[,input$columnidareaindata]
-            data$x2_id <- data[,input$columnidareaindata]
-            data$x3_id <- data[,input$columnidareaindata]
-            data$x4_id <- data[,input$columnidareaindata]
+            data$x1_id <- data[[area_id_col]]
+            data$x2_id <- data[[area_id_col]]
+            data$x3_id <- data[[area_id_col]]
+            data$x4_id <- data[[area_id_col]]
             
             
             if (has_time_dimension) {
@@ -2948,11 +3194,11 @@ shinyApp(
             x4 <- data[,input$columncov4indata]
             x5 <- data[,input$columncov5indata]
             
-            data$x1_id <- data[,input$columnidareaindata]
-            data$x2_id <- data[,input$columnidareaindata]
-            data$x3_id <- data[,input$columnidareaindata]
-            data$x4_id <- data[,input$columnidareaindata]
-            data$x5_id <- data[,input$columnidareaindata]
+            data$x1_id <- data[[area_id_col]]
+            data$x2_id <- data[[area_id_col]]
+            data$x3_id <- data[[area_id_col]]
+            data$x4_id <- data[[area_id_col]]
+            data$x5_id <- data[[area_id_col]]
             
             
             if (has_time_dimension) {
@@ -3090,12 +3336,12 @@ shinyApp(
             x5 <- data[,input$columncov5indata]
             x6 <- data[,input$columncov6indata]
             
-            data$x1_id <- data[,input$columnidareaindata]
-            data$x2_id <- data[,input$columnidareaindata]
-            data$x3_id <- data[,input$columnidareaindata]
-            data$x4_id <- data[,input$columnidareaindata]
-            data$x5_id <- data[,input$columnidareaindata]
-            data$x6_id <- data[,input$columnidareaindata]
+            data$x1_id <- data[[area_id_col]]
+            data$x2_id <- data[[area_id_col]]
+            data$x3_id <- data[[area_id_col]]
+            data$x4_id <- data[[area_id_col]]
+            data$x5_id <- data[[area_id_col]]
+            data$x6_id <- data[[area_id_col]]
             
             
             if (has_time_dimension) {
@@ -3246,13 +3492,13 @@ shinyApp(
             x6 <- data[,input$columncov6indata]
             x7 <- data[,input$columncov7indata]
             
-            data$x1_id <- data[,input$columnidareaindata]
-            data$x2_id <- data[,input$columnidareaindata]
-            data$x3_id <- data[,input$columnidareaindata]
-            data$x4_id <- data[,input$columnidareaindata]
-            data$x5_id <- data[,input$columnidareaindata]
-            data$x6_id <- data[,input$columnidareaindata]
-            data$x7_id <- data[,input$columnidareaindata]
+            data$x1_id <- data[[area_id_col]]
+            data$x2_id <- data[[area_id_col]]
+            data$x3_id <- data[[area_id_col]]
+            data$x4_id <- data[[area_id_col]]
+            data$x5_id <- data[[area_id_col]]
+            data$x6_id <- data[[area_id_col]]
+            data$x7_id <- data[[area_id_col]]
             
             
             if (has_time_dimension) {
@@ -3420,8 +3666,9 @@ shinyApp(
         print("===================== rv$errorMessageAssoc =====================")
         print(rv$errorMessageAssoc)
         
+        incProgress(1, detail = "Analysis completed! Rendering maps...")
         
-        
+      }) # ===== จบ withProgress =====
       }
     })
     
@@ -3542,73 +3789,77 @@ shinyApp(
       if (is.null(rv$datosOriginal)| is.null(rv$map))
         return(NULL)
       
-      print("Plot: ...map distribution.1..")
-      
-      map <- rv$map
-      data <- rv$datosOriginal
-      
-      
-      data <- data %>%
-        filter(
-          data[,input$columndateindata] %in% input$time_point_filter
-          
-        )
-      
-      datafiltered <- data
-      # [FIX] เดิม hardcode: match by name เฉพาะเมื่อเป็น sample "thailand" เท่านั้น
-      # ตอนนี้ใช้ resolve_match_key() ตรวจสอบจริงว่า id หรือ name match ได้ดีกว่ากัน แล้วใช้ตัวนั้น
-      # ใช้ได้ทั้ง sample data และไฟล์ที่ผู้ใช้อัปโหลดเอง
-      match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
-                                          input$columnidareaindata, input$columnidareanamedata)
-      # [FIX] trimws() ทั้งสองฝั่งกัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
-      ordercounties <- match(trimws(as.character(map[[input$columnidareainmap]])),
-                             trimws(as.character(datafiltered[[match_key_data]])))
-      
-      temp_geom <- st_geometry(map)
-      map <- datafiltered[ordercounties, ]
-      st_geometry(map) <- temp_geom
-      
-      
-      l <- leaflet(map) %>% addTiles()
-      pal <- colorNumeric(palette = input$color, domain = map[[input$columncasesindata]])
-      labels <- sprintf("<strong> %s </strong> <br/>  %s : %s ",
-                        map[[input$columnidareanamedata]] , input$columncasesindata, map[[input$columncasesindata]]
-      ) %>%
-        lapply(htmltools::HTML)
-      
-      l %>%
-        addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
-        addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
-        addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
-        addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
+      # ===== เพิ่ม withProgress ครอบการสร้างแผนที่ =====
+      withProgress(message = 'Rendering Map...', value = 0, {
         
-        addPolygons(
-          color = "grey", weight = 1,
-          fillColor = ~ pal(map[[input$columncasesindata]]), fillOpacity = 0.7,
-          highlightOptions = highlightOptions(weight = 4),
-          label = labels,
-          labelOptions = labelOptions(
-            style = list(
-              "font-weight" = "normal",
-              padding = "3px 8px"
-            ),
-            textsize = "16px", direction = "auto"
+        incProgress(0.2, detail = "Preparing data...")
+        print("Plot: ...map distribution.1..")
+        
+        map <- rv$map
+        data <- rv$datosOriginal
+        
+        data <- data %>%
+          filter(
+            data[,input$columndateindata] %in% input$time_point_filter
           )
+        
+        incProgress(0.5, detail = "Matching spatial data...")
+        
+        datafiltered <- data
+        match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
+                                            input$columnidareaindata, input$columnidareanamedata)
+        ordercounties <- match(norm_key(map[[input$columnidareainmap]]),
+                               norm_key(datafiltered[[match_key_data]]))
+        
+        temp_geom <- st_geometry(map)
+        map <- datafiltered[ordercounties, ]
+        st_geometry(map) <- temp_geom
+        
+        incProgress(0.7, detail = "Drawing map layers...")
+        
+        l <- leaflet(map) %>% addTiles()
+        pal <- colorNumeric(palette = input$color, domain = map[[input$columncasesindata]])
+        labels <- sprintf("<strong> %s </strong> <br/>  %s : %s ",
+                          map[[input$columnidareanamedata]] , input$columncasesindata, map[[input$columncasesindata]]
         ) %>%
-        addLegend_decreasing(
-          pal = pal, values = ~map[[input$columncasesindata]], opacity = 0.7,
-          title = input$columncasesindata, position = "bottomright", 
-          decreasing = TRUE
-        ) %>%
-        addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
-        ),
-        position = c("topleft"),
-        options = layersControlOptions(collapsed =  TRUE)
-        ) %>%
-        addFullscreenControl()
-      
-      
-      
+          lapply(htmltools::HTML)
+        
+        # เก็บผลลัพธ์ของแผนที่ไว้ในตัวแปร res ก่อน
+        res <- l %>%
+          addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
+          addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
+          addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
+          addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
+          
+          addPolygons(
+            color = "grey", weight = 1,
+            fillColor = ~ pal(map[[input$columncasesindata]]), fillOpacity = 0.7,
+            highlightOptions = highlightOptions(weight = 4),
+            label = labels,
+            labelOptions = labelOptions(
+              style = list(
+                "font-weight" = "normal",
+                padding = "3px 8px"
+              ),
+              textsize = "16px", direction = "auto"
+            )
+          ) %>%
+          addLegend_decreasing(
+            pal = pal, values = ~map[[input$columncasesindata]], opacity = 0.7,
+            title = input$columncasesindata, position = "bottomright", 
+            decreasing = TRUE
+          ) %>%
+          addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"
+          ),
+          position = c("topleft"),
+          options = layersControlOptions(collapsed =  TRUE)
+          ) %>%
+          addFullscreenControl()
+        
+        incProgress(1, detail = "Done!")
+        
+        return(res) # คืนค่าแผนที่กลับไปให้ renderLeaflet วาด
+      }) # ===== จบ withProgress =====
     })
     
     
@@ -3616,116 +3867,102 @@ shinyApp(
     
     ###### map_distribution 2 ######### 
     
+    
     output$map_distribution_2 <- renderLeaflet({
       
       if (is.null(rv$datosOriginal) | is.null(rv$map))
         return(NULL)
       
-      print("Plot: ...map distribution.2..")
-      
-      
-      map <- rv$map
-      data <- rv$datosOriginal
-      
-      
-      if(input$Expected_Value_from_csv == "yes" ){
-        if(input$columnexpvalueindata != "" ){
-          print("Check: ...this csv have expected value...")
-          data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
-          
+      # ===== เพิ่ม withProgress ครอบการสร้างแผนที่ =====
+      withProgress(message = 'Rendering Normalized Map...', value = 0, {
+        
+        incProgress(0.2, detail = "Preparing data...")
+        print("Plot: ...map distribution.2..")
+        
+        map <- rv$map
+        data <- rv$datosOriginal
+        
+        if(input$Expected_Value_from_csv == "yes" ){
+          if(input$columnexpvalueindata != "" ){
+            data['expected_value'] <- as.numeric(data[,input$columnexpvalueindata])
+          }
+        }else if (input$Expected_Value_from_csv == "no" ){
+          sum_case <- sum(data[,input$columncasesindata])
+          sum_pop <- sum(data[,input$columnpopindata])
+          divide_case_pop <- sum_case / sum_pop
+          expected_value <- data[,input$columnpopindata] * divide_case_pop
+          data['expected_value'] <- expected_value
         }
         
-      }else if (input$Expected_Value_from_csv == "no" ){
-        print("Check: ...this csv doesn't have expected value...")
-        
-        sum_case <- sum(data[,input$columncasesindata])
-        sum_pop <- sum(data[,input$columnpopindata])
-        
-        divide_case_pop <- sum_case / sum_pop
-        
-        
-        expected_value <- data[,input$columnpopindata] * divide_case_pop
-        
-        
-        data['expected_value'] <- expected_value
-        
-      }
-      
-      
-      data <- data %>%
-        filter(
-          data[,input$columndateindata] %in% input$time_point_filter
-        )
-      
-      if (input$divide_by == "columnpopindata") {
-        data$adjusted_cases <- data[, input$columncasesindata] / data[, input$columnpopindata]
-        
-        print("===================== ตัวหาร columnpopindata =====================")
-        print(data[, input$columnpopindata])
-        
-        
-      } else if (input$divide_by == "expected_value") {
-        data$adjusted_cases <- data[, input$columncasesindata] / data[, 'expected_value']
-        
-        print("===================== ตัวหาร expected_value =====================")
-        print(data[, 'expected_value'])
-      }
-      
-      datafiltered <- data
-      # [FIX] เหมือนด้านบน ใช้ resolve_match_key() แทนการ hardcode เช็คเฉพาะ dataset "thailand"
-      match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
-                                          input$columnidareaindata, input$columnidareanamedata)
-      # [FIX] trimws() ทั้งสองฝั่งกัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
-      ordercounties <- match(trimws(as.character(map[[input$columnidareainmap]])),
-                             trimws(as.character(datafiltered[[match_key_data]])))
-      
-      temp_geom <- st_geometry(map)
-      map <- datafiltered[ordercounties, ]
-      st_geometry(map) <- temp_geom
-      
-      
-      print("================ datafiltered$adjusted_cases ==========================")
-      print(datafiltered$adjusted_cases)
-      
-      
-      l <- leaflet(map) %>% addTiles()
-      pal <- colorNumeric(palette = input$color, domain = map$adjusted_cases)
-      labels <- sprintf("<strong> %s </strong> <br/>  Adjusted Cases : %s ",
-                        map[[input$columnidareanamedata]], 
-                        format(round(map$adjusted_cases, 5), scientific = FALSE)
-      ) %>%
-        lapply(htmltools::HTML)
-      
-      l %>%
-        addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
-        addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
-        addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
-        addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
-        addPolygons(
-          color = "grey", weight = 1,
-          fillColor = ~ pal(map$adjusted_cases), fillOpacity = 0.7,
-          highlightOptions = highlightOptions(weight = 4),
-          label = labels,
-          labelOptions = labelOptions(
-            style = list(
-              "font-weight" = "normal",
-              padding = "3px 8px"
-            ),
-            textsize = "16px", direction = "auto"
+        data <- data %>%
+          filter(
+            data[,input$columndateindata] %in% input$time_point_filter
           )
+        
+        incProgress(0.4, detail = "Adjusting values...")
+        
+        if (input$divide_by == "columnpopindata") {
+          data$adjusted_cases <- data[, input$columncasesindata] / data[, input$columnpopindata]
+        } else if (input$divide_by == "expected_value") {
+          data$adjusted_cases <- data[, input$columncasesindata] / data[, 'expected_value']
+        }
+        
+        incProgress(0.5, detail = "Matching spatial data...")
+        
+        datafiltered <- data
+        match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
+                                            input$columnidareaindata, input$columnidareanamedata)
+        ordercounties <- match(norm_key(map[[input$columnidareainmap]]),
+                               norm_key(datafiltered[[match_key_data]]))
+        
+        temp_geom <- st_geometry(map)
+        map <- datafiltered[ordercounties, ]
+        st_geometry(map) <- temp_geom
+        
+        incProgress(0.7, detail = "Drawing map layers...")
+        
+        l <- leaflet(map) %>% addTiles()
+        pal <- colorNumeric(palette = input$color, domain = map$adjusted_cases)
+        labels <- sprintf("<strong> %s </strong> <br/>  Adjusted Cases : %s ",
+                          map[[input$columnidareanamedata]], 
+                          format(round(map$adjusted_cases, 5), scientific = FALSE)
         ) %>%
-        addLegend_decreasing(
-          pal = pal, values = ~map$adjusted_cases, opacity = 0.7,
-          title = "Adjusted Cases", position = "bottomright", 
-          decreasing = TRUE
-        ) %>%
-        addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"),
-                         position = c("topleft"),
-                         options = layersControlOptions(collapsed =  TRUE)
-        ) %>%
-        addFullscreenControl()
+          lapply(htmltools::HTML)
+        
+        res <- l %>%
+          addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Open Street Map") %>%
+          addProviderTiles(providers$Esri.WorldImagery, group = "ESRI World Imagery") %>%
+          addProviderTiles(providers$Esri.NatGeoWorldMap, group = "ESRI National Geographic World Map") %>%
+          addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron") %>%
+          addPolygons(
+            color = "grey", weight = 1,
+            fillColor = ~ pal(map$adjusted_cases), fillOpacity = 0.7,
+            highlightOptions = highlightOptions(weight = 4),
+            label = labels,
+            labelOptions = labelOptions(
+              style = list(
+                "font-weight" = "normal",
+                padding = "3px 8px"
+              ),
+              textsize = "16px", direction = "auto"
+            )
+          ) %>%
+          addLegend_decreasing(
+            pal = pal, values = ~map$adjusted_cases, opacity = 0.7,
+            title = "Adjusted Cases", position = "bottomright", 
+            decreasing = TRUE
+          ) %>%
+          addLayersControl(baseGroups = c("Open Street Map", "ESRI World Imagery", "ESRI National Geographic World Map", "CartoDB Positron"),
+                           position = c("topleft"),
+                           options = layersControlOptions(collapsed =  TRUE)
+          ) %>%
+          addFullscreenControl()
+        
+        incProgress(1, detail = "Done!")
+        
+        return(res)
+      }) # ===== จบ withProgress =====
     })
-    
     
     
     # ==================================== cluster_dec ver ลองplot ==================================== 
@@ -3753,8 +3990,8 @@ shinyApp(
         match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
                                             input$columnidareaindata, input$columnidareanamedata)
         # [FIX] trimws() ทั้งสองฝั่งกัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
-        ordercounties <- match(trimws(as.character(map[[input$columnidareainmap]])),
-                               trimws(as.character(datafiltered[[match_key_data]])))
+        ordercounties <- match(norm_key(map[[input$columnidareainmap]]),
+                               norm_key(datafiltered[[match_key_data]]))
         
         temp_geom <- st_geometry(map)
         map <- datafiltered[ordercounties, ]
@@ -3992,8 +4229,8 @@ shinyApp(
       name_lookup <- unique(rv$data[, c(match_key_data, input$columnidareanamedata)])
       names(name_lookup) <- c(area_col, "area_display_name")
       # [FIX] trimws() ทั้งสองฝั่งก่อน merge กัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
-      name_lookup[[area_col]] <- trimws(as.character(name_lookup[[area_col]]))
-      map[[area_col]] <- trimws(as.character(map[[area_col]]))
+      name_lookup[[area_col]] <- norm_key(name_lookup[[area_col]])
+      map[[area_col]] <- norm_key(map[[area_col]])
       map <- merge(map, name_lookup, by = area_col, all.x = TRUE)
       
       sig_col <- NULL
@@ -4070,7 +4307,7 @@ shinyApp(
         if(input$columnexpvalueindata != "" ){
           print("download data: ...this csv have expected value...")
           
-          data <- rv$data[,!names(rv$data) %in% c("province_year", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id","expected_value")]
+          data <- rv$data[,!names(rv$data) %in% c("province_year", "__map_row__", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id","expected_value")]
           
           
         }
@@ -4078,7 +4315,7 @@ shinyApp(
       }else if (input$Expected_Value_from_csv == "no" ){
         print("download data: ...this csv doesn't have expected value...")
         
-        data <- rv$data[,!names(rv$data) %in% c("province_year", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id")]
+        data <- rv$data[,!names(rv$data) %in% c("province_year", "__map_row__", "x1_id",	"x2_id",	"x3_id",	"x4_id",	"x5_id",	"x6_id",	"x7_id")]
         
         
       }
@@ -4144,8 +4381,8 @@ shinyApp(
       name_lookup <- unique(rv$data[, c(match_key_data, input$columnidareanamedata)])
       names(name_lookup) <- c(area_col, "area_name")
       # [FIX] trimws() ทั้งสองฝั่งก่อน merge กัน mismatch จากช่องว่างหน้า-หลังที่มองไม่เห็น
-      name_lookup[[area_col]] <- trimws(as.character(name_lookup[[area_col]]))
-      df_wide[[area_col]] <- trimws(as.character(df_wide[[area_col]]))
+      name_lookup[[area_col]] <- norm_key(name_lookup[[area_col]])
+      df_wide[[area_col]] <- norm_key(df_wide[[area_col]])
       df_wide <- merge(df_wide, name_lookup, by = area_col, all.x = TRUE)
       
       long_list <- lapply(active_covs, function(cov_name) {
