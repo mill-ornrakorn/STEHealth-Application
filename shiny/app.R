@@ -39,6 +39,7 @@ library(RColorBrewer)
 library(sf)
 library(shinyWidgets)
 library(shinydashboardPlus)
+library(shinycssloaders)
 
 library(INLA)
 inla.setOption(scale.model.default = TRUE)
@@ -49,7 +50,6 @@ library(leaflet.extras)
 library(bsplus)
 library(DT)
 library(readxl)
-
 
 # By default the file size limit is 5MB. Here limit is 70MB.
 options(shiny.maxRequestSize = 70*1024^2)
@@ -103,119 +103,7 @@ body <- dashboardBody(
         pointer-events: none !important;
       }
       
-      /* ===== ย้าย Progress Bar และ Notification ไปกลางจอ ===== */
-      #shiny-notification-panel {
-        top: 50% !important;
-        left: 50% !important;
-        bottom: auto !important;
-        right: auto !important;
-        transform: translate(-50%, -50%) !important;
-        width: 350px !important;
-        z-index: 999999 !important;
-      }
       
-      .shiny-notification {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-        border-radius: 8px !important;
-        padding: 15px !important;
-      }
-      
-      /* ===== Tooltip แบบใหม่ที่แยกเฉพาะ ไม่ชนกับ .info-tooltip-container เดิม ===== */
-      .mr-tip {
-        position: relative;
-        display: inline-block;
-        margin-left: 6px;
-        vertical-align: middle;
-        cursor: help;
-      }
-      .mr-tip .mr-tip-icon {
-        color: #999999;
-        font-size: 14px;
-      }
-      .mr-tip .mr-tip-text {
-        visibility: hidden;
-        opacity: 0;
-        display: block;
-        position: absolute;
-        top: 130%;
-        left: 0;
-        background: #2b2b2b;
-        color: #ffffff;
-        text-align: left;
-        padding: 10px 12px;
-        border-radius: 8px;
-        font-size: 12.5px;
-        font-weight: normal;
-        line-height: 1.5;
-        width: 260px;
-        max-width: 260px;
-        white-space: normal;
-        word-wrap: break-word;
-        z-index: 99999;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-        transition: opacity 0.15s ease-in-out;
-        pointer-events: none;
-      }
-      .mr-tip:hover .mr-tip-text {
-        visibility: visible;
-        opacity: 1;
-      }
-      
-      /* ===== ทำให้ 2 คอลัมน์ในแถวเดียวกันสูงเท่ากันเสมอ (สำหรับ Upload Shapefile/CSV และ Association) ===== */
-      .equal-height-row, .equal-height-row > .row {
-        display: flex !important;
-        flex-wrap: wrap !important;
-      }
-      .equal-height-row > [class*='col-'],
-      .equal-height-row > .row > [class*='col-'] {
-        display: flex !important;
-        flex-direction: column !important;
-      }
-      
-
-      .info-tooltip-container {
-        position: relative !important;
-        display: inline-block !important;
-        margin-left: 6px !important;
-        vertical-align: middle !important;
-      }
-      .info-tooltip-container .tooltip-text {
-        display: block !important;
-        visibility: hidden;
-        opacity: 0;
-        position: absolute !important;
-        top: 135% !important;
-        bottom: auto !important;
-        left: 0 !important;
-        right: auto !important;
-        transform: none !important;
-        background: #2b2b2b !important;
-        color: #fff !important;
-        padding: 10px 12px !important;
-        border-radius: 8px !important;
-        font-size: 12.5px !important;
-        font-weight: normal !important;
-        line-height: 1.5 !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        overflow: visible !important;
-        width: 280px !important;
-        max-width: 280px !important;
-        white-space: normal !important;
-        word-wrap: break-word !important;
-        z-index: 99999 !important;
-        transition: opacity 0.15s ease-in-out;
-        pointer-events: none;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-      }
-      .info-tooltip-container .tooltip-text::after {
-        display: none !important;
-      }
-      .info-tooltip-container:hover .tooltip-text {
-        visibility: visible;
-        opacity: 1;
-      }
     "))
   ),
   tags$script("document.title = 'STEHealth | Spatial & Spatio-Temporal Epidemiological Analysis'"),
@@ -226,7 +114,7 @@ body <- dashboardBody(
   tags$head(
     tags$meta(charset="utf-8"),
     tags$link(rel="stylesheet" ,href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"), # UNICONS
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),   # import css file
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css?v=2.4"),   # import css file
     tags$script(src="js/index.js"), # เป็นตัวช่วยในการลิงก์ tag a ไปยัง tap อื่นม ๆ
     # สคริปต์สร้าง Tooltip ด้วยตัวเองเมื่อเอาเมาส์ชี้เมนูสีเทา
     tags$script(HTML("
@@ -882,9 +770,18 @@ body <- dashboardBody(
                           div(
                             class = "box-white",
                             uiOutput("mapDisError"),
-                            addSpinner(
-                              leafletOutput("map_distribution", height = "70vh"),  # แผนที่แรก
-                              spin = "bounce", color = "#735DFB"
+                            # addSpinner(
+                            #   leafletOutput("map_distribution", height = "70vh"),  # แผนที่แรก
+                            #   spin = "bounce", color = "#735DFB"
+                            # )
+                            
+                            # ใช้ withSpinner ของ shinycssloaders ครอบแผนที่
+                            withSpinner(
+                              leafletOutput("map_distribution", height = "70vh"),
+                              type = 8,                 # เปลี่ยนรูปแบบแอนิเมชัน (มีให้เลือก 1-8)
+                              color = "#735DFB",        # สีม่วงธีมแอป
+                              size = 0.7,               # ปรับขนาด Spinner ให้ใหญ่ขึ้น
+                              caption = "Rendering Map... Please wait" # เพิ่มข้อความใต้ Spinner
                             )
                           )
                         ),
@@ -902,9 +799,14 @@ body <- dashboardBody(
                                           selected = "columnpopindata")
                             ),
                             uiOutput("mapDisError_2"),
-                            addSpinner(
-                              leafletOutput("map_distribution_2", height = "70vh"),  # แผนที่ที่สอง
-                              spin = "bounce", color = "#735DFB"
+                            
+                            # ใช้ withSpinner ของ shinycssloaders ครอบแผนที่
+                            withSpinner(
+                              leafletOutput("map_distribution_2", height = "70vh"),
+                              type = 8, 
+                              color = "#735DFB",
+                              size = 0.7,
+                              caption = "Rendering Normalized Map... Please wait"
                             )
                           )
                         )
@@ -1218,10 +1120,136 @@ body <- dashboardBody(
               
       ),
       
-      
       tabItem(tabName = "Manual",
-              includeMarkdown("Manual.md")
+              HTML("<div class='heading_container'>
+                     <h1>User Manual</h1>
+                   </div>"),
               
+              div(class = "box-white", style = "padding: 20px;",
+                  # ปุ่มดาวน์โหลด PDF
+                  HTML('<p style="text-align: right; margin-bottom: 20px;">
+                          <a href="STEHealth_Application_Manual.pdf" target="_blank" class="btn btn-outline-primary2" style="border-radius: 100px;">
+                            <i class="uil uil-import"></i> Download Full PDF Manual
+                          </a>
+                        </p>'),
+                  
+                  # withMathJax เพื่อรองรับการแสดงสมการคณิตศาสตร์
+                  withMathJax(
+                    navlistPanel(
+                      id = "manual_nav",
+                      widths = c(3, 9), 
+                      
+                      "Introduction",
+                      tabPanel("What is STEHealth?", 
+                               h3(style = "color: #735DFB;", "What is STEHealth?"),
+                               p("STEHealth (Spatiotemporal Epidemiological Health) is a browser-based application for the Bayesian analysis of areal health data, supporting disease mapping, hotspot detection, and the estimation of associations between health outcomes and risk factors in both spatial and spatiotemporal settings."),
+                               h4("Background"),
+                               p("Bayesian spatial and spatiotemporal models are widely used in epidemiology, but fitting them typically requires programming expertise in specialized statistical software... STEHealth was developed to bridge this gap by providing an intuitive, browser-based interface built on the RShiny framework, combined with R-INLA for Bayesian hierarchical modeling."),
+                               h4("Features"),
+                               tags$ul(
+                                 tags$li(strong("Interactive Mapping:"), " Visualize spatial data using customizable maps."),
+                                 tags$li(strong("Cluster Detection:"), " Identify hotspots and non-hotspots within your data."),
+                                 tags$li(strong("Risk Factor Analysis:"), " Explore associations between risk factors and health outcomes (Overall RR and Area-level RR)."),
+                                 tags$li(strong("Ready-to-Use Sample Datasets:"), " Explore the web application immediately with three built-in sample datasets.")
+                               )
+                      ),
+                      
+                      tabPanel("How to Access",
+                               h3(style = "color: #735DFB;", "How to Access"),
+                               p("STEHealth is deployed on the cloud via Hugging Face Spaces. No installations are required. You can access and use the web application directly through your web browser."),
+                               tags$ul(
+                                 tags$li(strong("Recommendation:"), " A modern web browser (Chrome, Edge, Firefox, or Safari, latest version)"),
+                                 tags$li("A screen resolution of at least 1440 x 900 pixels on desktop browsers"),
+                                 tags$li("A stable internet connection")
+                               ),
+                               p(tags$i("Note: The web application may enter sleep mode after 48 hours of inactivity to save resources. It will automatically wake up on your next visit, which might take 1-2 minutes to load."))
+                      ),
+                      
+                      "Tutorials",
+                      tabPanel("Quick Start: Step-by-Step",
+                               h3(style = "color: #735DFB;", "Quick Start: Step-by-Step Demonstration"),
+                               p("This section walks through a complete analysis using the built-in sample data. It takes about 10 minutes and requires no data preparation."),
+                               
+                               h4("Step 1: Get Started"),
+                               p("Open the web application via the browser link and click the 'Get Started' button."),
+                               
+                               h4("Step 2: Choose Data Source"),
+                               p("Select 'Use Sample Data', choose Pollution & Health Data, 2007-2011 (CARBayesST) from the dropdown menu. Once selected, all required shapefile and data file columns will be auto-filled automatically."),
+                               # รูปหน้า Upload
+                               tags$img(src = "02_Shapefile&CSV.png", style = "width: 100%; max-width: 800px; margin: 15px 0; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"),
+                               
+                               h4("Step 3 & 4: Map Distribution"),
+                               p("Review the Data Summary table, then click Next to proceed. Visualize the map using filters (time point, color scheme), optionally take a screenshot, then press Next to go to the analysis page."),
+                               # รูปหน้า Map Distribution
+                               tags$img(src = "03_Map Distribution Page.png", style = "width: 100%; max-width: 800px; margin: 15px 0; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"),
+                               
+                               h4("Step 5: Cluster Detection"),
+                               p("The Cluster Detection tab presents a cluster map of the data, highlighting hotspots and non-hotspots. Users can visualize results using filters, download the result data, and take a screenshot."),
+                               # รูปหน้า Analysis
+                               tags$img(src = "04_Cluster Detection tab.png", style = "width: 100%; max-width: 800px; margin: 15px 0; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"),
+                               
+                               h4("Step 6: Association with Risk Factors"),
+                               p("Examine the Overall RR table and Area-level Significance. Use the filters and map to explore area-level relative risk (RR)."),
+                               tags$img(src = "05_Association with Risk Factors tab.png", style = "width: 100%; max-width: 800px; margin: 15px 0; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1);")
+                      ),
+                      
+                      tabPanel("Web Application Pages",
+                               h3(style = "color: #735DFB;", "Web Application Pages"),
+                               p("Detailed overview of the 8 pages in the application:"),
+                               h4("1. Home Page"),
+                               p("The landing page providing a brief overview and access to the analysis or manual."),
+                               h4("2. Upload Data Page"),
+                               p("Allows users to upload spatial data (Shapefile) and tabular data (CSV/Excel), or select built-in sample datasets. Includes variable mapping for area id, area name, cases, time point, population, and covariates."),
+                               h4("3. Map Distribution Page"),
+                               p("Interactive maps displaying the spatial distribution of raw observed cases and normalized cases (adjusted by population or expected value)."),
+                               h4("4. Spatial & Spatio-Temporal Analysis"),
+                               p("Displays the model results (Cluster Detection and Risk Factor Associations) using Bayesian spatiotemporal models.")
+                      ),
+                      
+                      "Interpretation & Methods",
+                      tabPanel("Interpreting the Results",
+                               h3(style = "color: #735DFB;", "Interpreting the Results"),
+                               h4("Cluster Detection (Hotspot Map)"),
+                               p("If an area is classified as a hotspot, it means that the posterior probability that its relative risk of outcomes exceeded the baseline was above the specified threshold (e.g., RR > 1)."),
+                               
+                               h4("Risk Factor Associations"),
+                               p(strong("If the area is significant and RR > 1:")),
+                               p("Example: RR is 1.0391. This suggests that for every 1-unit increase in the risk factor, the risk of the outcome increases by 3.91%."),
+                               p(strong("If the area is significant and RR < 1:")),
+                               p("Example: RR is 0.9671. This indicates that for every 1-unit increase in the risk factor, the risk of the outcome decreases by 3.29%."),
+                               p(strong("If the area is not significant:")),
+                               p("The 95% Credible Interval (CrI) of the area-specific RR includes 1; therefore, there is no evidence of an association between the risk factor and the outcome in this area.")
+                      ),
+                      
+                      tabPanel("Statistical Methods",
+                               h3(style = "color: #735DFB;", "Statistical Methods (Technical Details)"),
+                               p("All models are fitted in a Bayesian framework using integrated nested Laplace approximation (INLA) via the R-INLA package."),
+                               
+                               h4("Cluster Detection Model"),
+                               p("Observed counts \\( y_{it} \\) are modeled as:"),
+                               p("$$ y_{it} \\sim Poisson(E_{it}\\rho_{it}) $$"),
+                               p("$$ log(\\rho_{it}) = \\alpha + \\eta_{it} $$"),
+                               p("The spatial effect follows the Besag-York-Mollié (BYM) specification. The structured temporal effect is modeled with a first-order random walk (RW1) prior."),
+                               
+                               h4("Risk Factor Models"),
+                               p(strong("Fixed-Effect Model (Overall RR):")),
+                               p("$$ log(\\rho_{it}) = \\alpha + \\sum_{m}^{M}\\beta_{m}x_{mit} $$"),
+                               p(strong("Area-level Model (Random-Slope Model):")),
+                               p("$$ log(\\rho_{it}) = \\alpha + \\sum_{m}^{M}\\beta_{m}x_{mit} + \\eta_{it} $$")
+                      ),
+                      
+                      tabPanel("Credits & Contact",
+                               h3(style = "color: #735DFB;", "Credits & Contact"),
+                               h4("Source code & Dependencies"),
+                               p("The application runs on Hugging Face Spaces using Docker. Key R packages include shiny, leaflet, sf, R-INLA, and more."),
+                               h4("Credits"),
+                               p("Icons and visuals modified from Canva, Freepik, undraw, and Flaticon."),
+                               h4("Contact Us"),
+                               p("For technical support, questions, or feedback, please contact: ornrakorn.mek@outlook.com")
+                      )
+                    )
+                  )
+              )
       ),
       
       tabItem(tabName = "Help",
@@ -3789,10 +3817,7 @@ shinyApp(
       if (is.null(rv$datosOriginal)| is.null(rv$map))
         return(NULL)
       
-      # ===== เพิ่ม withProgress ครอบการสร้างแผนที่ =====
-      withProgress(message = 'Rendering Map...', value = 0, {
-        
-        incProgress(0.2, detail = "Preparing data...")
+      
         print("Plot: ...map distribution.1..")
         
         map <- rv$map
@@ -3803,8 +3828,7 @@ shinyApp(
             data[,input$columndateindata] %in% input$time_point_filter
           )
         
-        incProgress(0.5, detail = "Matching spatial data...")
-        
+
         datafiltered <- data
         match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
                                             input$columnidareaindata, input$columnidareanamedata)
@@ -3815,8 +3839,7 @@ shinyApp(
         map <- datafiltered[ordercounties, ]
         st_geometry(map) <- temp_geom
         
-        incProgress(0.7, detail = "Drawing map layers...")
-        
+
         l <- leaflet(map) %>% addTiles()
         pal <- colorNumeric(palette = input$color, domain = map[[input$columncasesindata]])
         labels <- sprintf("<strong> %s </strong> <br/>  %s : %s ",
@@ -3856,10 +3879,8 @@ shinyApp(
           ) %>%
           addFullscreenControl()
         
-        incProgress(1, detail = "Done!")
-        
+
         return(res) # คืนค่าแผนที่กลับไปให้ renderLeaflet วาด
-      }) # ===== จบ withProgress =====
     })
     
     
@@ -3872,11 +3893,7 @@ shinyApp(
       
       if (is.null(rv$datosOriginal) | is.null(rv$map))
         return(NULL)
-      
-      # ===== เพิ่ม withProgress ครอบการสร้างแผนที่ =====
-      withProgress(message = 'Rendering Normalized Map...', value = 0, {
-        
-        incProgress(0.2, detail = "Preparing data...")
+
         print("Plot: ...map distribution.2..")
         
         map <- rv$map
@@ -3899,16 +3916,14 @@ shinyApp(
             data[,input$columndateindata] %in% input$time_point_filter
           )
         
-        incProgress(0.4, detail = "Adjusting values...")
-        
+
         if (input$divide_by == "columnpopindata") {
           data$adjusted_cases <- data[, input$columncasesindata] / data[, input$columnpopindata]
         } else if (input$divide_by == "expected_value") {
           data$adjusted_cases <- data[, input$columncasesindata] / data[, 'expected_value']
         }
         
-        incProgress(0.5, detail = "Matching spatial data...")
-        
+
         datafiltered <- data
         match_key_data <- resolve_match_key(map, datafiltered, input$columnidareainmap,
                                             input$columnidareaindata, input$columnidareanamedata)
@@ -3919,8 +3934,7 @@ shinyApp(
         map <- datafiltered[ordercounties, ]
         st_geometry(map) <- temp_geom
         
-        incProgress(0.7, detail = "Drawing map layers...")
-        
+
         l <- leaflet(map) %>% addTiles()
         pal <- colorNumeric(palette = input$color, domain = map$adjusted_cases)
         labels <- sprintf("<strong> %s </strong> <br/>  Adjusted Cases : %s ",
@@ -3958,10 +3972,8 @@ shinyApp(
           ) %>%
           addFullscreenControl()
         
-        incProgress(1, detail = "Done!")
-        
+
         return(res)
-      }) # ===== จบ withProgress =====
     })
     
     

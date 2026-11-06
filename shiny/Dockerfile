@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 
 # ติดตั้งแพ็กเกจพื้นฐานจาก CRAN
 RUN R -e "install.packages('remotes'); \
-    install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyBS', 'leaflet', 'dplyr', 'ggplot2', 'RColorBrewer', 'shinyWidgets', 'shinydashboardPlus', 'sf', 'spdep', 'leaflet.extras', 'bsplus', 'markdown', 'readxl', 'plotly', 'DT'))"
+    install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyBS', 'leaflet', 'dplyr', 'ggplot2', 'RColorBrewer', 'shinyWidgets', 'shinydashboardPlus', 'shinycssloaders', 'sf', 'spdep', 'leaflet.extras', 'bsplus', 'markdown', 'readxl', 'plotly', 'DT'))"
 
 
 # ติดตั้ง INLA จากไฟล์ใน repo (server ของ INLA บล็อก install.packages จาก build server)

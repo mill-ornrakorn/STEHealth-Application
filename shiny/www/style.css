@@ -1235,3 +1235,180 @@ span.purple {
           }
           .preview-empty .empty-icon { font-size: 48px; }
           .preview-empty .empty-text { font-size: 13px; color: #bbb; }
+
+
+
+/* ===== ย้าย Progress Bar และ Notification ไปกลางจอ ===== */
+      #shiny-notification-panel {
+        top: 50% !important;
+        left: 50% !important;
+        bottom: auto !important;
+        right: auto !important;
+        transform: translate(-50%, -50%) !important;
+        width: 350px !important;
+        z-index: 999999 !important;
+      }
+      
+      .shiny-notification {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+        border-radius: 8px !important;
+        padding: 15px !important;
+      }
+      
+      /* ===== ปรับแต่งข้อความ Loading ให้ดู Minimal ===== */
+      .shinycssloaders-caption {
+        font-size: 13px !important;       /* ปรับขนาดฟอนต์ให้เล็กลง */
+        font-weight: 400 !important;      /* ปรับให้ตัวบางลง ไม่หนาทึบ */
+        color: #888888 !important;        /* ใช้สีเทาอ่อนให้ดูสบายตา ไม่แย่งซีน */
+        margin-top: 15px !important;      /* เพิ่มระยะห่างจากตัวหมุนนิดหน่อย */
+        letter-spacing: 0.5px !important; /* เพิ่มช่องไฟให้ดูคลีนขึ้น */
+      }
+      
+      
+      /* ===== Tooltip แบบใหม่ที่แยกเฉพาะ ไม่ชนกับ .info-tooltip-container เดิม ===== */
+      .mr-tip {
+        position: relative;
+        display: inline-block;
+        margin-left: 6px;
+        vertical-align: middle;
+        cursor: help;
+      }
+      .mr-tip .mr-tip-icon {
+        color: #999999;
+        font-size: 14px;
+      }
+      .mr-tip .mr-tip-text {
+        visibility: hidden;
+        opacity: 0;
+        display: block;
+        position: absolute;
+        top: 130%;
+        left: 0;
+        background: #2b2b2b;
+        color: #ffffff;
+        text-align: left;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: normal;
+        line-height: 1.5;
+        width: 260px;
+        max-width: 260px;
+        white-space: normal;
+        word-wrap: break-word;
+        z-index: 99999;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        transition: opacity 0.15s ease-in-out;
+        pointer-events: none;
+      }
+      .mr-tip:hover .mr-tip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+      
+      /* ===== ทำให้ 2 คอลัมน์ในแถวเดียวกันสูงเท่ากันเสมอ (สำหรับ Upload Shapefile/CSV และ Association) ===== */
+      .equal-height-row, .equal-height-row > .row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+      }
+      .equal-height-row > [class*='col-'],
+      .equal-height-row > .row > [class*='col-'] {
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      
+
+      .info-tooltip-container {
+        position: relative !important;
+        display: inline-block !important;
+        margin-left: 6px !important;
+        vertical-align: middle !important;
+      }
+      .info-tooltip-container .tooltip-text {
+        display: block !important;
+        visibility: hidden;
+        opacity: 0;
+        position: absolute !important;
+        top: 135% !important;
+        bottom: auto !important;
+        left: 0 !important;
+        right: auto !important;
+        transform: none !important;
+        background: #2b2b2b !important;
+        color: #fff !important;
+        padding: 10px 12px !important;
+        border-radius: 8px !important;
+        font-size: 12.5px !important;
+        font-weight: normal !important;
+        line-height: 1.5 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        width: 280px !important;
+        max-width: 280px !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        z-index: 99999 !important;
+        transition: opacity 0.15s ease-in-out;
+        pointer-events: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      }
+      .info-tooltip-container .tooltip-text::after {
+        display: none !important;
+      }
+      .info-tooltip-container:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+      
+      
+      /* ===== ปรับแต่งเมนูด้านซ้าย (navlistPanel) ในหน้า Manual ===== */
+      
+      /* 1. ปรับสีแท็บที่ถูกเลือก (Active) ให้เป็นสีม่วงเข้าธีม */
+      .nav-pills > li.active > a, 
+      .nav-pills > li.active > a:hover, 
+      .nav-pills > li.active > a:focus {
+        background-color: #735DFB !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+      }
+
+      /* 2. ปรับสีเวลาเอาเมาส์ชี้ (Hover) แท็บที่ยังไม่ได้เลือก */
+      .nav-pills > li > a:hover {
+        background-color: #e8e4ff !important;
+        color: #735DFB !important;
+        border-radius: 8px !important;
+      }
+      
+      /* 3. ปรับระยะห่างของแท็บแต่ละอันไม่ให้ติดกันเกินไป */
+      .nav-pills > li > a {
+        margin-bottom: 4px !important;
+      }
+
+      /* 4. ปรับแต่งหัวข้อหมวดหมู่ (nav-header / navbar-brand) ให้กดไม่ได้ */
+      .nav-pills > li.navbar-brand,
+      .nav-pills > li.nav-header {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important; 
+        letter-spacing: 1px !important;       
+        color: #999999 !important;            
+        background-color: transparent !important; /* บังคับพื้นหลังโปร่งใสเสมอ */
+        padding: 15px 15px 5px 15px !important;
+        margin-top: 15px !important;
+        margin-bottom: 5px !important;
+        border-bottom: 1px solid #eeeeee !important; 
+        pointer-events: none !important;      
+        cursor: default !important;           
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        line-height: normal !important;
+      }
+      
+      /* ป้องกันหัวข้อหมวดหมู่อันแรกสุดไม่ให้มี margin-top มากเกินไป */
+      .nav-pills > li.navbar-brand:first-child,
+      .nav-pills > li.nav-header:first-child {
+        margin-top: 0 !important;
+      }

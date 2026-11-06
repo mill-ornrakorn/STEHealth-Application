@@ -7,6 +7,21 @@
 
 <div class='box-white'>
 
+- #### version 2.4
+    ##### 6 November 2026
+    - On the Upload Data page:
+        - Added the Area Match Status UI under the CSV Data File section, allowing users to easily verify matched areas.
+    - On the Map Distribution page:
+        - Replaced the previous `withProgress` loading bar with a minimal `withSpinner` animation from the `shinycssloaders` package. This resolves rendering delays where the map would appear to freeze, providing a much smoother user experience.
+    - On the Manual page:
+        - Completely redesigned the manual using a native `navlistPanel` layout instead of an embedded PDF iframe. This resolves critical browser security blocks (e.g., Microsoft Edge cross-origin iframe blocking on Hugging Face Spaces) and significantly improves readability.
+        - Integrated `withMathJax` to properly render statistical formulas directly on the web page.
+    - Deployment and dependencies:
+        - Added the `shinycssloaders` package to the `Dockerfile`.
+        - Implemented cache busting for `style.css` (using `?v=...`) to ensure the latest UI changes are immediately reflected upon deployment without requiring users to clear their browser cache.
+        - Fixed CSS styling for the `navlistPanel` headers to ensure they appear as unclickable section titles rather than active tabs.
+
+
 - #### version 2.3
     ##### 18 October 2026
     - On the Upload Data page:
